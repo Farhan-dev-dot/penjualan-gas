@@ -1,0 +1,1551 @@
+/* =========================================================
+   SHARED TOKENS — PALETTE BIRU
+   ========================================================= */
+
+:root {
+    --brand-blue-50: #e3f2fd; /* paling terang */
+    --brand-blue-200: #90caf9; /* biru muda */
+    --brand-blue-500: #2196f3; /* biru utama / brand */
+    --brand-blue-900: #011739; /* biru gelap / aksen kuat */
+
+    --brand-blue: var(--brand-blue-500);
+    --brand-blue-soft: rgba(33, 150, 243, 0.1);
+    --brand-amber: #f7931e;
+    --text-muted: #6c757d;
+}
+
+/* =========================================================
+   PRODUK ALL
+   ========================================================= */
+
+.produkall .product-card {
+    border: 0;
+    background: transparent;
+}
+
+/* =========================================================
+   PRODUCT IMAGE
+   ========================================================= */
+
+.produkall .product-image-wrapper {
+    background-color: #f1f3f5;
+    border-radius: 6px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+}
+
+.produkall .product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 8px;
+}
+
+/* =========================================================
+   PRODUCT VARIANTS
+   ========================================================= */
+
+.produkall .product-variants {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.produkall .product-variant {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 3px;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.produkall .product-variant.active {
+    border-color: var(--brand-blue-900);
+}
+
+.produkall .product-variant img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* =========================================================
+   PRODUCT TITLE
+   ========================================================= */
+
+.produkall .product-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    margin-bottom: 4px;
+}
+
+/* =========================================================
+   PRODUCT CATEGORY
+   ========================================================= */
+
+.produkall .product-category {
+    font-size: 13px;
+    color: #6c757d;
+}
+
+/* =========================================================
+   PRODUCT RATING
+   ========================================================= */
+
+.produkall .product-rating {
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.produkall .product-rating i {
+    color: #ffc107;
+}
+
+/* =========================================================
+   PRODUCT PRICE
+   ========================================================= */
+
+.produkall .product-price {
+    font-size: 17px;
+    font-weight: 700;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+/* =========================================================
+   PRODUCT ADD BUTTON
+   ========================================================= */
+
+.produkall .product-add-btn {
+    width: 100%;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* =========================================================
+   SKELETON
+   ========================================================= */
+
+.produkall .product-skeleton-image {
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+}
+
+.produkall .product-skeleton-variant {
+    width: 42px;
+    height: 42px;
+    border-radius: 5px;
+}
+
+/* =========================================================
+   SECTION PRODUK KAMI
+   ========================================================= */
+
+.section-produk-kami {
+    position: relative;
+}
+
+/* =========================================================
+   PRODUCT CARD
+   ========================================================= */
+
+.section-produk-kami .product-card {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+/* =========================================================
+   PRODUCT IMAGE
+   ========================================================= */
+
+.section-produk-kami .product-card-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 20px;
+    display: block;
+}
+
+/* =========================================================
+   PRODUCT CARD BODY
+   ========================================================= */
+
+.section-produk-kami .product-card-body {
+    position: relative;
+    width: calc(100% - 40px);
+    margin: -55px auto 0;
+    background: #fff;
+    border-radius: 20px;
+    padding: 22px 20px;
+    box-shadow: 0 8px 25px rgba(13, 71, 161, 0.12);
+    z-index: 2;
+}
+
+/* =========================================================
+   PRODUCT CATEGORY
+   ========================================================= */
+
+.section-produk-kami .product-card-category {
+    color: var(--brand-blue);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+/* =========================================================
+   PRODUCT TITLE
+   ========================================================= */
+
+.section-produk-kami .product-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 20px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* =========================================================
+   PRODUCT PRICE
+   ========================================================= */
+
+.section-produk-kami .product-card-price {
+    color: var(--brand-blue);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   PRODUCT ACTION
+   ========================================================= */
+
+.section-produk-kami .product-card-action {
+    margin-top: 18px;
+}
+
+.section-produk-kami .product-card-action .btn {
+    border-radius: 50px;
+}
+
+/* =========================================================
+   SKELETON IMAGE
+   ========================================================= */
+
+.section-produk-kami .product-skeleton-image {
+    height: 250px;
+    border-radius: 20px;
+}
+
+/* =========================================================
+   SKELETON BODY
+   ========================================================= */
+
+.section-produk-kami .product-skeleton-body {
+    position: relative;
+    width: calc(100% - 40px);
+    margin: -55px auto 0;
+    background: #fff;
+    border-radius: 20px;
+    padding: 22px 20px;
+    box-shadow: 0 8px 25px rgba(13, 71, 161, 0.08);
+    z-index: 2;
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =========================================================
+   HERO CAROUSEL
+   ========================================================= */
+
+#carouselExampleIndicators .carousel-item img {
+    height: clamp(700px, 55vh, 700px);
+    object-fit: cover;
+}
+
+#carouselExampleIndicators .carousel-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(13, 71, 161, 0.35),
+        rgba(13, 71, 161, 0) 45%
+    );
+    pointer-events: none;
+}
+
+/* =========================================================
+   SEJARAH
+   ========================================================= */
+
+.sejarah {
+    position: relative;
+}
+
+/* =========================================================
+   SEJARAH SECTION
+   ========================================================= */
+
+.sejarah .history-section {
+    position: relative;
+    min-height: 650px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 420px)
+        minmax(0, 1fr);
+
+    grid-template-rows: 1fr 1fr;
+
+    align-items: center;
+
+    column-gap: clamp(24px, 4vw, 50px);
+    row-gap: 24px;
+}
+
+/* =========================================================
+   CENTER IMAGE
+   ========================================================= */
+
+.sejarah .history-center {
+    grid-column: 2;
+    grid-row: 1 / 3;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    z-index: 2;
+}
+
+.sejarah .history-center::before {
+    content: "";
+
+    position: absolute;
+
+    width: 92%;
+    height: 92%;
+
+    border-radius: 34px;
+
+    z-index: -1;
+}
+
+/* =========================================================
+   SEJARAH IMAGE
+   ========================================================= */
+
+.sejarah .history-image-wrapper {
+    width: 100%;
+    max-width: 400px;
+
+    aspect-ratio: 4 / 5;
+
+    border-radius: 30px;
+    overflow: hidden;
+
+    transition: transform 0.35s ease;
+}
+
+.sejarah .history-image-wrapper:hover {
+    transform: scale(1.02);
+}
+
+.sejarah .history-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+/* =========================================================
+   SEJARAH ITEM
+   ========================================================= */
+
+.sejarah .history-item {
+    position: relative;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 15px;
+
+    width: 100%;
+    max-width: 340px;
+
+    z-index: 3;
+
+    transition: transform 0.25s ease;
+}
+
+.sejarah .history-item:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   LEFT
+   ========================================================= */
+
+.sejarah .history-left {
+    justify-self: end;
+
+    text-align: right;
+
+    flex-direction: row-reverse;
+}
+
+/* =========================================================
+   RIGHT
+   ========================================================= */
+
+.sejarah .history-right {
+    justify-self: start;
+
+    text-align: left;
+}
+
+/* =========================================================
+   POSITION
+   ========================================================= */
+
+.sejarah .history-left-top {
+    grid-column: 1;
+    grid-row: 1;
+
+    align-self: end;
+
+    margin-bottom: 40px;
+}
+
+.sejarah .history-left-bottom {
+    grid-column: 1;
+    grid-row: 2;
+
+    align-self: start;
+
+    margin-top: 40px;
+}
+
+.sejarah .history-right-top {
+    grid-column: 3;
+    grid-row: 1;
+
+    align-self: end;
+
+    margin-bottom: 40px;
+}
+
+.sejarah .history-right-bottom {
+    grid-column: 3;
+    grid-row: 2;
+
+    align-self: start;
+
+    margin-top: 40px;
+}
+
+/* =========================================================
+   ICON + STEP NUMBER
+   ========================================================= */
+
+.sejarah .history-icon {
+    position: relative;
+
+    flex-shrink: 0;
+
+    min-width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--brand-blue-soft);
+
+    border: 2px solid rgba(33, 150, 243, 0.18);
+
+    color: var(--brand-blue);
+
+    font-size: 20px;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.sejarah .history-item:hover .history-icon {
+    transform: scale(1.08) rotate(-4deg);
+
+    background: var(--brand-blue);
+
+    color: #fff;
+}
+
+/* =========================================================
+   STEP NUMBER
+   ========================================================= */
+
+.sejarah .history-left .history-icon .history-step {
+    left: -6px;
+}
+
+.sejarah .history-right .history-icon .history-step {
+    right: -6px;
+}
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.sejarah .history-content h5 {
+    font-weight: 700;
+
+    margin-bottom: 8px;
+}
+
+.sejarah .history-content p {
+    color: var(--text-muted);
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    margin-bottom: 0;
+}
+
+/* =========================================================
+   CONNECTING LINE
+   ========================================================= */
+
+.sejarah .history-left::after {
+    content: "";
+
+    position: absolute;
+
+    top: 27px;
+    right: -200px;
+
+    width: 200px;
+    height: 2px;
+
+    background: var(--brand-blue-900);
+}
+
+.sejarah .history-right::before {
+    content: "";
+
+    position: absolute;
+
+    top: 27px;
+    left: -200px;
+
+    width: 200px;
+    height: 2px;
+
+    background: var(--brand-blue-900);
+}
+
+/* =========================================================
+   RESPONSIVE TABLET
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+    .sejarah .history-section {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 30px;
+
+        min-height: auto;
+    }
+
+    .sejarah .history-center {
+        order: 1;
+    }
+
+    .sejarah .history-left-top {
+        order: 2;
+    }
+
+    .sejarah .history-right-top {
+        order: 3;
+    }
+
+    .sejarah .history-left-bottom {
+        order: 4;
+    }
+
+    .sejarah .history-right-bottom {
+        order: 5;
+    }
+
+    .sejarah .history-item {
+        max-width: 600px;
+
+        width: 100%;
+
+        text-align: left;
+
+        flex-direction: row;
+
+        justify-self: auto;
+
+        margin: 0;
+
+        padding: 14px 16px;
+
+        border-radius: 16px;
+
+        background: #fff;
+
+        box-shadow: 0 0.4rem 1.2rem rgba(13, 71, 161, 0.06);
+    }
+
+    .sejarah .history-left {
+        text-align: left;
+
+        flex-direction: row;
+    }
+
+    .sejarah .history-image-wrapper {
+        max-width: 320px;
+    }
+
+    .sejarah .history-left::after,
+    .sejarah .history-right::before {
+        display: none;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE MOBILE
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+    .sejarah .history-image-wrapper {
+        max-width: 100%;
+    }
+
+    .sejarah .history-item {
+        align-items: flex-start;
+    }
+
+    .sejarah .history-icon {
+        min-width: 48px;
+
+        height: 48px;
+
+        font-size: 17px;
+    }
+
+    .sejarah .history-content h5 {
+        font-size: 17px;
+    }
+
+    .sejarah .history-content p {
+        font-size: 13px;
+    }
+}
+
+/* =========================================================
+   MITRA KAMI
+   ========================================================= */
+
+.mitra-kami {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* =========================================================
+   HEADER SECTION
+   ========================================================= */
+
+.mitra-kami .mitra-header {
+    max-width: 800px;
+    margin: 0 auto 50px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.badge-mitra {
+    display: inline-block;
+
+    padding: 8px 16px !important;
+
+    border-radius: 50px !important;
+
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    animation: slideInDown 0.6s ease-out;
+}
+
+.mitra-kami .mitra-header h2 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+
+    color: #1a1a1a;
+
+    line-height: 1.2;
+
+    margin-bottom: 1rem !important;
+
+    animation: slideInUp 0.6s ease-out 0.1s both;
+}
+
+.mitra-kami .mitra-header p {
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    font-size: 16px;
+    line-height: 1.8;
+
+    animation: slideInUp 0.6s ease-out 0.2s both;
+}
+
+/* =========================================================
+   STATISTICS SECTION
+   ========================================================= */
+
+.stat-card {
+    padding: 24px;
+
+    border-radius: 16px;
+
+    border: 1px solid #e9ecef;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+
+    animation: scaleIn 0.6s ease-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+
+    border-color: var(--brand-blue-200);
+
+    box-shadow: 0 12px 32px rgba(13, 71, 161, 0.08);
+}
+
+.stat-card h3 {
+    font-size: 2rem;
+
+    letter-spacing: 0.5px;
+}
+
+.stat-card p {
+    font-size: 13px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.3px;
+}
+
+/* =========================================================
+   CAROUSEL WRAPPER
+   ========================================================= */
+
+.mitra-carousel-wrapper {
+    position: relative;
+
+    width: 100%;
+
+    margin: 40px auto;
+
+    animation: fadeIn 0.8s ease-out 0.3s both;
+}
+
+/* =========================================================
+   CAROUSEL
+   ========================================================= */
+
+.mitra-kami .mitra-carousel {
+    position: relative;
+
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding: 30px 0;
+
+    overflow: hidden;
+}
+
+/* =========================================================
+   TRACK
+   ========================================================= */
+
+.mitra-kami .mitra-track {
+    display: flex;
+
+    align-items: center;
+
+    gap: 50px;
+
+    width: max-content;
+
+    margin: 0;
+
+    padding: 0;
+
+    will-change: transform;
+}
+
+/* =========================================================
+   ITEM
+   ========================================================= */
+
+.mitra-kami .mitra-item {
+    flex: 0 0 262.5px;
+
+    width: 262.5px;
+
+    min-width: 262.5px;
+
+    height: 130px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.mitra-kami .mitra-card {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+
+    cursor: pointer;
+
+    overflow: visible;
+
+    box-shadow: none;
+
+    transition: transform 0.35s ease;
+}
+
+.mitra-kami .mitra-card::before,
+.mitra-kami .mitra-card::after {
+    display: none !important;
+
+    content: none !important;
+}
+
+/* =========================================================
+   LOGO WRAPPER
+   ========================================================= */
+
+.mitra-kami .mitra-logo-wrapper {
+    width: 100%;
+
+    height: 120px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: transparent;
+
+    border: none;
+
+    box-shadow: none;
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.mitra-kami .mitra-logo {
+    width: 180px;
+
+    height: 115px;
+
+    object-fit: contain;
+
+    opacity: 0.3;
+
+    transform: scale(1);
+
+    transition:
+        opacity 0.4s ease,
+        filter 0.4s ease,
+        transform 0.4s ease;
+}
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.mitra-kami .mitra-card:hover .mitra-logo {
+    opacity: 1;
+
+    filter: grayscale(0%);
+
+    transform: scale(1.08);
+}
+
+/* =========================================================
+   INFO DISEMBUNYIKAN
+   ========================================================= */
+
+.mitra-kami .mitra-info {
+    display: none;
+}
+
+/* =========================================================
+   CAROUSEL CONTROLS
+   ========================================================= */
+
+.mitra-controls {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    margin-top: 20px;
+}
+
+/* =========================================================
+   CONTROL BUTTON
+   ========================================================= */
+
+.mitra-control-btn {
+    width: 40px;
+
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    background: var(--brand-blue-900);
+
+    color: #ffffff;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.mitra-control-btn:hover {
+    background: var(--brand-blue);
+
+    color: #ffffff;
+
+    transform: scale(1.08);
+
+    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.2);
+}
+
+.mitra-control-btn:active {
+    transform: scale(0.95);
+}
+
+/* =========================================================
+   DOTS
+   ========================================================= */
+
+.mitra-dots {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+/* =========================================================
+   DOT
+   ========================================================= */
+
+.mitra-dot {
+    width: 7px;
+
+    height: 7px;
+
+    padding: 0;
+
+    border: 1px solid #ddd;
+
+    background: #ffffff;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition:
+        width 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease;
+}
+
+.mitra-dot:hover {
+    transform: scale(1.2);
+
+    border-color: var(--brand-blue);
+}
+
+/* =========================================================
+   ACTIVE DOT
+   ========================================================= */
+
+.mitra-dot.active {
+    width: 28px;
+
+    background: var(--brand-blue);
+
+    border-color: var(--brand-blue);
+
+    border-radius: 5px;
+}
+
+/* =========================================================
+   RESPONSIVE - DESKTOP
+   ========================================================= */
+
+@media (min-width: 1200px) {
+    .mitra-kami .mitra-carousel {
+        max-width: 1200px;
+    }
+
+    .mitra-kami .mitra-track {
+        gap: 50px;
+    }
+
+    .mitra-kami .mitra-item {
+        flex: 0 0 200px;
+        width: 200px;
+        min-width: 200px;
+        height: 130px;
+    }
+
+    .mitra-kami .mitra-logo {
+        width: 180px;
+        height: 115px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - LARGE TABLET
+   ========================================================= */
+
+@media (max-width: 1199.98px) {
+    .mitra-kami .mitra-carousel {
+        max-width: 950px;
+    }
+
+    .mitra-kami .mitra-track {
+        gap: 35px;
+    }
+
+    .mitra-kami .mitra-item {
+        flex: 0 0 135px;
+
+        width: 135px;
+
+        min-width: 135px;
+    }
+
+    .mitra-kami .mitra-logo {
+        width: 110px;
+
+        height: 65px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+    .mitra-kami .mitra-carousel {
+        max-width: 760px;
+
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .mitra-kami .mitra-track {
+        gap: 25px;
+    }
+
+    .mitra-kami .mitra-item {
+        flex: 0 0 120px;
+
+        width: 120px;
+
+        min-width: 120px;
+    }
+
+    .mitra-kami .mitra-logo {
+        width: 100px;
+
+        height: 60px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+    .mitra-kami .mitra-carousel {
+        max-width: 100%;
+
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .mitra-kami .mitra-track {
+        gap: 20px;
+    }
+
+    .mitra-kami .mitra-item {
+        flex: 0 0 110px;
+
+        width: 110px;
+
+        min-width: 110px;
+
+        height: 90px;
+    }
+
+    .mitra-kami .mitra-logo {
+        width: 90px;
+
+        height: 55px;
+    }
+
+    .mitra-controls {
+        gap: 15px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE - SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 575.98px) {
+    .mitra-kami .mitra-carousel {
+        padding-left: 15px;
+
+        padding-right: 15px;
+    }
+
+    .mitra-kami .mitra-track {
+        gap: 15px;
+    }
+
+    .mitra-kami .mitra-item {
+        flex: 0 0 100px;
+
+        width: 100px;
+
+        min-width: 100px;
+
+        height: 80px;
+    }
+
+    .mitra-kami .mitra-logo {
+        width: 82px;
+
+        height: 50px;
+    }
+
+    .mitra-control-btn {
+        width: 38px;
+
+        height: 38px;
+    }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .mitra-kami *,
+    .mitra-kami *::before,
+    .mitra-kami *::after {
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: scale(1);
+    }
+}
+
+/* =========================================================
+   NAV LOGIN ICON
+   ========================================================= */
+
+.nav-login-icon {
+    width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #212529;
+    text-decoration: none;
+
+    border-radius: 50%;
+
+    transition:
+        color 0.25s ease,
+        background-color 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.nav-login-icon i {
+    font-size: 50px;
+
+    line-height: 1;
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease;
+}
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.nav-login-icon:hover {
+    color: var(--brand-blue);
+
+    background-color: var(--brand-blue-soft);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 15px rgba(33, 150, 243, 0.12);
+}
+
+.nav-login-icon:hover i {
+    transform: scale(1.08);
+}
+
+/* =========================================================
+   ACTIVE
+   ========================================================= */
+
+.nav-login-icon:active {
+    transform: translateY(0) scale(0.95);
+
+    box-shadow: none;
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+.nav-login-icon:focus-visible {
+    outline: 3px solid rgba(33, 150, 243, 0.25);
+
+    outline-offset: 3px;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+    .nav-login-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nav-login-icon i {
+        font-size: 24px;
+    }
+}
+
+/* =========================================================
+   Container background dasar — pakai palette biru
+   ========================================================= */
+
+main.home-page {
+    position: relative;
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        var(--brand-blue-50) 40%,
+        var(--brand-blue-200) 100%
+    );
+}
+
+.home-bg-group-1,
+.home-bg-group-2 {
+    position: relative;
+    z-index: 1;
+    background: transparent;
+}
+
+/* Footer */
+
+.site-footer {
+    background: var(--brand-blue-900);
+    color: #c6d0e0;
+    padding: 3.5rem 0 0;
+}
+
+.site-footer .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.site-footer .footer-logo i {
+    font-size: 1.9rem;
+    color: var(--brand-amber);
+}
+
+.site-footer .footer-brand h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.site-footer p.footer-desc {
+    color: var(--brand-blue-200);
+    font-size: 0.9rem;
+    max-width: 380px;
+    margin-bottom: 1.5rem;
+}
+
+.site-footer .footer-heading {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+}
+
+.site-footer .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.site-footer .footer-links li {
+    margin-bottom: 0.7rem;
+}
+
+.site-footer .footer-links a {
+    color: var(--brand-blue-200);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.15s ease;
+}
+
+.site-footer .footer-links a:hover {
+    color: var(--brand-blue-500);
+}
+
+.site-footer .footer-contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.9rem;
+    color: var(--brand-blue-200);
+}
+
+.site-footer .footer-contact i {
+    /* color: var(--brand-blue-500); */
+    width: 16px;
+    margin-top: 0.2rem;
+}
+
+.site-footer .footer-social {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+}
+
+.site-footer .footer-social a {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #c6d0e0;
+    text-decoration: none;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+.site-footer .footer-social a:hover {
+    background: var(--brand-blue-500);
+    color: #fff;
+}
+
+.site-footer .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 3rem;
+    padding: 1.25rem 0;
+    font-size: 0.85rem;
+    color: var(--brand-blue-200);
+}
+
+.site-footer .footer-bottom a {
+    color: var(--brand-blue-200);
+    text-decoration: none;
+}
+
+.site-footer .footer-bottom a:hover {
+    color: #fff;
+}
