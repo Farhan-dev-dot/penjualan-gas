@@ -86,6 +86,14 @@
             border-color: var(--accent);
         }
 
+        textarea.form-control {
+            resize: none;
+        }
+
+        .input-group-text.align-items-start {
+            padding-top: 0.65rem;
+        }
+
         .btn-accent {
             background: var(--accent);
             border: none;
@@ -179,6 +187,14 @@
                             <input type="email" class="form-control" id="email" name="email"
                                 placeholder="nama@email.com" value="{{ old('email') }}" required>
                         </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="alamat" class="form-label">Alamat</label>
+                    <div class="input-group">
+                        <span class="input-group-text align-items-start"><i class="fa-solid fa-location-pin"></i></span>
+                        <textarea class="form-control" id="alamat" name="alamat" rows="2" placeholder="Alamat lengkap Anda" required>{{ old('alamat') }}</textarea>
                     </div>
                 </div>
 

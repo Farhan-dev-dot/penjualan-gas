@@ -93,16 +93,6 @@
                                             </div>
 
 
-                                            {{-- VARIANT --}}
-                                            <div class="d-flex gap-2 mt-2 placeholder-glow">
-
-                                                <span class="placeholder product-skeleton-variant"></span>
-
-                                                <span class="placeholder product-skeleton-variant"></span>
-
-                                                <span class="placeholder product-skeleton-variant"></span>
-
-                                            </div>
 
 
                                             {{-- CONTENT --}}
@@ -179,31 +169,7 @@
                                             </div>
 
 
-                                            {{-- ================= --}}
-                                            {{-- VARIANTS --}}
-                                            {{-- ================= --}}
 
-                                            <div class="product-variants">
-
-                                                <div class="product-variant active">
-
-                                                    <img src="{{ asset('assets/img/1.png') }}" alt="LPG 3 Kg">
-
-                                                </div>
-
-                                                <div class="product-variant">
-
-                                                    <img src="{{ asset('assets/img/1.png') }}" alt="LPG 3 Kg">
-
-                                                </div>
-
-                                                <div class="product-variant">
-
-                                                    <img src="{{ asset('assets/img/1.png') }}" alt="LPG 3 Kg">
-
-                                                </div>
-
-                                            </div>
 
 
                                             {{-- ================= --}}

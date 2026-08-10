@@ -3,6 +3,7 @@
 use App\Http\Controllers\customer\AuthController;
 use App\Http\Controllers\customer\HomeController;
 use App\Http\Controllers\customer\KontakController;
+use App\Http\Controllers\customer\PasswordResetController;
 use App\Http\Controllers\customer\ProdukController;
 use App\Http\Controllers\customer\TentangController;
 use Illuminate\Support\Facades\Route;
@@ -34,3 +35,5 @@ Route::get('/kontak-kami', [KontakController::class, 'index'])->name('kontak.ind
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
+
+Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])->name('password.request');
