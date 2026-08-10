@@ -11,7 +11,6 @@
             --accent-soft: #E3F2FD;
         }
 
-        /* Sesuaikan 76px dengan tinggi navbar Anda yang sebenarnya */
         .auth-wrap {
             min-height: calc(100vh - 76px);
             background: linear-gradient(180deg,
@@ -22,24 +21,12 @@
 
         .auth-card {
             width: 100%;
-            max-width: 440px;
+            max-width: 460px;
             background: #fff;
             border: 1px solid #E7ECF3;
             border-radius: 16px;
-            padding: 2.5rem;
+            padding: 2.5rem 3rem;
             box-shadow: 0 20px 40px -20px rgba(13, 71, 161, 0.18);
-        }
-
-        .auth-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            background: rgba(33, 150, 243, 0.1);
-            color: var(--accent);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
         }
 
         .form-label {
@@ -106,10 +93,13 @@
             background: #fff;
             font-weight: 500;
             font-size: 0.9rem;
+            color: var(--ink);
+            text-decoration: none;
         }
 
         .btn-social:hover {
             background: #F0F4FA;
+            color: var(--ink);
         }
 
         .link-accent {
@@ -135,7 +125,7 @@
         <div class="auth-card">
 
             <h2 class="fw-bold mb-1" style="color: var(--ink);">Masuk ke akun Anda</h2>
-            <p class="text-secondary mb-4">Silakan masukkan detail akun untuk melanjutkan.</p>
+            <p class="text-secondary mb-4">Silakan login untuk melanjutkan.</p>
 
             @if ($errors->any())
                 <div class="alert alert-danger py-2 small">
@@ -159,7 +149,7 @@
                     </div>
                 </div>
 
-                <div class="mb-2">
+                <div class="mb-3">
                     <label for="password" class="form-label">Kata Sandi</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa-regular fa-lock"></i></span>
@@ -171,14 +161,12 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                        <label class="form-check-label small text-secondary" for="remember">
-                            Ingat saya
-                        </label>
+                        <label class="form-check-label small text-secondary" for="remember">Ingat saya</label>
                     </div>
-                    <a href="" class="link-accent small">Lupa kata sandi?</a>
+                    <a href="{{ route('password.request') }}" class="link-accent small">Lupa kata sandi?</a>
                 </div>
 
                 <button type="submit" class="btn btn-accent w-100 mb-3">Masuk</button>
@@ -186,19 +174,16 @@
                 <div class="d-flex align-items-center gap-3 my-4 divider-text">
                     <span>atau lanjutkan dengan</span>
                 </div>
+                {{-- {{ route('auth.google') }} --}}
 
-                {{-- <div class="d-flex gap-2 mb-4">
-                    <button type="button" class="btn btn-social flex-fill py-2">
-                        <i class="fa-brands fa-google me-1"></i> Google
-                    </button>
-                    <button type="button" class="btn btn-social flex-fill py-2">
-                        <i class="fa-brands fa-github me-1"></i> GitHub
-                    </button>
-                </div> --}}
+                <a href=""
+                    class="btn btn-social w-100 py-2 d-flex align-items-center justify-content-center gap-2 mb-4">
+                    <i class="fa-brands fa-google"></i> Masuk dengan Google
+                </a>
 
                 <p class="text-center text-secondary small mb-0">
                     Belum punya akun?
-                    <a href="{{ route('register') ?? '#' }}" class="link-accent">Daftar sekarang</a>
+                    <a href="{{ route('register') ?? '#' }}" class="link-accent">Daftar di sini</a>
                 </p>
             </form>
         </div>
@@ -206,15 +191,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const togglePassword = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
+            const toggleBtn = document.getElementById('togglePassword');
+            const input = document.getElementById('password');
+            const icon = document.getElementById('toggleIcon');
 
-            togglePassword.addEventListener('click', function() {
-                const isPassword = passwordInput.getAttribute('type') === 'password';
-                passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-                toggleIcon.classList.toggle('fa-eye');
-                toggleIcon.classList.toggle('fa-eye-slash');
+            toggleBtn.addEventListener('click', function() {
+                const isPassword = input.getAttribute('type') === 'password';
+                input.setAttribute('type', isPassword ? 'text' : 'password');
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
             });
         });
     </script>
