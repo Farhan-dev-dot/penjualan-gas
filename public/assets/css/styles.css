@@ -281,23 +281,1529 @@
 
 /* =========================================================
    HERO CAROUSEL
-   ========================================================= */
+========================================================= */
+
+#carouselExampleIndicators {
+    position: relative;
+    overflow: hidden;
+}
+
+/* =========================================================
+   CAROUSEL IMAGE
+========================================================= */
 
 #carouselExampleIndicators .carousel-item img {
+    display: block;
+    width: 100%;
+}
+
+/* Semua gambar carousel */
+
+#carouselExampleIndicators .carousel-item > img {
     height: clamp(700px, 55vh, 700px);
+
     object-fit: cover;
 }
 
-#carouselExampleIndicators .carousel-item::after {
-    content: "";
+/* =========================================================
+   CAROUSEL NAVIGATION
+========================================================= */
+
+#carouselExampleIndicators .carousel-control-prev,
+#carouselExampleIndicators .carousel-control-next {
+    z-index: 10;
+
+    width: 7%;
+}
+
+#carouselExampleIndicators .carousel-indicators {
+    z-index: 10;
+}
+
+#carouselExampleIndicators .carousel-control-prev-icon,
+#carouselExampleIndicators .carousel-control-next-icon {
+    width: 35px;
+    height: 35px;
+}
+
+/* =========================================================
+   =========================================================
+   SLIDE 1
+   COMPANY INTRODUCTION
+   =========================================================
+========================================================= */
+
+/* ---------------------------------------------------------
+IMAGE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-image {
+    width: 100%;
+
+    height: clamp(700px, 55vh, 700px);
+
+    object-fit: cover;
+
+    object-position: center;
+}
+
+/* ---------------------------------------------------------
+OVERLAY
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-overlay {
     position: absolute;
+
     inset: 0;
+
+    z-index: 1;
+
     background: linear-gradient(
-        to top,
-        rgba(13, 71, 161, 0.35),
-        rgba(13, 71, 161, 0) 45%
+        90deg,
+        rgba(1, 23, 57, 0.94) 0%,
+        rgba(1, 23, 57, 0.82) 34%,
+        rgba(1, 23, 57, 0.48) 65%,
+        rgba(1, 23, 57, 0.08) 100%
     );
+
     pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+CONTENT
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-content {
+    position: absolute;
+
+    top: 50%;
+    left: 8%;
+
+    transform: translateY(-50%);
+
+    width: min(620px, 48%);
+
+    z-index: 2;
+
+    color: #fff;
+}
+
+/* ---------------------------------------------------------
+BADGE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 8px 17px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid rgba(144, 202, 249, 0.45);
+
+    border-radius: 50px;
+
+    background: rgba(1, 23, 57, 0.35);
+
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+
+    color: #fff;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------
+TITLE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-title {
+    margin: 0;
+
+    max-width: 650px;
+
+    color: #fff;
+
+    font-size: clamp(42px, 4.5vw, 68px);
+
+    line-height: 1.08;
+
+    font-weight: 800;
+
+    letter-spacing: -1.8px;
+}
+
+#carouselExampleIndicators .slide-1-title span {
+    color: var(--brand-blue-200);
+}
+
+/* ---------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-description {
+    max-width: 560px;
+
+    margin-top: 24px;
+
+    margin-bottom: 0;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 17px;
+
+    line-height: 1.75;
+
+    font-weight: 400;
+}
+
+/* ---------------------------------------------------------
+INFO
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-info {
+    display: flex;
+
+    align-items: center;
+
+    margin-top: 35px;
+
+    gap: 22px;
+}
+
+/* ---------------------------------------------------------
+INFO ITEM
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-info-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+/* ---------------------------------------------------------
+ICON
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-info-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(33, 150, 243, 0.14);
+
+    border: 1px solid rgba(144, 202, 249, 0.25);
+
+    color: var(--brand-blue-200);
+
+    font-size: 16px;
+}
+
+/* ---------------------------------------------------------
+INFO TEXT
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-info-item strong {
+    display: block;
+
+    color: #fff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+#carouselExampleIndicators .slide-1-info-item small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: rgba(255, 255, 255, 0.6);
+
+    font-size: 11px;
+
+    line-height: 1.2;
+}
+
+/* ---------------------------------------------------------
+DIVIDER
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-1-divider {
+    width: 1px;
+
+    height: 38px;
+
+    background: rgba(144, 202, 249, 0.25);
+}
+
+/* =========================================================
+   SLIDE 1 ANIMATION
+========================================================= */
+
+#carouselExampleIndicators .carousel-item.active .slide-1-badge {
+    animation: slide-1-fade-up 0.7s ease both;
+}
+
+#carouselExampleIndicators .carousel-item.active .slide-1-title {
+    animation: slide-1-fade-up 0.8s ease 0.1s both;
+}
+
+#carouselExampleIndicators .carousel-item.active .slide-1-description {
+    animation: slide-1-fade-up 0.8s ease 0.2s both;
+}
+
+#carouselExampleIndicators .carousel-item.active .slide-1-info {
+    animation: slide-1-fade-up 0.8s ease 0.3s both;
+}
+
+@keyframes slide-1-fade-up {
+    from {
+        opacity: 0;
+
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   =========================================================
+   SLIDE 2
+   INDUSTRY
+   =========================================================
+========================================================= */
+
+/* ---------------------------------------------------------
+IMAGE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-image {
+    width: 100%;
+
+    height: clamp(700px, 55vh, 700px);
+
+    object-fit: cover;
+
+    object-position: center;
+}
+
+/* ---------------------------------------------------------
+OVERLAY
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    background: linear-gradient(
+        90deg,
+        rgba(227, 242, 253, 0.97) 0%,
+        rgba(227, 242, 253, 0.93) 42%,
+        rgba(227, 242, 253, 0.7) 68%,
+        rgba(227, 242, 253, 0.18) 100%
+    );
+
+    pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+CONTENT
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-content {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 2;
+
+    padding: 70px 8% 50px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+/* ---------------------------------------------------------
+HEADER
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-header {
+    max-width: 650px;
+
+    margin-bottom: 42px;
+}
+
+/* ---------------------------------------------------------
+TITLE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-title {
+    margin: 0;
+
+    max-width: 700px;
+
+    color: var(--brand-blue-900);
+
+    font-size: clamp(42px, 4.5vw, 64px);
+
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    letter-spacing: -2px;
+}
+
+#carouselExampleIndicators .slide-2-title span {
+    display: block;
+
+    color: var(--brand-blue-500);
+}
+
+/* ---------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-description {
+    max-width: 570px;
+
+    margin: 20px 0 0;
+
+    color: var(--text-muted);
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+/* ---------------------------------------------------------
+INDUSTRY LIST
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-industry-list {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+
+    max-width: 1150px;
+}
+
+/* ---------------------------------------------------------
+INDUSTRY ITEM
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-industry-item {
+    position: relative;
+
+    min-height: 170px;
+
+    padding: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.35);
+
+    border: 1px solid rgba(1, 23, 57, 0.08);
+
+    backdrop-filter: blur(7px);
+
+    -webkit-backdrop-filter: blur(7px);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease,
+        background 0.3s ease;
+}
+
+/* ---------------------------------------------------------
+HOVER
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-industry-item:hover {
+    transform: translateY(-6px);
+
+    background: rgba(255, 255, 255, 0.75);
+
+    border-color: rgba(33, 150, 243, 0.35);
+
+    box-shadow: 0 15px 35px rgba(1, 23, 57, 0.12);
+}
+
+/* ---------------------------------------------------------
+ICON
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border-radius: 12px;
+
+    background: var(--brand-blue-900);
+
+    color: var(--brand-blue-200);
+
+    font-size: 18px;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+#carouselExampleIndicators .slide-2-industry-item:hover .slide-2-icon {
+    background: var(--brand-blue-500);
+
+    color: #fff;
+}
+
+/* ---------------------------------------------------------
+ITEM CONTENT
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-item-content {
+    position: relative;
+}
+
+/* ---------------------------------------------------------
+NUMBER
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-number {
+    position: absolute;
+
+    top: -5px;
+    right: 0;
+
+    color: rgba(1, 23, 57, 0.09);
+
+    font-size: 26px;
+
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+/* ---------------------------------------------------------
+ITEM TITLE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-industry-item h3 {
+    margin: 0 0 8px;
+
+    color: var(--brand-blue-900);
+
+    font-size: 16px;
+
+    font-weight: 750;
+
+    line-height: 1.2;
+}
+
+/* ---------------------------------------------------------
+ITEM DESCRIPTION
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-2-industry-item p {
+    max-width: 220px;
+
+    margin: 0;
+
+    color: #344054;
+
+    font-size: 13px;
+
+    line-height: 1.55;
+}
+
+/* =========================================================
+   SLIDE 2 ANIMATION
+========================================================= */
+
+#carouselExampleIndicators .carousel-item.active .slide-2-title {
+    animation: slide-2-fade-up 0.7s ease 0.1s both;
+}
+
+#carouselExampleIndicators .carousel-item.active .slide-2-description {
+    animation: slide-2-fade-up 0.7s ease 0.2s both;
+}
+
+#carouselExampleIndicators .carousel-item.active .slide-2-industry-item {
+    animation: slide-2-fade-up 0.7s ease both;
+}
+
+#carouselExampleIndicators
+    .carousel-item.active
+    .slide-2-industry-item:nth-child(1) {
+    animation-delay: 0.25s;
+}
+
+#carouselExampleIndicators
+    .carousel-item.active
+    .slide-2-industry-item:nth-child(2) {
+    animation-delay: 0.35s;
+}
+
+#carouselExampleIndicators
+    .carousel-item.active
+    .slide-2-industry-item:nth-child(3) {
+    animation-delay: 0.45s;
+}
+
+#carouselExampleIndicators
+    .carousel-item.active
+    .slide-2-industry-item:nth-child(4) {
+    animation-delay: 0.55s;
+}
+
+@keyframes slide-2-fade-up {
+    from {
+        opacity: 0;
+
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   =========================================================
+   SLIDE 3
+   EDITORIAL / CORPORATE STATEMENT
+   =========================================================
+========================================================= */
+
+/* ---------------------------------------------------------
+IMAGE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-image {
+    width: 100%;
+
+    height: clamp(700px, 55vh, 700px);
+
+    object-fit: cover;
+
+    object-position: center;
+}
+
+/* ---------------------------------------------------------
+OVERLAY
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 1;
+
+    background: linear-gradient(
+        90deg,
+        rgba(1, 23, 57, 0.97) 0%,
+        rgba(1, 23, 57, 0.88) 30%,
+        rgba(1, 23, 57, 0.56) 58%,
+        rgba(1, 23, 57, 0.1) 100%
+    );
+
+    pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+LARGE NUMBER
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-index {
+    position: absolute;
+
+    right: 7%;
+    top: 7%;
+
+    z-index: 2;
+
+    color: rgba(144, 202, 249, 0.08);
+
+    font-size: clamp(150px, 20vw, 300px);
+
+    font-weight: 900;
+
+    line-height: 0.8;
+
+    letter-spacing: -15px;
+
+    user-select: none;
+
+    pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+CONTENT
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-content {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 3;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 70px 8%;
+}
+
+/* ---------------------------------------------------------
+INNER
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-content-inner {
+    width: min(720px, 65%);
+}
+
+/* ---------------------------------------------------------
+LABEL
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 22px;
+
+    color: rgba(255, 255, 255, 0.65);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 3px;
+
+    text-transform: uppercase;
+}
+
+#carouselExampleIndicators .slide-3-label span {
+    display: block;
+
+    width: 35px;
+    height: 1px;
+
+    background: var(--brand-blue-500);
+}
+
+/* ---------------------------------------------------------
+TITLE
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-title {
+    margin: 0;
+
+    color: #fff;
+
+    font-size: clamp(48px, 5.5vw, 82px);
+
+    font-weight: 800;
+
+    line-height: 0.98;
+
+    letter-spacing: -3px;
+}
+
+#carouselExampleIndicators .slide-3-title span {
+    color: var(--brand-blue-200);
+
+    font-style: italic;
+
+    font-weight: 700;
+}
+
+/* ---------------------------------------------------------
+DESCRIPTION
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-description {
+    max-width: 530px;
+
+    margin: 30px 0 0;
+
+    padding-left: 47px;
+
+    border-left: 1px solid rgba(144, 202, 249, 0.3);
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+/* ---------------------------------------------------------
+BOTTOM STATEMENT
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-bottom {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 42px;
+
+    padding-left: 47px;
+}
+
+#carouselExampleIndicators .slide-3-bottom-line {
+    width: 45px;
+    height: 1px;
+
+    background: var(--brand-blue-500);
+}
+
+#carouselExampleIndicators .slide-3-bottom span {
+    color: rgba(255, 255, 255, 0.55);
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 2.5px;
+}
+
+/* ---------------------------------------------------------
+VERTICAL TEXT
+--------------------------------------------------------- */
+
+#carouselExampleIndicators .slide-3-vertical {
+    position: absolute;
+
+    right: 28px;
+    bottom: 50%;
+
+    z-index: 4;
+
+    transform: rotate(-90deg) translateX(50%);
+
+    transform-origin: right bottom;
+
+    color: rgba(255, 255, 255, 0.4);
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    letter-spacing: 3px;
+
+    white-space: nowrap;
+}
+
+/* =========================================================
+   SLIDE 3 ANIMATION
+========================================================= */
+
+#carouselExampleIndicators .carousel-item.active .slide-3-content-inner {
+    animation: slide-3-editorial-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#carouselExampleIndicators .carousel-item.active .slide-3-index {
+    animation: slide-3-number-in 1.1s ease both;
+}
+
+@keyframes slide-3-editorial-in {
+    from {
+        opacity: 0;
+
+        transform: translateX(-45px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-3-number-in {
+    from {
+        opacity: 0;
+
+        transform: translateX(60px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+   TABLET
+========================================================= */
+
+@media (max-width: 992px) {
+    /* =====================================================
+       SLIDE 1
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-1-content {
+        left: 6%;
+
+        width: 58%;
+    }
+
+    #carouselExampleIndicators .slide-1-title {
+        font-size: 48px;
+    }
+
+    #carouselExampleIndicators .slide-1-description {
+        font-size: 15px;
+    }
+
+    /* =====================================================
+       SLIDE 2
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-2-content {
+        padding: 60px 6% 40px;
+    }
+
+    #carouselExampleIndicators .slide-2-header {
+        margin-bottom: 30px;
+    }
+
+    #carouselExampleIndicators .slide-2-title {
+        font-size: 45px;
+    }
+
+    #carouselExampleIndicators .slide-2-description {
+        font-size: 14px;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-list {
+        grid-template-columns: repeat(2, 1fr);
+
+        max-width: 700px;
+
+        gap: 12px;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-item {
+        min-height: 145px;
+
+        padding: 17px;
+    }
+
+    /* =====================================================
+       OLD INDUSTRY
+       Dipertahankan agar kode lama tidak rusak
+    ===================================================== */
+
+    #carouselExampleIndicators .industry-title {
+        font-size: 2.8rem;
+    }
+
+    #carouselExampleIndicators .industry-title-main {
+        font-size: 3.8rem;
+    }
+
+    #carouselExampleIndicators .industry-header {
+        margin-bottom: 40px;
+    }
+
+    #carouselExampleIndicators .industry-icon {
+        font-size: 26px;
+    }
+
+    #carouselExampleIndicators .industry-item h6 {
+        font-size: 13px;
+    }
+
+    #carouselExampleIndicators .industry-item p {
+        font-size: 11px;
+    }
+
+    /* =====================================================
+       SLIDE 3
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-3-content {
+        padding: 60px 6%;
+    }
+
+    #carouselExampleIndicators .slide-3-content-inner {
+        width: 70%;
+    }
+
+    #carouselExampleIndicators .slide-3-title {
+        font-size: 54px;
+
+        letter-spacing: -2px;
+    }
+
+    #carouselExampleIndicators .slide-3-description {
+        font-size: 14px;
+
+        max-width: 480px;
+    }
+
+    #carouselExampleIndicators .slide-3-index {
+        right: 5%;
+
+        font-size: 190px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+   MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+    /* =====================================================
+       SLIDE 1
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-1-image {
+        height: 580px;
+
+        object-position: 60% center;
+    }
+
+    #carouselExampleIndicators .slide-1-overlay {
+        background: linear-gradient(
+            90deg,
+            rgba(1, 23, 57, 0.94) 0%,
+            rgba(1, 23, 57, 0.82) 60%,
+            rgba(1, 23, 57, 0.45) 100%
+        );
+    }
+
+    #carouselExampleIndicators .slide-1-content {
+        top: 50%;
+
+        left: 6%;
+
+        width: 88%;
+
+        transform: translateY(-50%);
+    }
+
+    #carouselExampleIndicators .slide-1-badge {
+        padding: 7px 14px;
+
+        margin-bottom: 16px;
+
+        font-size: 10px;
+
+        letter-spacing: 1.5px;
+    }
+
+    #carouselExampleIndicators .slide-1-title {
+        font-size: 34px;
+
+        line-height: 1.1;
+
+        letter-spacing: -1px;
+    }
+
+    #carouselExampleIndicators .slide-1-description {
+        margin-top: 18px;
+
+        font-size: 13px;
+
+        line-height: 1.65;
+    }
+
+    #carouselExampleIndicators .slide-1-info {
+        margin-top: 25px;
+
+        gap: 10px;
+    }
+
+    #carouselExampleIndicators .slide-1-info-icon {
+        width: 36px;
+        height: 36px;
+
+        font-size: 14px;
+    }
+
+    #carouselExampleIndicators .slide-1-info-item {
+        gap: 8px;
+    }
+
+    #carouselExampleIndicators .slide-1-info-item strong {
+        font-size: 12px;
+    }
+
+    #carouselExampleIndicators .slide-1-info-item small {
+        font-size: 10px;
+    }
+
+    #carouselExampleIndicators .slide-1-divider {
+        height: 32px;
+    }
+
+    /* =====================================================
+       CONTACT ITEM
+    ===================================================== */
+
+    #carouselExampleIndicators .contact-item {
+        font-size: 10px;
+
+        gap: 8px;
+    }
+
+    #carouselExampleIndicators .contact-item i {
+        width: 14px;
+
+        flex-basis: 14px;
+
+        font-size: 10px;
+    }
+
+    /* =====================================================
+       SLIDE 2
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-2-image {
+        height: 650px;
+
+        object-position: 60% center;
+    }
+
+    #carouselExampleIndicators .slide-2-overlay {
+        background: linear-gradient(
+            90deg,
+            rgba(227, 242, 253, 0.98) 0%,
+            rgba(227, 242, 253, 0.94) 70%,
+            rgba(227, 242, 253, 0.65) 100%
+        );
+    }
+
+    #carouselExampleIndicators .slide-2-content {
+        padding: 45px 6% 35px;
+
+        justify-content: center;
+    }
+
+    #carouselExampleIndicators .slide-2-header {
+        margin-bottom: 25px;
+    }
+
+    #carouselExampleIndicators .slide-2-title {
+        font-size: 32px;
+
+        line-height: 1.08;
+
+        letter-spacing: -1px;
+    }
+
+    #carouselExampleIndicators .slide-2-description {
+        margin-top: 15px;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-list {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 9px;
+
+        width: 100%;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-item {
+        min-height: 145px;
+
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+    #carouselExampleIndicators .slide-2-icon {
+        width: 35px;
+        height: 35px;
+
+        margin-bottom: 10px;
+
+        border-radius: 9px;
+
+        font-size: 14px;
+    }
+
+    #carouselExampleIndicators .slide-2-number {
+        top: -2px;
+
+        font-size: 19px;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-item h3 {
+        margin-bottom: 5px;
+
+        font-size: 12px;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-item p {
+        font-size: 9px;
+
+        line-height: 1.45;
+    }
+
+    /* =====================================================
+       OLD INDUSTRY
+    ===================================================== */
+
+    #carouselExampleIndicators .industry-header {
+        margin-top: 10px;
+
+        margin-bottom: 30px;
+    }
+
+    #carouselExampleIndicators .industry-title {
+        font-size: 1.8rem;
+
+        line-height: 1.05;
+    }
+
+    #carouselExampleIndicators .industry-title-main {
+        font-size: 2.5rem;
+
+        line-height: 1;
+    }
+
+    #carouselExampleIndicators .industry-icon {
+        margin-bottom: 8px;
+
+        font-size: 22px;
+    }
+
+    #carouselExampleIndicators .industry-item {
+        padding-right: 8px;
+    }
+
+    #carouselExampleIndicators .industry-item h6 {
+        font-size: 11px;
+
+        margin-bottom: 5px;
+    }
+
+    #carouselExampleIndicators .industry-item p {
+        max-width: 130px;
+
+        font-size: 9px;
+
+        line-height: 1.4;
+    }
+
+    /* =====================================================
+       SLIDE 3
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-3-image {
+        height: 650px;
+
+        object-position: 60% center;
+    }
+
+    #carouselExampleIndicators .slide-3-overlay {
+        background: linear-gradient(
+            90deg,
+            rgba(1, 23, 57, 0.97) 0%,
+            rgba(1, 23, 57, 0.9) 60%,
+            rgba(1, 23, 57, 0.58) 100%
+        );
+    }
+
+    #carouselExampleIndicators .slide-3-index {
+        right: 5%;
+
+        top: 8%;
+
+        font-size: 130px;
+
+        letter-spacing: -8px;
+
+        opacity: 0.7;
+    }
+
+    #carouselExampleIndicators .slide-3-content {
+        padding: 40px 7%;
+    }
+
+    #carouselExampleIndicators .slide-3-content-inner {
+        width: 100%;
+    }
+
+    #carouselExampleIndicators .slide-3-label {
+        gap: 8px;
+
+        margin-bottom: 18px;
+
+        font-size: 8px;
+
+        letter-spacing: 2px;
+    }
+
+    #carouselExampleIndicators .slide-3-label span {
+        width: 25px;
+    }
+
+    #carouselExampleIndicators .slide-3-title {
+        font-size: 38px;
+
+        line-height: 1.02;
+
+        letter-spacing: -1.5px;
+    }
+
+    #carouselExampleIndicators .slide-3-description {
+        max-width: 90%;
+
+        margin-top: 22px;
+
+        padding-left: 20px;
+
+        font-size: 11px;
+
+        line-height: 1.7;
+    }
+
+    #carouselExampleIndicators .slide-3-bottom {
+        margin-top: 30px;
+
+        padding-left: 20px;
+
+        gap: 10px;
+    }
+
+    #carouselExampleIndicators .slide-3-bottom-line {
+        width: 30px;
+    }
+
+    #carouselExampleIndicators .slide-3-bottom span {
+        font-size: 7px;
+
+        letter-spacing: 1.5px;
+    }
+
+    #carouselExampleIndicators .slide-3-vertical {
+        display: none;
+    }
+
+    /* =====================================================
+       CAROUSEL CONTROLS
+    ===================================================== */
+
+    #carouselExampleIndicators .carousel-control-prev,
+    #carouselExampleIndicators .carousel-control-next {
+        width: 12%;
+    }
+
+    #carouselExampleIndicators .carousel-control-prev-icon,
+    #carouselExampleIndicators .carousel-control-next-icon {
+        width: 25px;
+
+        height: 25px;
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+    /* =====================================================
+       SLIDE 1
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-1-image {
+        height: 560px;
+    }
+
+    #carouselExampleIndicators .slide-1-content {
+        left: 6%;
+
+        width: 88%;
+    }
+
+    #carouselExampleIndicators .slide-1-title {
+        font-size: 30px;
+    }
+
+    #carouselExampleIndicators .slide-1-description {
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+    #carouselExampleIndicators .slide-1-info {
+        gap: 8px;
+    }
+
+    #carouselExampleIndicators .slide-1-info-icon {
+        width: 32px;
+        height: 32px;
+
+        font-size: 12px;
+    }
+
+    #carouselExampleIndicators .slide-1-info-item strong {
+        font-size: 11px;
+    }
+
+    #carouselExampleIndicators .slide-1-info-item small {
+        font-size: 9px;
+    }
+
+    /* =====================================================
+       SLIDE 2
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-2-image {
+        height: 620px;
+    }
+
+    #carouselExampleIndicators .slide-2-content {
+        padding: 35px 5% 30px;
+    }
+
+    #carouselExampleIndicators .slide-2-title {
+        font-size: 28px;
+    }
+
+    #carouselExampleIndicators .slide-2-description {
+        font-size: 11px;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-item {
+        min-height: 135px;
+
+        padding: 12px;
+    }
+
+    #carouselExampleIndicators .slide-2-icon {
+        width: 32px;
+        height: 32px;
+
+        font-size: 12px;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-item h3 {
+        font-size: 11px;
+    }
+
+    #carouselExampleIndicators .slide-2-industry-item p {
+        font-size: 8.5px;
+    }
+
+    /* =====================================================
+       SLIDE 3
+    ===================================================== */
+
+    #carouselExampleIndicators .slide-3-image {
+        height: 620px;
+    }
+
+    #carouselExampleIndicators .slide-3-content {
+        padding: 35px 6%;
+    }
+
+    #carouselExampleIndicators .slide-3-title {
+        font-size: 32px;
+    }
+
+    #carouselExampleIndicators .slide-3-description {
+        font-size: 10px;
+
+        line-height: 1.65;
+    }
+
+    #carouselExampleIndicators .slide-3-index {
+        font-size: 105px;
+    }
+
+    #carouselExampleIndicators .slide-3-bottom {
+        margin-top: 25px;
+    }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    #carouselExampleIndicators *,
+    #carouselExampleIndicators *::before,
+    #carouselExampleIndicators *::after {
+        animation-duration: 0.01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        scroll-behavior: auto !important;
+
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* =========================================================
@@ -1412,7 +2918,7 @@
    Container background dasar — pakai palette biru
    ========================================================= */
 
-main.home-page {
+/* main.home-page {
     position: relative;
     background: linear-gradient(
         180deg,
@@ -1458,7 +2964,6 @@ main.home-page {
 }
 
 .site-footer p.footer-desc {
-    color: var(--brand-blue-200);
     font-size: 0.9rem;
     max-width: 380px;
     margin-bottom: 1.5rem;
@@ -1482,14 +2987,14 @@ main.home-page {
 }
 
 .site-footer .footer-links a {
-    color: var(--brand-blue-200);
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.15s ease;
+    color: #ddd;
 }
 
 .site-footer .footer-links a:hover {
-    color: var(--brand-blue-500);
+    color: var(--brand-blue-200);
 }
 
 .site-footer .footer-contact li {
@@ -1498,11 +3003,9 @@ main.home-page {
     gap: 0.6rem;
     margin-bottom: 0.9rem;
     font-size: 0.9rem;
-    color: var(--brand-blue-200);
 }
 
 .site-footer .footer-contact i {
-    /* color: var(--brand-blue-500); */
     width: 16px;
     margin-top: 0.2rem;
 }
@@ -1521,7 +3024,7 @@ main.home-page {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #c6d0e0;
+    /* color: #c6d0e0; */
     text-decoration: none;
     transition:
         background 0.15s ease,
@@ -1529,7 +3032,7 @@ main.home-page {
 }
 
 .site-footer .footer-social a:hover {
-    background: var(--brand-blue-500);
+    /* background: var(--brand-blue-200); */
     color: #fff;
 }
 
@@ -1548,4 +3051,828 @@ main.home-page {
 
 .site-footer .footer-bottom a:hover {
     color: #fff;
+}
+*/
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.about-misvi-section {
+    position: relative;
+
+    width: 100%;
+
+    padding: 80px 0;
+
+    overflow: hidden;
+
+    /* background: #ffffff; */
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.about-misvi-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(280px, 0.85fr)
+        minmax(500px, 1.8fr);
+
+    gap: 24px;
+
+    align-items: stretch;
+}
+
+/* =========================================================
+   VISION
+========================================================= */
+
+.about-misvi-vision {
+    min-width: 0;
+}
+
+.about-misvi-vision-card {
+    position: relative;
+
+    height: 100%;
+    min-height: 470px;
+
+    overflow: hidden;
+
+    border-radius: 26px;
+
+    background: linear-gradient(145deg, #ffffff 0%, #f8fbff 100%);
+
+    border: 1px solid rgba(33, 150, 243, 0.1);
+
+    box-shadow: 0 15px 45px rgba(1, 23, 57, 0.07);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* =========================================================
+   VISION TOP LINE
+========================================================= */
+
+.about-misvi-vision-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 5px;
+
+    background: linear-gradient(
+        90deg,
+        var(--brand-blue-500),
+        var(--brand-blue-200)
+    );
+}
+
+/* =========================================================
+   VISION DECORATION
+========================================================= */
+
+.about-misvi-vision-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: -100px;
+    bottom: -100px;
+
+    border-radius: 50%;
+
+    background: var(--brand-blue-soft);
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   VISION HOVER
+========================================================= */
+
+.about-misvi-vision-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow: 0 22px 55px rgba(1, 23, 57, 0.12);
+}
+
+/* =========================================================
+   VISION BODY
+========================================================= */
+
+.about-misvi-vision-body {
+    position: relative;
+
+    z-index: 2;
+
+    height: 100%;
+
+    padding: 42px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+/* =========================================================
+   VISION ICON
+========================================================= */
+
+.about-misvi-vision-icon {
+    width: 66px;
+    height: 66px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 28px;
+
+    border-radius: 17px;
+
+    background: var(--brand-blue-soft);
+
+    border: 1px solid rgba(33, 150, 243, 0.12);
+
+    color: var(--brand-blue-500);
+
+    font-size: 25px;
+
+    transition:
+        transform 0.35s ease,
+        background 0.35s ease;
+}
+
+.about-misvi-vision-card:hover .about-misvi-vision-icon {
+    transform: scale(1.08) rotate(-3deg);
+
+    background: var(--brand-blue-50);
+}
+
+/* =========================================================
+   VISION TITLE
+========================================================= */
+
+.about-misvi-vision-title {
+    margin: 0 0 18px;
+
+    color: var(--brand-blue-900);
+
+    font-size: clamp(30px, 3vw, 42px);
+
+    font-weight: 800;
+
+    line-height: 1.1;
+
+    letter-spacing: -1.2px;
+}
+
+/* =========================================================
+   VISION DESCRIPTION
+========================================================= */
+
+.about-misvi-vision-description {
+    max-width: 480px;
+
+    margin: 0;
+
+    color: var(--text-muted);
+
+    font-size: 15px;
+
+    line-height: 1.8;
+}
+
+/* =========================================================
+   VISION LINE
+========================================================= */
+
+.about-misvi-vision-line {
+    width: 70px;
+    height: 3px;
+
+    margin-top: 30px;
+
+    border-radius: 10px;
+
+    background: linear-gradient(
+        90deg,
+        var(--brand-blue-500),
+        var(--brand-blue-200)
+    );
+}
+
+/* =========================================================
+   MISSION
+========================================================= */
+
+.about-misvi-mission {
+    min-width: 0;
+}
+
+.about-misvi-mission-card {
+    position: relative;
+
+    height: 100%;
+    min-height: 470px;
+
+    overflow: hidden;
+
+    border-radius: 26px;
+
+    background: linear-gradient(
+        135deg,
+        var(--brand-blue-900) 0%,
+        #062653 55%,
+        #0a3976 100%
+    );
+
+    box-shadow: 0 18px 50px rgba(1, 23, 57, 0.2);
+
+    color: #ffffff;
+}
+
+/* =========================================================
+   MISSION DECORATIVE CIRCLES
+========================================================= */
+
+.about-misvi-mission-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    right: -130px;
+    top: -150px;
+
+    border-radius: 50%;
+
+    background: rgba(33, 150, 243, 0.16);
+
+    pointer-events: none;
+}
+
+.about-misvi-mission-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    left: -130px;
+    bottom: -120px;
+
+    border-radius: 50%;
+
+    background: rgba(144, 202, 249, 0.08);
+
+    pointer-events: none;
+}
+
+/* =========================================================
+   MISSION BODY
+========================================================= */
+
+.about-misvi-mission-body {
+    position: relative;
+
+    z-index: 2;
+
+    height: 100%;
+
+    padding: 38px;
+}
+
+/* =========================================================
+   MISSION HEADER
+========================================================= */
+
+.about-misvi-mission-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 17px;
+
+    margin-bottom: 30px;
+}
+
+/* =========================================================
+   MISSION ICON
+========================================================= */
+
+.about-misvi-mission-icon {
+    flex-shrink: 0;
+
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 17px;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    border: 1px solid rgba(144, 202, 249, 0.2);
+
+    color: var(--brand-blue-200);
+
+    font-size: 24px;
+
+    transition:
+        transform 0.35s ease,
+        background 0.35s ease;
+}
+
+.about-misvi-mission-card:hover .about-misvi-mission-icon {
+    transform: scale(1.08) rotate(3deg);
+
+    background: rgba(33, 150, 243, 0.16);
+}
+
+/* =========================================================
+   MISSION TITLE
+========================================================= */
+
+.about-misvi-mission-title {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: clamp(28px, 3vw, 40px);
+
+    font-weight: 800;
+
+    line-height: 1.1;
+
+    letter-spacing: -1px;
+}
+
+/* =========================================================
+   MISSION LIST
+========================================================= */
+
+.about-misvi-list {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+}
+
+/* =========================================================
+   MISSION ITEM
+========================================================= */
+
+.about-misvi-item {
+    position: relative;
+
+    min-height: 150px;
+
+    display: flex;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: rgba(255, 255, 255, 0.065);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+/* =========================================================
+   MISSION ITEM HOVER
+========================================================= */
+
+.about-misvi-item:hover {
+    transform: translateY(-5px);
+
+    background: rgba(255, 255, 255, 0.105);
+
+    border-color: rgba(144, 202, 249, 0.35);
+}
+
+/* =========================================================
+   MISSION NUMBER
+========================================================= */
+
+.about-misvi-item-number {
+    flex-shrink: 0;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: rgba(33, 150, 243, 0.15);
+
+    border: 1px solid rgba(144, 202, 249, 0.18);
+
+    color: var(--brand-blue-200);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+/* =========================================================
+   MISSION CONTENT
+========================================================= */
+
+.about-misvi-item-content {
+    min-width: 0;
+}
+
+/* =========================================================
+   MISSION ITEM LABEL
+========================================================= */
+
+.about-misvi-item-label {
+    position: relative;
+
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+}
+
+/* =========================================================
+   MISSION ITEM DESCRIPTION
+========================================================= */
+
+.about-misvi-item-content p {
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font-size: 12px;
+
+    line-height: 1.65;
+}
+
+/* =========================================================
+   ITEM ACCENTS
+========================================================= */
+
+.about-misvi-item:nth-child(1) {
+    border-top: 2px solid rgba(33, 150, 243, 0.75);
+}
+
+.about-misvi-item:nth-child(2) {
+    border-top: 2px solid rgba(144, 202, 249, 0.65);
+}
+
+.about-misvi-item:nth-child(3) {
+    border-top: 2px solid rgba(33, 150, 243, 0.55);
+}
+
+.about-misvi-item:nth-child(4) {
+    border-top: 2px solid rgba(144, 202, 249, 0.65);
+}
+
+/* =========================================================
+   MISSION NUMBER ACCENT
+========================================================= */
+
+.about-misvi-item:nth-child(4) .about-misvi-item-number {
+    color: rgba(144, 202, 249, 0.65);
+
+    background: rgba(33, 150, 243, 0.55);
+
+    border-color: rgba(33, 150, 243, 0.55);
+}
+
+/* =========================================================
+   DESKTOP ANIMATION
+========================================================= */
+
+.about-misvi-vision-card,
+.about-misvi-mission-card {
+    animation: about-misvi-fade-up 0.7s ease both;
+}
+
+.about-misvi-mission {
+    animation-delay: 0.12s;
+}
+
+@keyframes about-misvi-fade-up {
+    from {
+        opacity: 0;
+
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   LARGE TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+    .about-misvi-grid {
+        grid-template-columns:
+            minmax(260px, 0.8fr)
+            minmax(450px, 1.7fr);
+
+        gap: 18px;
+    }
+
+    .about-misvi-vision-body {
+        padding: 32px;
+    }
+
+    .about-misvi-mission-body {
+        padding: 30px;
+    }
+
+    .about-misvi-item {
+        padding: 17px;
+
+        min-height: 145px;
+    }
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 991px) {
+    .about-misvi-section {
+        padding: 65px 0;
+    }
+
+    .about-misvi-grid {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+    .about-misvi-vision-card,
+    .about-misvi-mission-card {
+        min-height: auto;
+    }
+
+    .about-misvi-vision-body {
+        padding: 35px;
+    }
+
+    .about-misvi-mission-body {
+        padding: 32px;
+    }
+
+    .about-misvi-list {
+        gap: 12px;
+    }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+    .about-misvi-section {
+        padding: 50px 0;
+    }
+
+    .about-misvi-grid {
+        gap: 16px;
+    }
+
+    /* -----------------------------------------
+       VISION
+    ----------------------------------------- */
+
+    .about-misvi-vision-card {
+        border-radius: 21px;
+    }
+
+    .about-misvi-vision-body {
+        padding: 28px;
+    }
+
+    .about-misvi-vision-icon {
+        width: 56px;
+        height: 56px;
+
+        margin-bottom: 22px;
+
+        border-radius: 14px;
+
+        font-size: 21px;
+    }
+
+    .about-misvi-vision-title {
+        margin-bottom: 14px;
+
+        font-size: 30px;
+    }
+
+    .about-misvi-vision-description {
+        font-size: 13px;
+
+        line-height: 1.7;
+    }
+
+    .about-misvi-vision-line {
+        width: 55px;
+
+        margin-top: 24px;
+    }
+
+    /* -----------------------------------------
+       MISSION
+    ----------------------------------------- */
+
+    .about-misvi-mission-card {
+        border-radius: 21px;
+    }
+
+    .about-misvi-mission-body {
+        padding: 25px;
+    }
+
+    .about-misvi-mission-header {
+        gap: 13px;
+
+        margin-bottom: 22px;
+    }
+
+    .about-misvi-mission-icon {
+        width: 54px;
+        height: 54px;
+
+        border-radius: 14px;
+
+        font-size: 20px;
+    }
+
+    .about-misvi-mission-title {
+        font-size: 29px;
+    }
+
+    .about-misvi-list {
+        grid-template-columns: 1fr;
+
+        gap: 9px;
+    }
+
+    .about-misvi-item {
+        min-height: 0;
+
+        padding: 16px;
+
+        gap: 12px;
+
+        border-radius: 13px;
+    }
+
+    .about-misvi-item-number {
+        width: 34px;
+        height: 34px;
+
+        border-radius: 9px;
+
+        font-size: 10px;
+    }
+
+    .about-misvi-item-label {
+        margin-bottom: 6px;
+
+        font-size: 11px;
+    }
+
+    .about-misvi-item-content p {
+        font-size: 11px;
+
+        line-height: 1.55;
+    }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 400px) {
+    .about-misvi-section {
+        padding: 40px 0;
+    }
+
+    .about-misvi-vision-body {
+        padding: 23px;
+    }
+
+    .about-misvi-mission-body {
+        padding: 20px;
+    }
+
+    .about-misvi-vision-title {
+        font-size: 27px;
+    }
+
+    .about-misvi-vision-description {
+        font-size: 12px;
+
+        line-height: 1.65;
+    }
+
+    .about-misvi-mission-title {
+        font-size: 26px;
+    }
+
+    .about-misvi-mission-header {
+        margin-bottom: 18px;
+    }
+
+    .about-misvi-item {
+        padding: 14px;
+    }
+
+    .about-misvi-item-number {
+        width: 31px;
+        height: 31px;
+
+        font-size: 9px;
+    }
+
+    .about-misvi-item-label {
+        font-size: 10px;
+    }
+
+    .about-misvi-item-content p {
+        font-size: 10px;
+
+        line-height: 1.5;
+    }
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .about-misvi-section *,
+    .about-misvi-section *::before,
+    .about-misvi-section *::after {
+        animation: none !important;
+
+        transition: none !important;
+    }
 }

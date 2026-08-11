@@ -202,7 +202,7 @@
                     <div>
                         <label for="password" class="form-label">Kata Sandi</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="fa-regular fa-lock"></i></span>
+                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                             <input type="password" class="form-control" id="password" name="password"
                                 placeholder="••••••••" required>
                             <span class="input-group-text" role="button" id="togglePassword">
@@ -215,7 +215,7 @@
                     <div>
                         <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
                         <div class="input-group">
-                            <span class="input-group-text"><i class="fa-regular fa-lock"></i></span>
+                            <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                             <input type="password" class="form-control" id="password_confirmation"
                                 name="password_confirmation" placeholder="••••••••" required>
                             <span class="input-group-text" role="button" id="togglePasswordConfirm">

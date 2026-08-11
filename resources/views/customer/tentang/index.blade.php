@@ -5,182 +5,530 @@
 
         {{-- Hero Carousel --}}
         <div id="carouselExampleIndicators" class="carousel slide">
+
+            {{-- Indicators --}}
             <div class="carousel-indicators">
+
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
-                    aria-current="true" aria-label="Slide 1"></button>
+                    aria-current="true" aria-label="Slide 1">
+                </button>
+
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                    aria-label="Slide 2"></button>
+                    aria-label="Slide 2">
+                </button>
+
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                    aria-label="Slide 3"></button>
+                    aria-label="Slide 3">
+                </button>
+
             </div>
+
+
+            {{-- Carousel Inner --}}
             <div class="carousel-inner">
+
+                {{-- ========================= --}}
+                {{-- SLIDE 1 --}}
+                {{-- ========================= --}}
                 <div class="carousel-item active position-relative">
-                    <div class="card text-bg-dark border-0">
-                        <img src="{{ asset('assets/img/1.png') }}" class="d-block w-100">
-                    </div>
-                </div>
-                <div class="carousel-item position-relative">
-                    <div class="card text-bg-dark border-0">
-                        <img src="{{ asset('assets/img/2.png') }}" class="d-block w-100">
-                    </div>
-                </div>
-                <div class="carousel-item position-relative">
-                    <div class="card text-bg-dark border-0">
-                        <img src="{{ asset('assets/img/3.png') }}" class="d-block w-100" alt="">
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-                data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
 
-        <div class="container py-5">
+                    {{-- Background --}}
+                    <img src="{{ asset('assets/img/1.png') }}" class="d-block w-100 slide-1-image"
+                        alt="PT Berkat Bidara Berwibawa">
 
-            <div class="row g-4">
+                    {{-- Overlay --}}
+                    <div class="slide-1-overlay"></div>
 
-                <!-- Visi -->
-                <div class="col-lg-4">
+                    {{-- Content --}}
+                    <div class="slide-1-content">
 
-                    <div class="card border-0 shadow-sm rounded-4 h-100">
 
-                        <div class="card-body p-4">
 
-                            <div class="bg-primary bg-opacity-10 rounded-3 d-inline-flex p-3 mb-4">
+                        {{-- Heading --}}
+                        <h1 class="slide-1-title">
+                            Mitra Energi
+                            <span>Terpercaya</span>
+                            untuk Bisnis Anda
+                        </h1>
 
-                                <i class="fa-solid fa-eye text-primary fs-4"></i>
+                        {{-- Description --}}
+                        <p class="slide-1-description">
+                            Kami hadir sebagai mitra penyedia energi yang mengutamakan
+                            kualitas, ketersediaan, dan pelayanan profesional untuk
+                            mendukung kelancaran operasional bisnis Anda.
+                        </p>
 
+                        {{-- Bottom Info --}}
+                        <div class="slide-1-info">
+
+                            <div class="slide-1-info-item">
+                                <div class="slide-1-info-icon">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Kemitraan</strong>
+                                    <small>Jangka Panjang</small>
+                                </div>
                             </div>
 
-                            <h2 class="fw-bold mb-3">
-                                Visi Kami
+                            <div class="slide-1-divider"></div>
+
+                            <div class="slide-1-info-item">
+                                <div class="slide-1-info-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Pasokan</strong>
+                                    <small>Terpercaya</small>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- ========================= --}}
+                {{-- SLIDE 2 --}}
+                {{-- ========================= --}}
+                <div class="carousel-item position-relative">
+
+                    {{-- Background --}}
+                    <img src="{{ asset('assets/img/2.png') }}" class="d-block w-100 slide-2-image"
+                        alt="Sektor Industri PT Berkat Bidara Berwibawa">
+
+                    {{-- Overlay --}}
+                    <div class="slide-2-overlay"></div>
+
+                    {{-- Content --}}
+                    <div class="slide-2-content">
+
+                        {{-- Header --}}
+                        <div class="slide-2-header">
+
+
+
+                            <h2 class="slide-2-title">
+                                Solusi Energi untuk
+                                <span>Berbagai Industri</span>
                             </h2>
 
-                            <p class="text-secondary mb-0">
-                                Menjadi perusahaan distribusi LPG terpercaya yang
-                                menghadirkan pelayanan profesional, inovatif, dan
-                                berkelanjutan untuk memenuhi kebutuhan energi masyarakat
-                                Indonesia.
+                            <p class="slide-2-description">
+                                Kami menyediakan solusi dan pasokan energi yang
+                                dapat disesuaikan dengan kebutuhan operasional
+                                berbagai sektor bisnis.
                             </p>
 
                         </div>
 
+
+                        {{-- Industry List --}}
+                        <div class="slide-2-industry-list">
+
+                            {{-- Manufacturing --}}
+                            <div class="slide-2-industry-item">
+
+                                <div class="slide-2-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+
+                                <div class="slide-2-item-content">
+
+                                    <span class="slide-2-number">
+                                        01
+                                    </span>
+
+                                    <h3>
+                                        Manufacturing
+                                    </h3>
+
+                                    <p>
+                                        Mendukung proses produksi dengan
+                                        pasokan energi yang konsisten.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Metal & Mining --}}
+                            <div class="slide-2-industry-item">
+
+                                <div class="slide-2-icon">
+                                    <i class="fas fa-hard-hat"></i>
+                                </div>
+
+                                <div class="slide-2-item-content">
+
+                                    <span class="slide-2-number">
+                                        02
+                                    </span>
+
+                                    <h3>
+                                        Metal & Mining
+                                    </h3>
+
+                                    <p>
+                                        Mendukung kebutuhan energi untuk
+                                        aktivitas pertambangan dan pengolahan.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Food & Beverage --}}
+                            <div class="slide-2-industry-item">
+
+                                <div class="slide-2-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+
+                                <div class="slide-2-item-content">
+
+                                    <span class="slide-2-number">
+                                        03
+                                    </span>
+
+                                    <h3>
+                                        Food & Beverage
+                                    </h3>
+
+                                    <p>
+                                        Menunjang proses produksi dan
+                                        operasional industri makanan.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Healthcare --}}
+                            <div class="slide-2-industry-item">
+
+                                <div class="slide-2-icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+
+                                <div class="slide-2-item-content">
+
+                                    <span class="slide-2-number">
+                                        04
+                                    </span>
+
+                                    <h3>
+                                        Kesehatan
+                                    </h3>
+
+                                    <p>
+                                        Mendukung kebutuhan energi pada
+                                        fasilitas dan layanan kesehatan.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
 
                 </div>
 
-                <!-- Misi -->
-                <div class="col-lg-8">
 
-                    <div class="card bg-primary text-white border-0 shadow rounded-4 h-100">
+                {{-- ========================= --}}
+                {{-- SLIDE 3 --}}
+                {{-- ========================= --}}
+                <div class="carousel-item position-relative">
 
-                        <div class="card-body p-4">
+                    {{-- Background --}}
+                    <img src="{{ asset('assets/img/3.png') }}" class="d-block w-100 slide-3-image"
+                        alt="PT Berkat Bidara Berwibawa">
 
-                            <div class="d-flex align-items-center mb-4">
+                    {{-- Dark Overlay --}}
+                    <div class="slide-3-overlay"></div>
 
-                                <div class="bg-white bg-opacity-25 rounded-3 p-3 me-3">
 
-                                    <i class="fa-solid fa-rocket fs-4"></i>
 
-                                </div>
+                    <div class="slide-3-index">
+                        03
+                    </div>
 
-                                <h2 class="fw-bold mb-0">
-                                    Misi Kami
-                                </h2>
+                    {{-- Main Content --}}
+                    <div class="slide-3-content">
+
+                        <div class="slide-3-content-inner">
+
+
+
+                            {{-- Main Heading --}}
+                            <h2 class="slide-3-title">
+                                Menghubungkan
+                                <br>
+                                <span>Energi</span> dengan
+                                <br>
+                                Pertumbuhan.
+                            </h2>
+
+                            {{-- Description --}}
+                            <p class="slide-3-description">
+                                Dari kebutuhan operasional hingga pengembangan bisnis,
+                                kami menghadirkan solusi energi yang dirancang untuk
+                                membantu mitra bergerak lebih jauh.
+                            </p>
+
+                            {{-- Bottom Statement --}}
+                            <div class="slide-3-bottom">
+
+                                <div class="slide-3-bottom-line"></div>
+
+                                <span>
+                                    TRUSTED ENERGY PARTNER
+                                </span>
 
                             </div>
 
-                            <div class="row g-3">
+                        </div>
 
-                                <div class="col-md-6">
+                    </div>
 
-                                    <div class="card border-0 bg-white bg-opacity-10 text-white h-100">
+                    {{-- Vertical Text --}}
+                    <div class="slide-3-vertical">
+                        PT BERKAT BIDARA BERWIBAWA
+                    </div>
 
-                                        <div class="card-body">
+                </div>
 
-                                            <small class="fw-bold text-uppercase">
-                                                Pelayanan Prima
-                                            </small>
+            </div>
+            {{-- END carousel-inner --}}
 
-                                            <p class="mt-3 mb-0">
-                                                Memberikan layanan distribusi LPG yang
-                                                cepat, aman, dan tepat waktu dengan
-                                                mengutamakan kepuasan pelanggan.
-                                            </p>
+
+            {{-- ========================= --}}
+            {{-- PREVIOUS --}}
+            {{-- ========================= --}}
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="prev">
+
+                <span class="carousel-control-prev-icon" aria-hidden="true">
+                </span>
+
+                <span class="visually-hidden">
+                    Previous
+                </span>
+
+            </button>
+
+
+            {{-- ========================= --}}
+            {{-- NEXT --}}
+            {{-- ========================= --}}
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                data-bs-slide="next">
+
+                <span class="carousel-control-next-icon" aria-hidden="true">
+                </span>
+
+                <span class="visually-hidden">
+                    Next
+                </span>
+
+            </button>
+
+        </div>
+
+        <div class="container py-5">
+            {{-- =========================================================
+     VISI & MISI
+========================================================= --}}
+
+            <section class="about-misvi-section">
+
+                <div class="container">
+
+                    <div class="about-misvi-grid">
+
+                        {{-- =================================================
+                 VISI
+            ================================================== --}}
+
+                        <div class="about-misvi-vision">
+
+                            <div class="about-misvi-vision-card">
+
+                                <div class="about-misvi-vision-body">
+
+                                    {{-- Icon --}}
+                                    <div class="about-misvi-vision-icon">
+
+                                        <i class="fa-solid fa-eye"></i>
+
+                                    </div>
+
+
+
+
+                                    {{-- Title --}}
+                                    <h2 class="about-misvi-vision-title">
+                                        Visi Kami
+                                    </h2>
+
+
+                                    {{-- Description --}}
+                                    <p class="about-misvi-vision-description">
+                                        Menjadi perusahaan distribusi LPG terpercaya yang
+                                        menghadirkan pelayanan profesional, inovatif, dan
+                                        berkelanjutan untuk memenuhi kebutuhan energi
+                                        masyarakat Indonesia.
+                                    </p>
+
+
+                                    {{-- Decorative Line --}}
+                                    <div class="about-misvi-vision-line"></div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {{-- =================================================
+                 MISI
+            ================================================== --}}
+
+                        <div class="about-misvi-mission">
+
+                            <div class="about-misvi-mission-card">
+
+                                <div class="about-misvi-mission-body">
+
+                                    {{-- Mission Header --}}
+                                    <div class="about-misvi-mission-header">
+
+                                        <div class="about-misvi-mission-icon">
+
+                                            <i class="fa-solid fa-rocket"></i>
+
+                                        </div>
+
+
+                                        <div>
+
+
+
+                                            <h2 class="about-misvi-mission-title">
+                                                Misi Kami
+                                            </h2>
 
                                         </div>
 
                                     </div>
 
-                                </div>
 
-                                <div class="col-md-6">
+                                    {{-- Mission List --}}
+                                    <div class="about-misvi-list">
 
-                                    <div class="card border-0 bg-white bg-opacity-10 text-white h-100">
 
-                                        <div class="card-body">
+                                        {{-- Mission 01 --}}
+                                        <div class="about-misvi-item">
 
-                                            <small class="fw-bold text-uppercase">
-                                                Kualitas & Keamanan
-                                            </small>
+                                            <div class="about-misvi-item-number">
+                                                01
+                                            </div>
 
-                                            <p class="mt-3 mb-0">
-                                                Menjamin setiap produk LPG yang
-                                                didistribusikan memenuhi standar kualitas
-                                                serta keamanan yang berlaku.
-                                            </p>
+                                            <div class="about-misvi-item-content">
 
-                                        </div>
+                                                <span class="about-misvi-item-label">
+                                                    Pelayanan Prima
+                                                </span>
 
-                                    </div>
+                                                <p>
+                                                    Memberikan layanan distribusi LPG
+                                                    yang cepat, aman, dan tepat waktu
+                                                    dengan mengutamakan kepuasan
+                                                    pelanggan.
+                                                </p>
 
-                                </div>
-
-                                <div class="col-md-6">
-
-                                    <div class="card border-0 bg-white bg-opacity-10 text-white h-100">
-
-                                        <div class="card-body">
-
-                                            <small class="fw-bold text-uppercase">
-                                                Inovasi Digital
-                                            </small>
-
-                                            <p class="mt-3 mb-0">
-                                                Mengembangkan sistem pemesanan online
-                                                untuk mempermudah pelanggan dalam
-                                                memperoleh layanan kami.
-                                            </p>
+                                            </div>
 
                                         </div>
 
-                                    </div>
 
-                                </div>
+                                        {{-- Mission 02 --}}
+                                        <div class="about-misvi-item">
 
-                                <div class="col-md-6">
+                                            <div class="about-misvi-item-number">
+                                                02
+                                            </div>
 
-                                    <div class="card border-0 bg-white bg-opacity-10 text-white h-100">
+                                            <div class="about-misvi-item-content">
 
-                                        <div class="card-body">
+                                                <span class="about-misvi-item-label">
+                                                    Kualitas & Keamanan
+                                                </span>
+
+                                                <p>
+                                                    Menjamin setiap produk LPG yang
+                                                    didistribusikan memenuhi standar
+                                                    kualitas serta keamanan yang berlaku.
+                                                </p>
+
+                                            </div>
+
+                                        </div>
 
 
-                                            <small class="fw-bold text-uppercase">
-                                                Tanggung Jawab Sosial
-                                            </small>
+                                        {{-- Mission 03 --}}
+                                        <div class="about-misvi-item">
 
-                                            <p class="mt-3 mb-0">
-                                                Berkontribusi dalam mendukung kebutuhan
-                                                energi masyarakat melalui pelayanan yang
-                                                profesional dan berkelanjutan.
-                                            </p>
+                                            <div class="about-misvi-item-number">
+                                                03
+                                            </div>
+
+                                            <div class="about-misvi-item-content">
+
+                                                <span class="about-misvi-item-label">
+                                                    Inovasi Digital
+                                                </span>
+
+                                                <p>
+                                                    Mengembangkan sistem pemesanan online
+                                                    untuk mempermudah pelanggan dalam
+                                                    memperoleh layanan kami.
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        {{-- Mission 04 --}}
+                                        <div class="about-misvi-item">
+
+                                            <div class="about-misvi-item-number">
+                                                04
+                                            </div>
+
+                                            <div class="about-misvi-item-content">
+
+                                                <span class="about-misvi-item-label">
+                                                    Tanggung Jawab Sosial
+                                                </span>
+
+                                                <p>
+                                                    Berkontribusi dalam mendukung kebutuhan
+                                                    energi masyarakat melalui pelayanan
+                                                    yang profesional dan berkelanjutan.
+                                                </p>
+
+                                            </div>
 
                                         </div>
 
@@ -196,7 +544,7 @@
 
                 </div>
 
-            </div>
+            </section>
 
         </div>
         {{-- ============================= --}}

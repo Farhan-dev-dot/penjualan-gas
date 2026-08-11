@@ -31,7 +31,7 @@
                     <li><a href="{{ url('/') }}">Beranda</a></li>
                     <li><a href="{{ url('/produk') }}">Produk</a></li>
                     <li><a href="{{ url('/tentang-kami') }}">Tentang Kami</a></li>
-                    <li><a href="{{ url('/kontak-kami') }}">Kontak Kami</a></li>
+                    {{-- <li><a href="{{ url('/kontak-kami') }}">Kontak Kami</a></li> --}}
                 </ul>
             </div>
 
