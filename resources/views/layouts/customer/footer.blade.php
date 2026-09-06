@@ -5,16 +5,18 @@
             {{-- Logo & deskripsi --}}
             <div class="col-lg-6">
                 <div class="footer-logo">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" width="45" height="45"
-                        class="me-2">
+                    <span class="logo-wrap">
+                        <img src="{{ asset('assets/img/logo.png') }}" alt="Logo">
+                    </span>
+
                     <div class="footer-brand">
-                        <h1>Berdiri</h1>
-                        <h1>Berkat Berwibawa</h1>
+                        <h1>BBB</h1>
                     </div>
                 </div>
                 <p class="footer-desc">
-                    Solusi Gas Berkualitas
-                    untuk Setiap Kebutuhan.
+                    PT Berkat Bidara Berwibawa menyediakan layanan filling station
+                    untuk Oxygen (O₂), Nitrogen (N₂), Argon (Ar), Acetylene (C₂H₂),
+                    Carbon Dioxide (CO₂), dan berbagai gas industri lainnya.
                 </p>
                 <div class="footer-social">
                     <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>

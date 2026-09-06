@@ -31,7 +31,7 @@ class PasswordResetController extends Controller
     // Form input password baru (diakses dari link email, membawa token)
     public function showResetForm(Request $request, $token)
     {
-        return view('reset-password', [
+        return view('customer.auth.reset_password', [
             'token' => $token,
             'email' => $request->email,
         ]);

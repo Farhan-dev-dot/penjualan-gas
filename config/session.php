@@ -133,6 +133,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Admin Session Cookie
+    |--------------------------------------------------------------------------
+    |
+    | The admin area uses its own cookie. This prevents a customer session
+    | from replacing or interfering with the administrator session.
+    |
+    */
+
+    'admin_cookie' => env('ADMIN_SESSION_COOKIE', 'penjualangas_admin_session'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Session Cookie Path
     |--------------------------------------------------------------------------
     |

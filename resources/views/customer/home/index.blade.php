@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer.app')
 
 @section('content')
     <main class="home-page">
@@ -6,34 +6,44 @@
         <div class="home-bg-group-1">
             <!-- Hero Section -->
             <div class="container py-2">
-                <section class="row align-items-center home-bg-hero">
-                    <div class="col-lg-6">
-                        <h1 class="display-3 fw-bold mb-4">
-                            Solusi Distribusi Gas Industri & LPG untuk Bisnis Anda
-                            <span class="text-primary">
-                                Cepat, Tepat, dan Terpercaya
-                            </span>
-                        </h1>
-                        <p class="lead text-secondary mb-4">
-                            Pastikan kebutuhan gas bisnis Anda selalu terpenuhi. Kami menghadirkan layanan distribusi yang
-                            cepat,
-                            harga kompetitif, dan dukungan pelanggan profesional untuk berbagai kebutuhan industri maupun
-                            komersial.
-                        </p>
-                        <div class="d-flex gap-3 mb-5">
-                            <a href="#" class="btn btn-primary px-4">
-                                Lihat Produk
-                            </a>
-                            <a href="#" class="btn btn-outline-primary px-4">
-                                Kontak Kami
-                            </a>
-                        </div>
-                    </div>
+                <section class="home-bg-hero">
+                    <div class="container">
+                        <div class="row align-items-center g-5">
+                            <div class="col-lg-6">
 
-                    <div class="col-lg-6 mt-5 mt-lg-0">
-                        <div class="card border-0 shadow-lg rounded-3">
-                            <div class="card-body p-3">
-                                <img src="{{ asset('assets/img/home.png') }}" class="img-fluid rounded-3" alt="Gas">
+
+                                <h1 class="mb-4">
+                                    Solusi Gas untuk Bisnis Anda
+                                    <span>Cepat, Tepat, dan Terpercaya</span>
+                                </h1>
+
+                                <p class="lead mb-4">
+                                    Pastikan kebutuhan gas bisnis Anda selalu terpenuhi. Kami menghadirkan
+                                    layanan distribusi yang cepat, harga kompetitif, dan dukungan pelanggan
+                                    profesional untuk berbagai kebutuhan industri maupun komersial.
+                                </p>
+
+                                <div class="d-flex flex-wrap gap-3 mb-5">
+                                    <a href="#" class="btn btn-primary px-4">
+                                        Lihat Produk
+                                        <i class="fa-solid fa-arrow-right ms-2"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline-primary px-4">
+                                        Kontak Kami
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="hero-image-wrap">
+                                    <div class="hero-blob"></div>
+                                    <div class="card border-0 hero-card">
+                                        <div class="card-body p-3">
+                                            <img src="{{ asset('assets/img/home.png') }}" class="img-fluid rounded-3"
+                                                alt="Gas">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -41,38 +51,22 @@
             </div>
 
             <!-- Products Section -->
-            <section class="section-produk-kami home-bg-produk py-5">
-                <div class="container">
-                    <div class="mt-3">
-                        <h2 class="fw-bold mb-4 text-center h1">
-                            Produk Terbaik
-                        </h2>
-                        <p class="text-center">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                            Doloribus, ea.
-                        </p>
-                    </div>
+            <section class="section-produk-kami home-bg-produk">
+                <div class="container produk-container">
+                    <h2 class="produk-heading">Produk Terbaik Kami</h2>
+                    <p class="lead text-secondary mb-0 mx-auto" style="max-width: 600px; text-align: center;">
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Doloribus, ea.
+                    </p>
 
                     <div id="produk-skeleton">
-                        <div class="row g-4">
+                        <div class="produk-grid">
                             @for ($i = 0; $i < 3; $i++)
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="product-card" aria-hidden="true">
-                                        <div class="placeholder-glow">
-                                            <span class="placeholder w-100 d-block product-skeleton-image"></span>
-                                        </div>
-                                        <div class="product-skeleton-body">
-                                            <div class="placeholder-glow mb-2">
-                                                <span class="placeholder col-4 rounded"></span>
-                                            </div>
-                                            <div class="placeholder-glow mb-3">
-                                                <span class="placeholder col-12 mb-1"></span>
-                                                <span class="placeholder col-9"></span>
-                                            </div>
-                                            <div class="placeholder-glow">
-                                                <span class="placeholder col-5"></span>
-                                            </div>
-                                        </div>
+                                <div class="product-card" aria-hidden="true" style="animation-delay: 0s; opacity:1;">
+                                    <span class="product-skeleton-image"></span>
+                                    <div class="product-skeleton-body">
+                                        <div class="bar" style="width:40%"></div>
+                                        <div class="bar" style="width:90%"></div>
+                                        <div class="bar" style="width:60%"></div>
                                     </div>
                                 </div>
                             @endfor
@@ -80,78 +74,59 @@
                     </div>
 
                     <div id="produk-content" class="d-none">
-                        <div class="row g-4">
-                            <div class="col-lg-4 col-md-6">
-                                <div class="product-card">
-                                    <img src="{{ asset('assets/img/jumbtron1.jpg') }}" class="product-card-image"
+                        <div class="produk-grid">
+
+                            <div class="product-card">
+                                <div class="product-card-image-wrap">
+                                    <img src="{{ asset('assets/img/produk1.png') }}" class="product-card-image"
                                         alt="Armix / Arcil">
-                                    <div class="product-card-body">
-                                        <div class="product-card-category">
-                                            Produk Unggulan
-                                        </div>
-                                        <h5 class="product-card-title">
-                                            Armix / Arcil dengan Komposisi Sesuai Kebutuhan
-                                        </h5>
-                                        <p class="product-card-price">
-                                            Mulai dari Rp250.000
-                                        </p>
-                                        <div class="product-card-action">
-                                            <a href="#" class="btn btn-primary w-100">
-                                                Pesan Sekarang
-                                                <i class="fa-solid fa-arrow-right ms-1"></i>
-                                            </a>
-                                        </div>
+                                    <div class="shine"></div>
+                                </div>
+                                <div class="product-card-body">
+                                    <h5 class="product-card-title">Gas CO₂ 23 Kg</h5>
+                                    <div><span class="product-card-price">Mulai dari Rp880.000 / Tabung</span></div>
+                                    <div class="product-card-action">
+                                        <a href="#" class="btn-produk">
+                                            Pesan Sekarang <i class="fa-solid fa-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-lg-4 col-md-6">
-                                <div class="product-card">
-                                    <img src="{{ asset('assets/img/jumbtron1.jpg') }}" class="product-card-image"
+                            <div class="product-card">
+                                <div class="product-card-image-wrap">
+                                    <img src="{{ asset('assets/img/produk2.png') }}" class="product-card-image"
                                         alt="Gas Industri">
-                                    <div class="product-card-body">
-                                        <div class="product-card-category">
-                                            Gas Industri
-                                        </div>
-                                        <h5 class="product-card-title">
-                                            Gas Industri Berkualitas untuk Kebutuhan Bisnis
-                                        </h5>
-                                        <p class="product-card-price">
-                                            Mulai dari Rp250.000
-                                        </p>
-                                        <div class="product-card-action">
-                                            <a href="#" class="btn btn-primary w-100">
-                                                Pesan Sekarang
-                                                <i class="fa-solid fa-arrow-right ms-1"></i>
-                                            </a>
-                                        </div>
+                                    <div class="shine"></div>
+                                </div>
+                                <div class="product-card-body">
+                                    <h5 class="product-card-title">Hidrogen 7 m³</h5>
+                                    <div><span class="product-card-price">Mulai dari Rp1.500.000 / Tabung</span></div>
+                                    <div class="product-card-action">
+                                        <a href="#" class="btn-produk">
+                                            Pesan Sekarang <i class="fa-solid fa-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-lg-4 col-md-6">
-                                <div class="product-card">
-                                    <img src="{{ asset('assets/img/jumbtron1.jpg') }}" class="product-card-image"
+                            <div class="product-card">
+                                <div class="product-card-image-wrap">
+                                    <img src="{{ asset('assets/img/produk3.png') }}" class="product-card-image"
                                         alt="Gas B2B">
-                                    <div class="product-card-body">
-                                        <div class="product-card-category">
-                                            Solusi B2B
-                                        </div>
-                                        <h5 class="product-card-title">
-                                            Penyediaan Gas untuk Kebutuhan Industri dan Bisnis
-                                        </h5>
-                                        <p class="product-card-price">
-                                            Harga sesuai kebutuhan
-                                        </p>
-                                        <div class="product-card-action">
-                                            <a href="#" class="btn btn-primary w-100">
-                                                Pesan Sekarang
-                                                <i class="fa-solid fa-arrow-right ms-1"></i>
-                                            </a>
-                                        </div>
+                                    <div class="shine"></div>
+                                </div>
+                                <div class="product-card-body">
+                                    <h5 class="product-card-title">LPG 50 Kg</h5>
+                                    <div><span class="product-card-price">Mulai Dari Rp1.100.000/tabung</span></div>
+                                    <div class="product-card-action">
+                                        <a href="#" class="btn-produk">
+                                            Pesan Sekarang <i class="fa-solid fa-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -165,12 +140,15 @@
                 <div class="container">
                     <!-- Header -->
                     <div class="mitra-header text-center mb-5">
+                        <div class="badge-mitra">
+                            <span class="dot"></span> Mitra Terpercaya
+                        </div>
                         <h2 class="fw-bold mb-3 display-5">
-                            Dipercaya oleh Lebih dari 50+ Perusahaan
+                            Dipercaya oleh <span class="accent">50+</span> Perusahaan
                         </h2>
-                        <p class="text-secondary lead">
-                            Kami bangga bekerja sama dengan perusahaan-perusahaan terkemuka
-                            untuk mendistribusikan energi berkualitas tinggi ke seluruh Indonesia
+                        <p class="mitra-sub">
+                            Kami bangga bekerja sama dengan perusahaan-perusahaan terkemuka untuk mendistribusikan energi
+                            berkualitas tinggi ke seluruh Indonesia.
                         </p>
                     </div>
 
@@ -274,17 +252,17 @@
             <!-- Contact Section -->
             <section class="section-hubungi-kami py-5">
                 <div class="container">
-                    <div class="text-center">
-                        <h2 class="fw-bold mb-3">
-                            Hubungi Kami
-                        </h2>
-                        <p class="lead text-secondary mb-0">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, maxime.
+                    <div class="text-center mb-5">
+                        {{-- <span class="contact-eyebrow">Kontak</span> --}}
+                        <h2 class="contact-title mb-3">Hubungi Kami</h2>
+                        <p class="lead text-secondary mb-0 mx-auto" style="max-width: 560px;">
+                            Punya pertanyaan seputar produk atau ingin melakukan pemesanan? Tim kami siap membantu Anda.
                         </p>
                     </div>
-                    <div class="row py-4">
-                        <div class="col-lg-6">
-                            <div class="card border-0 shadow-lg rounded-4">
+
+                    <div class="row g-4">
+                        <div class="col-lg-7">
+                            <div class="card border-0 contact-form-card h-100">
                                 <div class="card-body p-4 p-lg-5">
                                     <h3 class="fw-bold mb-2">Kirim Pesan</h3>
                                     <p class="text-secondary mb-4">
@@ -293,34 +271,26 @@
                                     <form action="">
                                         <div class="row">
                                             <div class="col-md-6 mb-3">
-                                                <label for="nama" class="form-label fw-semibold">
-                                                    Nama Lengkap
-                                                </label>
-                                                <input type="text" class="form-control form-control-lg" id="nama"
-                                                    name="nama" placeholder="Masukkan nama">
+                                                <label for="nama" class="form-label fw-semibold">Nama Lengkap</label>
+                                                <input type="text" class="form-control form-control-lg contact-input"
+                                                    id="nama" name="nama" placeholder="Masukkan nama">
                                             </div>
                                             <div class="col-md-6 mb-3">
-                                                <label for="email" class="form-label fw-semibold">
-                                                    Email
-                                                </label>
-                                                <input type="email" class="form-control form-control-lg" id="email"
-                                                    name="email" placeholder="nama@email.com">
+                                                <label for="email" class="form-label fw-semibold">Email</label>
+                                                <input type="email" class="form-control form-control-lg contact-input"
+                                                    id="email" name="email" placeholder="nama@email.com">
                                             </div>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="subjek" class="form-label fw-semibold">
-                                                Subjek
-                                            </label>
-                                            <input type="text" class="form-control form-control-lg" id="subjek"
-                                                name="subjek" placeholder="Masukkan subjek pesan">
+                                            <label for="subjek" class="form-label fw-semibold">Subjek</label>
+                                            <input type="text" class="form-control form-control-lg contact-input"
+                                                id="subjek" name="subjek" placeholder="Masukkan subjek pesan">
                                         </div>
                                         <div class="mb-4">
-                                            <label for="pesan" class="form-label fw-semibold">
-                                                Pesan
-                                            </label>
-                                            <textarea class="form-control" id="pesan" rows="6" placeholder="Tuliskan pesan Anda..."></textarea>
+                                            <label for="pesan" class="form-label fw-semibold">Pesan</label>
+                                            <textarea class="form-control contact-input" id="pesan" rows="6" placeholder="Tuliskan pesan Anda..."></textarea>
                                         </div>
-                                        <button class="btn btn-primary btn-lg w-100 rounded-3">
+                                        <button class="btn btn-primary btn-lg w-100">
                                             <i class="fa-solid fa-paper-plane me-2"></i>
                                             Kirim Pesan
                                         </button>
@@ -328,68 +298,68 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-body p-4">
-                                            <div class="text-start">
-                                                <div class="bg-primary bg-opacity-10 rounded-3 d-inline-flex p-3 mb-3">
-                                                    <i class="fa-solid fa-phone fs-4 text-primary"></i>
-                                                </div>
-                                                <h5 class="fw-bold mb-1">Customer Support</h5>
-                                                <p class="text-secondary mb-0">+62 812 3456 7890</p>
-                                            </div>
+
+                        <div class="col-lg-5">
+                            <div class="row g-3 h-100">
+                                <div class="col-md-6 col-lg-12">
+
+                                    <div class="contact-info-card">
+                                        <div class="contact-icon-wrap contact-icon-accent">
+                                            <i class="fa-solid fa-phone"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-1">Customer Support</h5>
+                                            <p class="mb-0">+62 812 3456 7890</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-body p-4">
-                                            <div class="text-start">
-                                                <div class="bg-success bg-opacity-10 rounded-3 d-inline-flex p-3 mb-3">
-                                                    <i class="fa-solid fa-shop fs-4 text-success"></i>
-                                                </div>
-                                                <h5 class="fw-bold mb-1">Sales & Order</h5>
-                                                <p class="text-secondary mb-0">+62 812 3456 7890</p>
-                                            </div>
+
+                                <div class="col-md-6 col-lg-12">
+                                    <div class="contact-info-card">
+                                        <div class="contact-icon-wrap contact-icon-accent">
+                                            <i class="fa-solid fa-shop"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-1">Sales & Order</h5>
+                                            <p class="mb-0 text-secondary">+62 812 3456 7890</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-body p-4">
-                                            <div class="text-start">
-                                                <div class="bg-danger bg-opacity-10 rounded-3 d-inline-flex p-3 mb-3">
-                                                    <i class="fa-solid fa-shop fs-4 text-danger-emphasis"></i>
-                                                </div>
-                                                <h5 class="fw-bold mb-1">Email</h5>
-                                                <p class="text-secondary mb-0">berdirikarya@gmail.com</p>
-                                            </div>
+
+                                <div class="col-12">
+                                    <div class="contact-info-card">
+                                        <div class="contact-icon-wrap contact-icon-accent">
+                                            <i class="fa-solid fa-envelope"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-1">Email</h5>
+                                            <p class="mb-0 text-secondary">berdirikarya@gmail.com</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="card border-0 shadow-sm rounded-4 h-100">
-                                        <div class="card-body p-4">
+
+                                <div class="col-12">
+                                    <div class="contact-info-card contact-info-map p-0">
+                                        <div class="p-4 pb-0">
                                             <div class="d-flex align-items-start">
-                                                <div class="bg-warning bg-opacity-10 rounded-3 p-3 me-3">
-                                                    <i class="fa-solid fa-location-dot fs-5 text-warning"></i>
+                                                <div class="contact-icon-wrap contact-icon-accent me-3">
+                                                    <i class="fa-solid fa-location-dot"></i>
                                                 </div>
-                                                <div class="g-4">
+                                                <div>
                                                     <h5 class="fw-bold mb-2">Alamat</h5>
-                                                    <p class="text-secondary mb-0">
+                                                    <p class="text-secondary mb-3">
                                                         Jl. Raya Bekasi No. 123, <br>
                                                         Kramat Jati, Jakarta Timur <br>
                                                         DKI Jakarta 13510, Indonesia
                                                     </p>
-                                                    <iframe
-                                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.8464937017725!2d106.8617783747511!3d-6.283900793705008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f262402cb223%3A0xcb09a05752df7c62!2sJl.%20SMP%20126%2C%20Kec.%20Kramat%20jati%2C%20Kota%20Jakarta%20Timur%2C%20Daerah%20Khusus%20Ibukota%20Jakarta!5e0!3m2!1sid!2sid!4v1786012220612!5m2!1sid!2sid"
-                                                        width="400" height="200" style="border:0;"
-                                                        allowfullscreen="" loading="lazy"
-                                                        referrerpolicy="strict-origin-when-cross-origin"></iframe>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="contact-map-frame">
+                                            <iframe
+                                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.8464937017725!2d106.8617783747511!3d-6.283900793705008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f262402cb223%3A0xcb09a05752df7c62!2sJl.%20SMP%20126%2C%20Kec.%20Kramat%20jati%2C%20Kota%20Jakarta%20Timur%2C%20Daerah%20Khusus%20Ibukota%20Jakarta!5e0!3m2!1sid!2sid!4v1786012220612!5m2!1sid!2sid"
+                                                width="100%" height="180" style="border:0;" allowfullscreen=""
+                                                loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                                         </div>
                                     </div>
                                 </div>

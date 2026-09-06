@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -23,6 +26,17 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
+        $this->renderable(function (TokenMismatchException $exception, Request $request): ?Response {
+            if ($request->is('admin') || $request->is('admin/*')) {
+                return redirect()->route('admin.login')->with(
+                    'error',
+                    'Sesi formulir telah berakhir. Silakan masuk kembali untuk melanjutkan.'
+                );
+            }
+
+            return null;
+        });
+
         $this->reportable(function (Throwable $e) {
             //
         });

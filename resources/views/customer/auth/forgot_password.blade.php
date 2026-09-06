@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer.app')
 
 @section('content')
     <style>
@@ -12,7 +12,7 @@
 
         .auth-wrap {
             min-height: calc(100vh - 76px);
-            background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 40%, var(--accent-light) 100%);
+            /* background: linear-gradient(180deg, #fff 0%, var(--accent-soft) 40%, var(--accent-light) 100%); */
         }
 
         .auth-card {

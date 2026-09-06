@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.customer.app')
 
 @section('content')
     <main class="home-page">
@@ -255,12 +255,6 @@
                     {{-- Dark Overlay --}}
                     <div class="slide-3-overlay"></div>
 
-
-
-                    <div class="slide-3-index">
-                        03
-                    </div>
-
                     {{-- Main Content --}}
                     <div class="slide-3-content">
 
@@ -423,7 +417,7 @@
 
 
 
-                                            <h2 class="about-misvi-mission-title">
+                                            <h2 class="about-misvi-mission-title text-white">
                                                 Misi Kami
                                             </h2>
 
