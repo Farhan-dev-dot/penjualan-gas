@@ -81,10 +81,10 @@ class PembelianController extends Controller
     }
 
 
-    public function showPesananDetail($id_pembelian)
+    public function showPesananDetail($id_penjualan)
     {
         $pembelian = Pembelian::with(['details.produk'])
-            ->where('id_pembelian', $id_pembelian)
+            ->where('id_penjualan', $id_penjualan)
             ->where('id_user', auth()->id())
             ->firstOrFail();
 
@@ -107,7 +107,7 @@ class PembelianController extends Controller
         return view('customer.pesanan.detail_pesanan', compact('pembelian'));
     }
 
-    public function showRefill($id_pembelian)
+    public function showRefill($id_penjualan)
     {
         $pembelian = Pembelian::with(['details' => function ($query) {
             $query->with(['pembelian', 'produk'])
@@ -115,7 +115,7 @@ class PembelianController extends Controller
                 ->whereNotNull('akhir_sewa')
                 ->whereDate('akhir_sewa', '>=', today());
         }])
-            ->where('id_pembelian', $id_pembelian)
+            ->where('id_penjualan', $id_penjualan)
             ->where('id_user', auth()->id())
             ->whereIn('payment_status', ['menunggu_konfirmasi', 'settlement'])
             ->firstOrFail();
@@ -131,10 +131,10 @@ class PembelianController extends Controller
         return view('customer.pesanan.refill', compact('sewaDetails'));
     }
 
-    public function paymentToken($id_pembelian)
+    public function paymentToken($id_penjualan)
     {
         $pembelian = Pembelian::with(['details.produk'])
-            ->where('id_pembelian', $id_pembelian)
+            ->where('id_penjualan', $id_penjualan)
             ->where('id_user', auth()->id())
             ->whereIn('payment_status', ['pending', 'process'])
             ->firstOrFail();
@@ -143,15 +143,15 @@ class PembelianController extends Controller
         // Contohnya, Midtrans sudah menyatakan transaksi expire tetapi webhook
         // belum sempat masuk ke aplikasi.
         try {
-            $response = Transaction::status($pembelian->kode_pembelian);
+            $response = Transaction::status($pembelian->kode_penjualan);
             $data = json_decode(json_encode($response), true);
 
-            if (($data['order_id'] ?? null) === $pembelian->kode_pembelian) {
+            if (($data['order_id'] ?? null) === $pembelian->kode_penjualan) {
                 $pembelian = $this->applyMidtransStatus($pembelian, $data);
             }
         } catch (\Throwable $th) {
             Log::warning('Gagal memeriksa status Midtrans sebelum membuka pembayaran', [
-                'kode_pembelian' => $pembelian->kode_pembelian,
+                'kode_penjualan' => $pembelian->kode_penjualan,
                 'message' => $th->getMessage(),
             ]);
         }
@@ -179,7 +179,7 @@ class PembelianController extends Controller
 
             $snapToken = Snap::getSnapToken([
                 'transaction_details' => [
-                    'order_id' => $pembelian->kode_pembelian,
+                    'order_id' => $pembelian->kode_penjualan,
                     'gross_amount' => $pembelian->gross_amount,
                 ],
 
@@ -211,17 +211,17 @@ class PembelianController extends Controller
      * Sinkronkan status transaksi dari Midtrans untuk transaksi milik pelanggan.
      * Ini menjadi fallback apabila webhook tidak dapat menjangkau server lokal.
      */
-    public function syncPaymentStatus($id_pembelian)
+    public function syncPaymentStatus($id_penjualan)
     {
-        $pembelian = Pembelian::where('id_pembelian', $id_pembelian)
+        $pembelian = Pembelian::where('id_penjualan', $id_penjualan)
             ->where('id_user', auth()->id())
             ->firstOrFail();
 
         try {
-            $response = Transaction::status($pembelian->kode_pembelian);
+            $response = Transaction::status($pembelian->kode_penjualan);
             $data = json_decode(json_encode($response), true);
 
-            if (($data['order_id'] ?? null) !== $pembelian->kode_pembelian) {
+            if (($data['order_id'] ?? null) !== $pembelian->kode_penjualan) {
                 throw new \RuntimeException('Order ID Midtrans tidak cocok.');
             }
 
@@ -233,7 +233,7 @@ class PembelianController extends Controller
             ]);
         } catch (\Throwable $th) {
             Log::warning('Gagal menyinkronkan status Midtrans', [
-                'kode_pembelian' => $pembelian->kode_pembelian,
+                'kode_penjualan' => $pembelian->kode_penjualan,
                 'message' => $th->getMessage(),
             ]);
 
@@ -260,7 +260,6 @@ class PembelianController extends Controller
                 'nama_penerima'     => 'required|string|max:150',
                 'telepon_penerima'  => 'required|string|max:20',
                 'email_penerima'    => 'nullable|email|max:150',
-                'provinsi'          => 'nullable|string|max:100',
                 'kota'              => 'nullable|string|max:100',
                 'kecamatan'         => 'nullable|string|max:100',
                 'kelurahan'          => 'nullable|string|max:100',
@@ -269,7 +268,6 @@ class PembelianController extends Controller
                 'cart_items'        => 'required|string',
                 'jenis_sewa'        => 'nullable|in:harian,bulanan',
                 'mulai_sewa'        => 'nullable|date',
-                'durasi'            => 'nullable|integer|min:1',
             ]);
 
             $cartItems = json_decode($request->input('cart_items'), true);
@@ -343,7 +341,7 @@ class PembelianController extends Controller
             $mulaiSewa = $jenisSewa
                 ? Carbon::parse($request->input('mulai_sewa', now()->toDateString()))
                 : null;
-            $akhirSewa = $mulaiSewa && $totalHariSewa
+            $akhirSewa = $jenisSewa
                 ? $mulaiSewa->copy()->addDays($totalHariSewa - 1)
                 : null;
 
@@ -367,13 +365,13 @@ class PembelianController extends Controller
                 ], 422);
             }
 
-            $kodePembelian = 'INV-' . time() . '-' . $user->id;
+            $kodePenjualan = 'INV-' . time() . '-' . $user->id;
 
             $pembelian = DB::transaction(function () use (
                 $request,
                 $cartItems,
                 $grossAmount,
-                $kodePembelian,
+                $kodePenjualan,
                 $jenisSewa,
                 $durasiSewa,
                 $totalHariSewa,
@@ -382,7 +380,7 @@ class PembelianController extends Controller
             ) {
 
                 $pembelian = Pembelian::create([
-                    'kode_pembelian'   => $kodePembelian,
+                    'kode_penjualan'   => $kodePenjualan,
                     'id_user'          => Auth::id(),
                     'gross_amount'     => $grossAmount,
                     'payment_type'     => null,
@@ -401,7 +399,7 @@ class PembelianController extends Controller
                             : 'isi_ulang');
 
                     PembelianDetail::create([
-                        'id_pembelian'     => $pembelian->id_pembelian,
+                        'id_penjualan'     => $pembelian->id_penjualan,
                         'id_produk'        => $item['id_produk'] ?? $item['id'] ?? null,
                         'nama_penerima'    => $request->nama_penerima,
                         'telepon_penerima' => $request->telepon_penerima,
@@ -430,7 +428,7 @@ class PembelianController extends Controller
 
             $transactionDetails = [
                 'transaction_details' => [
-                    'order_id'     => $pembelian->kode_pembelian,
+                    'order_id'     => $pembelian->kode_penjualan,
                     'gross_amount' => $pembelian->gross_amount,
                 ],
                 'item_details' => $itemDetails,
@@ -456,7 +454,7 @@ class PembelianController extends Controller
             return response()->json([
                 'success'     => true,
                 'snap_token'  => $snapToken,
-                'order_id'    => $pembelian->kode_pembelian,
+                'order_id'    => $pembelian->kode_penjualan,
             ]);
         } catch (\Throwable $th) {
             Log::error('Gagal membuat transaksi pembelian', [
@@ -485,13 +483,13 @@ class PembelianController extends Controller
                 return response()->json(['success' => false, 'message' => 'Signature Midtrans tidak valid.'], 403);
             }
 
-            $pembelian = Pembelian::where('kode_pembelian', $orderId)->firstOrFail();
+            $pembelian = Pembelian::where('kode_penjualan', $orderId)->firstOrFail();
             $pembelian = $this->applyMidtransStatus($pembelian, $data);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Notifikasi berhasil diproses.',
-                'kode_pembelian' => $orderId,
+                'kode_penjualan' => $orderId,
                 'payment_type' => $data['payment_type'] ?? null,
                 'transaction_status' => $data['transaction_status'] ?? null,
                 'payment_status' => $pembelian->payment_status,
@@ -538,26 +536,6 @@ class PembelianController extends Controller
 
             $pembelian->payment_type = $data['payment_type'] ?? $pembelian->payment_type;
             $pembelian->midtrans_response = $data;
-
-            if ($paid && !$wasPaid) {
-                foreach ($pembelian->details as $detail) {
-                    $produk = ProdukModel::where('id_produk', $detail->id_produk)->lockForUpdate()->first();
-
-                    if (!$produk) {
-                        continue;
-                    }
-
-                    $produk->stok_isi = max(0, $produk->stok_isi - $detail->jumlah);
-
-                    if ($detail->tipe_transaksi === 'refil') {
-                        $produk->stok_kosong += $detail->jumlah;
-                    } elseif ($detail->tipe_transaksi === 'pinjam') {
-                        $produk->stok_pinjam += $detail->jumlah;
-                    }
-
-                    $produk->save();
-                }
-            }
 
             $pembelian->save();
 

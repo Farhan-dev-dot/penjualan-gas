@@ -16,8 +16,7 @@
                         <small>Kelola seluruh transaksi barang masuk secara manual</small>
                     </h6>
 
-                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#ModalBarangMasuk">
+                    <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#ModalBarangMasuk">
                         <i class="fa-solid fa-plus"></i> Tambah Barang Masuk
                     </button>
                 </div>
@@ -63,7 +62,12 @@
                                     <td>{{ $item->produk->jenis_gas ?? '-' }}</td>
                                     <td>
                                         <span
-                                            class="status-badge {{ $item->jenis_transaksi === 'masuk' ? 'status-active' : 'status-inactive' }}">
+                                            class="status-badge
+        {{ $item->jenis_transaksi === 'masuk'
+            ? 'status-masuk'
+            : ($item->jenis_transaksi === 'retur'
+                ? 'status-retur'
+                : 'status-pengembalian') }}">
                                             {{ ucfirst($item->jenis_transaksi) }}
                                         </span>
                                     </td>
@@ -77,15 +81,22 @@
                                                 data-bs-target="#ModalDetailBarangMasuk"
                                                 data-produk="{{ $item->produk->jenis_gas ?? '-' }}"
                                                 data-jenis="{{ ucfirst($item->jenis_transaksi) }}"
+                                                data-petugas="{{ $item->nama_petugas ?? '-' }}"
                                                 data-isi="{{ $item->stok_isi }}" data-kosong="{{ $item->stok_kosong }}"
                                                 data-pinjam="{{ $item->stok_pinjam }}"
                                                 data-keterangan="{{ $item->keterangan ?? '-' }}"
                                                 data-tanggal="{{ \Carbon\Carbon::parse($item->tanggal_transaksi)->format('d M Y') }}">
                                                 <i class="fa-solid fa-eye"></i>
                                             </button>
-                                            <button class="btn-icon btn-icon-danger" title="Hapus">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
+                                            <form action="{{ route('admin.barang-masuk.destroy', $item->id_transaksi) }}"
+                                                method="POST" class="d-inline"
+                                                onsubmit="return confirm('Yakin ingin menghapus transaksi barang masuk ini? Stok akan dikembalikan.')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn-icon btn-icon-danger" title="Hapus">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

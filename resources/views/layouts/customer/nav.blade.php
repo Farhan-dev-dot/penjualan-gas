@@ -81,10 +81,10 @@
                         @php($user = auth()->user())
                         <button class="user-chip" type="button" data-bs-toggle="dropdown">
                             <span class="user-avatar">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
-                            {{-- <span class="d-none d-md-block text-start">
+                            <span class="d-none d-md-block text-start">
                                 <span class="user-name d-block">{{ $user->name }}</span>
-                                <span class="user-role">{{ ucfirst($user->role ?? 'user') }}</span>
-                            </span> --}}
+                                {{-- <span class="user-role">{{ ucfirst($user->role ?? 'user') }}</span> --}}
+                            </span>
                             <i class="fa-solid fa-chevron-down small text-muted d-none d-md-inline"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" style="width: 220px;">

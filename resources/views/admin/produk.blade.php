@@ -2,6 +2,7 @@
 
 @section('title', 'Data Produk')
 
+@section('page-title', 'Data Produk')
 @section('content')
     <x-breadcrumb />
 
@@ -21,6 +22,13 @@
                         Tambah Produk
                     </a>
                 </div>
+
+                @if (session('success'))
+                    <div class="alert alert-success mx-4 mt-3 mb-0">{{ session('success') }}</div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger mx-4 mt-3 mb-0">{{ session('error') }}</div>
+                @endif
 
                 <form action="{{ route('admin.produk') }}" method="GET" class="table-toolbar">
 
@@ -84,6 +92,10 @@
                                             <span class="stok-badge stok-pinjam" title="Stok Dipinjam">
                                                 <i class="fa-solid fa-arrow-right-arrow-left"></i> {{ $item->stok_pinjam }}
                                             </span>
+
+                                            <span class="stok-badge stok-rusak" title="Stok Rusak">
+                                                <i class="fa-solid fa-exclamation-triangle"></i> {{ $item->stok_rusak }}
+                                            </span>
                                         </div>
                                     </td>
                                     <td class="text-end">
@@ -120,7 +132,8 @@
                                             </button>
 
                                             <form action="{{ route('admin.produk.destroy', $item->id_produk) }}"
-                                                method="POST" class="d-inline form-delete">
+                                                method="POST" class="d-inline form-delete"
+                                                onsubmit="return confirm('Yakin ingin menghapus produk {{ addslashes($item->jenis_gas) }}?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn-icon btn-icon-danger" title="Hapus">

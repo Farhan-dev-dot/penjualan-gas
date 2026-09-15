@@ -32,12 +32,12 @@ class AuthController extends Controller
 
         $admin = Auth::guard('admin')->user();
 
-        if ($admin->role !== 'admin') {
+        if (!in_array($admin->role, ['manager', 'admin'], true)) {
             $this->logoutAndInvalidate($request);
 
             return back()
                 ->withErrors([
-                    'email' => 'Akun ini bukan akun administrator.'
+                    'email' => 'Akun ini bukan akun Manager atau Admin.'
                 ])
                 ->withInput($request->only('email'));
         }
@@ -55,7 +55,11 @@ class AuthController extends Controller
         // Prevent session fixation only after the account has passed all checks.
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard'));
+        $redirect = $admin->role === 'manager'
+            ? route('manager.dashboard')
+            : route('admin.dashboard');
+
+        return redirect()->intended($redirect);
     }
 
     public function logout(Request $request)

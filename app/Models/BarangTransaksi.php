@@ -12,8 +12,7 @@ class BarangTransaksi extends Model
     protected $primaryKey = 'id_transaksi';
 
     protected $fillable = [
-        'id_pembelian',
-        'id_detail',
+        'id_penjualan',
         'id_produk',
         'jenis_transaksi',
         'stok_isi',
@@ -21,6 +20,7 @@ class BarangTransaksi extends Model
         'stok_pinjam',
         'keterangan',
         'tanggal_transaksi',
+        'nama_petugas',
     ];
 
     protected $casts = [
@@ -29,7 +29,7 @@ class BarangTransaksi extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Relasi ke Pembelian
+    | Relasi ke Penjualan
     |--------------------------------------------------------------------------
     | Banyak barang transaksi dimiliki oleh satu pembelian.
     */
@@ -38,23 +38,8 @@ class BarangTransaksi extends Model
     {
         return $this->belongsTo(
             Pembelian::class,
-            'id_pembelian',
-            'id_pembelian'
-        );
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Relasi ke Pembelian Detail
-    |--------------------------------------------------------------------------
-    */
-
-    public function detail()
-    {
-        return $this->belongsTo(
-            PembelianDetail::class,
-            'id_detail',
-            'id_detail'
+            'id_penjualan',
+            'id_penjualan'
         );
     }
 

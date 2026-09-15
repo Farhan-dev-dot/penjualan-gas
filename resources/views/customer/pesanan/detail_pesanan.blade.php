@@ -8,7 +8,7 @@
             {{-- ================= HEADER ================= --}}
             <div class="pesanan-detail-header">
                 <div class="pesanan-flat-top-left">
-                    <span class="pesanan-flat-kode">{{ $pembelian->kode_pembelian }}</span>
+                    <span class="pesanan-flat-kode">{{ $pembelian->kode_penjualan }}</span>
                     <span class="pesanan-flat-dot">&middot;</span>
                     <span class="pesanan-flat-date">{{ $pembelian->created_at->format('d M Y, H:i') }}</span>
                 </div>

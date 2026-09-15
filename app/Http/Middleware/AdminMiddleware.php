@@ -13,7 +13,7 @@ class AdminMiddleware
         if (Auth::guard('admin')->check()) {
             $admin = Auth::guard('admin')->user();
 
-            if (($admin->role ?? null) === 'admin') {
+            if (in_array($admin->role ?? null, ['manager', 'admin'], true)) {
                 return $next($request);
             }
 
@@ -22,7 +22,7 @@ class AdminMiddleware
             $request->session()->regenerateToken();
 
             return redirect()->route('admin.login')
-                ->withErrors(['email' => 'Akun ini bukan akun administrator.']);
+                ->withErrors(['email' => 'Akun ini bukan akun Manager atau Admin.']);
         }
 
         if (Auth::guard('web')->check()) {

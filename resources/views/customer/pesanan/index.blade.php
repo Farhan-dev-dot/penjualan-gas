@@ -48,7 +48,10 @@
 
                     $statusMap = [
                         'settlement' => ['label' => 'Selesai', 'class' => 'is-settlement'],
-                        'menunggu_konfirmasi' => ['label' => 'Menunggu Konfirmasi', 'class' => 'is-menunggu-konfirmasi'],
+                        'menunggu_konfirmasi' => [
+                            'label' => 'Menunggu Konfirmasi',
+                            'class' => 'is-menunggu-konfirmasi',
+                        ],
                         'pending' => ['label' => 'Belum Bayar', 'class' => 'is-pending'],
                         'cancel' => ['label' => 'Dibatalkan', 'class' => 'is-cancel'],
                         'process' => ['label' => 'Diproses', 'class' => 'is-proses'],
@@ -68,7 +71,7 @@
                     {{-- ================= BARIS ATAS: kode, tanggal, status ================= --}}
                     <div class="pesanan-flat-top">
                         <div class="pesanan-flat-top-left">
-                            <span class="pesanan-flat-kode">{{ $item->kode_pembelian }}</span>
+                            <span class="pesanan-flat-kode">{{ $item->kode_penjualan }}</span>
                             <span class="pesanan-flat-dot">&middot;</span>
                             <span class="pesanan-flat-date">{{ $item->created_at->format('d M Y, H:i') }}</span>
                         </div>
@@ -116,22 +119,27 @@
 
                             <div class="pesanan-flat-actions">
                                 @if ($lastDetail && $lastDetail->produk)
-                                    <a href="{{ route('user.pesanan-detail', $item->id_pembelian) }}"
+                                    <a href="{{ route('user.pesanan-detail', $item->id_penjualan) }}"
                                         class="btn-flat-outline btn-sm">
                                         Lihat Detail
                                     </a>
                                 @endif
 
                                 @if (in_array($item->payment_status, ['pending', 'process']))
-                                    <a href="{{ route('user.pesanan.payment-token', $item->id_pembelian) }}"
-                                        data-sync-url="{{ route('user.pesanan.sync-payment-status', $item->id_pembelian) }}"
+                                    <a href="{{ route('user.pesanan.payment-token', $item->id_penjualan) }}"
+                                        data-sync-url="{{ route('user.pesanan.sync-payment-status', $item->id_penjualan) }}"
                                         class="btn-flat-primary btn-sm js-pay-order">
                                         Bayar Sekarang
                                     </a>
                                 @endif
 
-                                @if ($pinjamDetail && $pinjamDetail->akhir_sewa && now()->lte($pinjamDetail->akhir_sewa) && in_array($item->payment_status, ['menunggu_konfirmasi', 'settlement']))
-                                    <a href="{{ route('user.refill', $item->id_pembelian) }}" class="btn-flat-primary btn-sm">
+                                @if (
+                                    $pinjamDetail &&
+                                        $pinjamDetail->akhir_sewa &&
+                                        now()->lte($pinjamDetail->akhir_sewa) &&
+                                        in_array($item->payment_status, ['menunggu_konfirmasi', 'settlement']))
+                                    <a href="{{ route('user.refill', $item->id_penjualan) }}"
+                                        class="btn-flat-primary btn-sm">
                                         Refill Tabung
                                     </a>
                                 @endif
@@ -228,7 +236,8 @@
                                 // Snap dapat menampilkan pesan "Transaksi sudah kedaluwarsa"
                                 // saat popup ditutup. Sinkronkan agar status lokal menjadi expire
                                 // dan tombol Bayar Sekarang hilang setelah halaman dimuat ulang.
-                                const result = await syncPaymentStatus(button.dataset.syncUrl);
+                                const result = await syncPaymentStatus(button.dataset
+                                    .syncUrl);
 
                                 if (result?.payment_status === 'expire') {
                                     window.location.reload();

@@ -14,12 +14,18 @@ class UseAdminSession
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->is('admin') || $request->is('admin/*')) {
+        if (
+            $request->is('admin') || $request->is('admin/*') ||
+            $request->is('petugas') || $request->is('petugas/*') ||
+            $request->is('manager') || $request->is('manager/*')
+        ) {
             // This runs before StartSession, so Laravel reads the correct
             // cookie from the very first admin request (including login).
             config([
                 'session.cookie' => config('session.admin_cookie'),
-                'session.path' => '/admin',
+                // Cookie harus tersedia untuk halaman login /petugas dan
+                // panel /admin, tetapi tetap terpisah lewat nama cookie khusus.
+                'session.path' => '/',
             ]);
         }
 

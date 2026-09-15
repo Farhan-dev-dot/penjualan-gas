@@ -15,6 +15,13 @@
                     </h6>
                 </div>
 
+                @if (session('success'))
+                    <div class="alert alert-success mx-4 mt-3 mb-0">{{ session('success') }}</div>
+                @endif
+                @if (session('error'))
+                    <div class="alert alert-danger mx-4 mt-3 mb-0">{{ session('error') }}</div>
+                @endif
+
                 <form action="{{ route('admin.pembelian') }}" method="GET" class="table-toolbar">
 
                     <div class="input-group search-box">
@@ -106,7 +113,7 @@
                                 @endphp
                                 <tr>
                                     <td>
-                                        <span class="cell-primary d-block">{{ $item->kode_pembelian }}</span>
+                                        <span class="cell-primary d-block">{{ $item->kode_penjualan }}</span>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
@@ -170,10 +177,10 @@
                                             data-url="{{ route('admin.pembelian.payment-status', $item) }}"
                                             data-original-status="{{ $item->payment_status }}"
                                             {{ $canConfirmPayment ? '' : 'disabled' }}
-                                            aria-label="Status pembayaran {{ $item->kode_pembelian }}">
+                                            aria-label="Status pembayaran {{ $item->kode_penjualan }}">
                                             @if ($canConfirmPayment)
                                                 <option value="menunggu_konfirmasi" selected>Menunggu Konfirmasi</option>
-                                                <option value="settlement">Selesai</option>
+                                                <option value="settlement">Berhasil</option>
                                             @else
                                                 <option value="{{ $item->payment_status }}" selected>
                                                     {{ $status['label'] }}</option>
@@ -187,7 +194,7 @@
                                         <div class="row-actions justify-content-end">
                                             <button class="btn-icon" title="Detail" data-bs-toggle="modal"
                                                 data-bs-target="#ModalPembelianDetail"
-                                                data-kode="{{ $item->kode_pembelian }}"
+                                                data-kode="{{ $item->kode_penjualan }}"
                                                 data-pembeli="{{ $item->user->name ?? '-' }}"
                                                 data-email="{{ $item->user->email ?? '-' }}"
                                                 data-payment="{{ strtoupper($item->payment_type ?? '-') }}"
@@ -199,7 +206,9 @@
                                                 <i class="fa-solid fa-eye"></i>
                                             </button>
 
-                                            <form action="#" method="POST" class="d-inline form-delete">
+                                            <form action="{{ route('admin.pembelian.destroy', $item->id_penjualan) }}"
+                                                method="POST" class="d-inline form-delete"
+                                                onsubmit="return confirm('Yakin ingin menghapus pembelian {{ addslashes($item->kode_penjualan) }}?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn-icon btn-icon-danger" title="Hapus">

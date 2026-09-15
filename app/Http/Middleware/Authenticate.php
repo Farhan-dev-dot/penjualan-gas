@@ -19,8 +19,8 @@ class Authenticate extends Middleware
         }
 
         // If the request targets the admin area, redirect to the admin login path
-        if ($request->segment(1) === 'admin') {
-            return '/admin/login';
+        if (in_array($request->segment(1), ['admin', 'manager'], true)) {
+            return '/petugas/login';
         }
 
         return route('login');

@@ -36,6 +36,7 @@
                             <thead>
                                 <tr>
                                     <th style="width:22%">Produk</th>
+                                    <th style="width:24%">Pembelian Asal</th>
                                     <th style="width:12%">Jenis Transaksi</th>
                                     <th style="width:9%">Isi</th>
                                     <th style="width:9%">Kosong</th>
@@ -81,21 +82,33 @@
             </select>
         </td>
         <td>
-            <select class="form-select form-select-sm" name="items[__INDEX__][jenis_transaksi]" required>
-                <option value="masuk">Masuk</option>
-                <option value="retur">Retur</option>
+            <select class="form-select form-select-sm select-penjualan-row" name="items[__INDEX__][id_penjualan]">
+                <option value="">-- Tidak ada / pilih untuk retur --</option>
+                @foreach ($pembelianDetails->groupBy('id_penjualan') as $idPenjualan => $details)
+                    <option value="{{ $idPenjualan }}">
+                        {{ $details->first()->pembelian->kode_penjualan ?? '-' }}
+                        — {{ $details->first()->nama_penerima }}
+                    </option>
+                @endforeach
             </select>
         </td>
         <td>
-            <input type="number" min="0" class="form-control form-control-sm" name="items[__INDEX__][stok_isi]"
-                value="0" required>
+            <select class="form-select form-select-sm" name="items[__INDEX__][jenis_transaksi]" required>
+                <option value="masuk">Masuk</option>
+                <option value="retur">Retur</option>
+                <option value="pengembalian">Pengembalian</option>
+            </select>
         </td>
         <td>
-            <input type="number" min="0" class="form-control form-control-sm"
+            <input type="number" min="0" class="form-control form-control-sm stok-input"
+                name="items[__INDEX__][stok_isi]" value="0" placeholder="0" required>
+        </td>
+        <td>
+            <input type="number" min="0" class="form-control form-control-sm stok-input"
                 name="items[__INDEX__][stok_kosong]" value="0" required>
         </td>
         <td>
-            <input type="number" min="0" class="form-control form-control-sm"
+            <input type="number" min="0" class="form-control form-control-sm stok-input"
                 name="items[__INDEX__][stok_pinjam]" value="0" required>
         </td>
         <td>
@@ -137,6 +150,10 @@
                     <span class="cm-field-value" id="detail-bm-jenis">-</span>
                 </div>
                 <div class="cm-field">
+                    <span class="cm-field-label"><i class="fa-solid fa-right-left"></i> Nama Petugas </span>
+                    <span class="cm-field-value" id="detail-bm-petugas">-</span>
+                </div>
+                <div class="cm-field">
                     <span class="cm-field-label"><i class="fa-solid fa-cubes"></i> Stok Isi</span>
                     <span class="cm-field-value" id="detail-bm-isi">-</span>
                 </div>
@@ -156,6 +173,7 @@
                     <span class="cm-field-label"><i class="fa-solid fa-note-sticky"></i> Keterangan</span>
                     <span class="cm-field-value" id="detail-bm-keterangan">-</span>
                 </div>
+
             </div>
 
             <div class="modal-footer cm-footer">

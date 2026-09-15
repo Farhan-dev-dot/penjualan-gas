@@ -28,13 +28,13 @@ class ExampleTest extends TestCase
             'password' => bcrypt('user-password'),
         ]);
 
-        $response = $this->from('/admin/login')
-            ->post('/admin/login', [
+        $response = $this->from('/petugas/login')
+            ->post('/petugas/login', [
                 'email' => $user->email,
                 'password' => 'user-password',
             ]);
 
-        $response->assertRedirect('/admin/login');
+        $response->assertRedirect('/petugas/login');
         $response->assertSessionHasErrors('email');
         $this->assertGuest('admin');
         $this->assertGuest('web');

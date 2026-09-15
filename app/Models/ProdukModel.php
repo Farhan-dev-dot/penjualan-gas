@@ -31,6 +31,7 @@ class ProdukModel extends Model
         "stok_isi",
         "stok_kosong",
         "stok_pinjam",
+        "stok_rusak",
     ];
 
     /**

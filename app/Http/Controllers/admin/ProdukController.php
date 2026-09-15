@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BarangTransaksi;
+use App\Models\PembelianDetail;
 use App\Models\ProdukModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -93,6 +95,14 @@ class ProdukController extends Controller
 
     public function destroy(ProdukModel $produk)
     {
+        $dipakaiTransaksi = BarangTransaksi::where('id_produk', $produk->id_produk)->exists();
+        $dipakaiPembelian = PembelianDetail::where('id_produk', $produk->id_produk)->exists();
+
+        if ($dipakaiTransaksi || $dipakaiPembelian) {
+            return redirect()->route('admin.produk')
+                ->with('error', 'Produk tidak dapat dihapus karena sudah digunakan dalam transaksi atau pembelian.');
+        }
+
         if ($produk->foto) {
             Storage::disk('public')->delete($produk->foto);
         }

@@ -26,7 +26,7 @@
 
                             <div class="refill-flat-info">
                                 <div class="refill-flat-top">
-                                    <span class="refill-flat-kode">{{ $sewa->pembelian->kode_pembelian }}</span>
+                                    <span class="refill-flat-kode">{{ $sewa->pembelian->kode_penjualan }}</span>
                                     <span class="refill-flat-dot">&bull;</span>
                                     <span class="refill-flat-badge">Sewa Aktif</span>
                                 </div>

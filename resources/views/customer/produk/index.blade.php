@@ -4,11 +4,11 @@
     <main class="home-page">
         <div class="container py-5" style="min-height: 100vh">
             <div class="text-center mb-5">
-                <h2 class="fw-bold mt-3">
+                <h2 class="produk-heading fw-bold mt-3">
                     Produk Kami
                 </h2>
 
-                <p class="text-secondary mx-auto" style="max-width: 650px;">
+                <p class=" lead text-secondary mb-0 mx-auto text-secondary mx-auto" style="max-width: 650px;">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, facere.
                 </p>
             </div>

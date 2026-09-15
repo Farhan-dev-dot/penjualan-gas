@@ -24,11 +24,11 @@
                                 </p>
 
                                 <div class="d-flex flex-wrap gap-3 mb-5">
-                                    <a href="#" class="btn btn-primary px-4">
+                                    <a href="{{ route('produk.index') }}" class="btn btn-primary px-4">
                                         Lihat Produk
                                         <i class="fa-solid fa-arrow-right ms-2"></i>
                                     </a>
-                                    <a href="#" class="btn btn-outline-primary px-4">
+                                    <a href="#hubungin-kami" class="btn btn-outline-primary px-4">
                                         Kontak Kami
                                     </a>
                                 </div>
@@ -140,9 +140,6 @@
                 <div class="container">
                     <!-- Header -->
                     <div class="mitra-header text-center mb-5">
-                        <div class="badge-mitra">
-                            <span class="dot"></span> Mitra Terpercaya
-                        </div>
                         <h2 class="fw-bold mb-3 display-5">
                             Dipercaya oleh <span class="accent">50+</span> Perusahaan
                         </h2>
@@ -156,25 +153,25 @@
                     <div class="row g-4 mb-5">
                         <div class="col-md-3 col-sm-6">
                             <div class="stat-card text-center">
-                                <h3 class="text-primary fw-bold mb-1">50+</h3>
+                                <h3 class=" fw-bold mb-1">50+</h3>
                                 <p class="text-secondary small mb-0">Mitra Aktif</p>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6">
                             <div class="stat-card text-center">
-                                <h3 class="text-success fw-bold mb-1">99%</h3>
+                                <h3 class=" fw-bold mb-1">99%</h3>
                                 <p class="text-secondary small mb-0">Kepuasan Klien</p>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6">
                             <div class="stat-card text-center">
-                                <h3 class="text-warning fw-bold mb-1">24/7</h3>
+                                <h3 class=" fw-bold mb-1">24/7</h3>
                                 <p class="text-secondary small mb-0">Layanan Siaga</p>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-6">
                             <div class="stat-card text-center">
-                                <h3 class="text-info fw-bold mb-1">5 Tahun</h3>
+                                <h3 class=" fw-bold mb-1">5 Tahun</h3>
                                 <p class="text-secondary small mb-0">Pengalaman</p>
                             </div>
                         </div>
@@ -250,7 +247,7 @@
             </section>
 
             <!-- Contact Section -->
-            <section class="section-hubungi-kami py-5">
+            <section class="section-hubungi-kami py-5" id="hubungin-kami">
                 <div class="container">
                     <div class="text-center mb-5">
                         {{-- <span class="contact-eyebrow">Kontak</span> --}}

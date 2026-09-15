@@ -11,16 +11,16 @@ class Pembelian extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembelian';
+    protected $table = 'penjualan';
 
-    protected $primaryKey = 'id_pembelian';
+    protected $primaryKey = 'id_penjualan';
 
     public $incrementing = true;
 
     protected $keyType = 'int';
 
     protected $fillable = [
-        'kode_pembelian',
+        'kode_penjualan',
         'id_user',
         'gross_amount',
         'payment_type',
@@ -43,14 +43,26 @@ class Pembelian extends Model
     }
 
     /**
-     * Relasi ke detail pembelian
+     * Relasi ke detail penjualan
      */
     public function details(): HasMany
     {
         return $this->hasMany(
             PembelianDetail::class,
-            'id_pembelian',
-            'id_pembelian'
+            'id_penjualan',
+            'id_penjualan'
+        );
+    }
+
+    /**
+     * Seluruh pergerakan stok yang dibuat dari pembelian ini.
+     */
+    public function barangTransaksis(): HasMany
+    {
+        return $this->hasMany(
+            BarangTransaksi::class,
+            'id_penjualan',
+            'id_penjualan'
         );
     }
 }

@@ -10,7 +10,7 @@ class PembelianDetail extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembelian_detail';
+    protected $table = 'penjualan_detail';
 
     protected $primaryKey = 'id_detail';
 
@@ -19,7 +19,7 @@ class PembelianDetail extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'id_pembelian',
+        'id_penjualan',
         'id_produk',
         'nama_penerima',
         'telepon_penerima',
@@ -46,14 +46,14 @@ class PembelianDetail extends Model
     ];
 
     /**
-     * Relasi ke pembelian
+     * Relasi ke penjualan
      */
     public function pembelian(): BelongsTo
     {
         return $this->belongsTo(
             Pembelian::class,
-            'id_pembelian',
-            'id_pembelian'
+            'id_penjualan',
+            'id_penjualan'
         );
     }
 

@@ -663,6 +663,46 @@ main {
     margin-top: 0.15rem;
 }
 
+.stok-filter-panel {
+    margin: 1rem 1.25rem;
+    border: 1px solid var(--brand-blue-100);
+    border-radius: var(--radius-sm);
+    background: var(--brand-blue-50);
+}
+
+.stok-filter-heading {
+    padding: 1rem 1.25rem 0;
+    color: var(--brand-blue-900);
+}
+
+.stok-filter-heading h6 {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.stok-filter-heading p {
+    color: var(--ink-600);
+    font-size: 0.78rem;
+}
+
+.stok-filter-form {
+    padding: 1rem 1.25rem 1.25rem;
+}
+
+.stok-filter-form .form-label {
+    color: var(--ink-900);
+    font-size: 0.8rem;
+}
+
+.stok-filter-form .form-control {
+    border-color: var(--ink-200);
+}
+
+.stok-filter-form .form-control:focus {
+    border-color: var(--brand-blue-400);
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.12);
+}
+
 /* ============ TABLE TOOLBAR ============ */
 .table-toolbar {
     display: flex;
@@ -880,6 +920,24 @@ main {
     background: currentColor;
 }
 
+/* MASUK - Hijau */
+.status-badge.status-masuk {
+    background: rgba(23, 166, 115, 0.12);
+    color: var(--success);
+}
+
+/* RETUR - Merah */
+.status-badge.status-retur {
+    background: rgba(229, 72, 77, 0.1);
+    color: var(--danger);
+}
+
+/* PENGEMBALIAN - Kuning */
+.status-badge.status-pengembalian {
+    background: rgba(245, 165, 36, 0.12);
+    color: var(--warning);
+}
+
 .status-badge.status-active {
     background: rgba(23, 166, 115, 0.12);
     color: var(--success);
@@ -920,6 +978,28 @@ main {
 }
 
 .row-actions .btn-icon.btn-icon-danger:hover {
+    background: var(--danger);
+    border-color: var(--danger);
+}
+.text-end .btn-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ink-200);
+    background: #fff;
+    color: var(--ink-600);
+    place-items: center;
+    font-size: 0.78rem;
+    transition: all 0.15s ease;
+}
+
+.text-end .btn-icon:hover {
+    background: var(--brand-blue-500);
+    border-color: var(--brand-blue-500);
+    color: #fff;
+}
+
+.text-end .btn-icon.btn-icon-danger:hover {
     background: var(--danger);
     border-color: var(--danger);
 }
@@ -1059,6 +1139,10 @@ main {
     max-width: 960px;
 }
 
+#ModalBarangMasuk .modal-dialog.modal-xl {
+    max-width: min(1200px, calc(100vw - 2rem));
+}
+
 .cm-content {
     border: none;
     border-radius: var(--radius-lg);
@@ -1132,6 +1216,12 @@ main {
 
 .cm-body {
     padding: 1.25rem 1.5rem;
+}
+
+.stok-input {
+    color: var(--ink-900) !important;
+    background-color: #fff !important;
+    text-align: center;
 }
 
 .cm-field {
@@ -1238,6 +1328,10 @@ main {
 .stok-badge.stok-pinjam {
     background: #fff6e0;
     color: #b8860b;
+}
+.stok-badge.stok-rusak {
+    background: #bad0eb;
+    color: #220bb8;
 }
 
 .modal-produk-foto {

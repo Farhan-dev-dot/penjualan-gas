@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BarangTransaksi;
 use App\Models\Pembelian;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PembelianController extends Controller
 {
@@ -14,7 +16,7 @@ class PembelianController extends Controller
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('kode_pembelian', 'like', '%' . $request->search . '%')
+                $q->where('kode_penjualan', 'like', '%' . $request->search . '%')
                     ->orWhereHas('user', fn($u) => $u->where('name', 'like', '%' . $request->search . '%'));
             });
         }
@@ -52,5 +54,21 @@ class PembelianController extends Controller
             'payment_status' => $pembelian->payment_status,
             'label' => 'Berhasil',
         ]);
+    }
+
+    public function destroy(Pembelian $pembelian)
+    {
+        if (BarangTransaksi::where('id_penjualan', $pembelian->id_penjualan)->exists()) {
+            return redirect()->route('admin.pembelian')
+                ->with('error', 'Penjualan tidak dapat dihapus karena sudah diproses menjadi barang keluar.');
+        }
+
+        DB::transaction(function () use ($pembelian) {
+            $pembelian->details()->delete();
+            $pembelian->delete();
+        });
+
+        return redirect()->route('admin.pembelian')
+            ->with('success', 'Data penjualan berhasil dihapus.');
     }
 }

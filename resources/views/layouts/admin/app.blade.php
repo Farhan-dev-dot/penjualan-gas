@@ -5,16 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel')</title>
+    <style>
+        html.asset-loading body {
+            visibility: hidden;
+        }
+    </style>
+    <script>
+        document.documentElement.classList.add('asset-loading');
+        window.addEventListener('load', function() {
+            document.documentElement.classList.remove('asset-loading');
+        });
+    </script>
     {{-- link fontawsome  --}}
     <script src="https://kit.fontawesome.com/f1bc26f6b9.js" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    @push('styles')
-        {{-- link css --}}
-        <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
-    @endpush
+    {{-- link css --}}
+    <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
+    @stack('styles')
 </head>
-@stack('styles')
 
 <body>
 
@@ -57,7 +66,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 
     <script>
         const sidebar = document.getElementById('sidebar');
@@ -96,6 +105,7 @@
     </script>
 
     @yield('scripts')
+    @stack('scripts')
 </body>
 
 </html>

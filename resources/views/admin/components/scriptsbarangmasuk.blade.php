@@ -21,6 +21,7 @@
 
                 document.getElementById('detail-bm-produk').textContent = btn.dataset.produk || '-';
                 document.getElementById('detail-bm-jenis').textContent = btn.dataset.jenis || '-';
+                document.getElementById('detail-bm-petugas').textContent = btn.dataset.petugas || '-';
                 document.getElementById('detail-bm-isi').textContent = btn.dataset.isi || '-';
                 document.getElementById('detail-bm-kosong').textContent = btn.dataset.kosong || '-';
                 document.getElementById('detail-bm-pinjam').textContent = btn.dataset.pinjam || '-';
@@ -40,6 +41,11 @@
             const elements = clone.querySelectorAll('[name*="__INDEX__"]');
             elements.forEach(el => {
                 el.name = el.name.replace(/__INDEX__/g, rowCount);
+            });
+
+            clone.querySelectorAll('.stok-input').forEach(input => {
+                input.defaultValue = '0';
+                input.value = '0';
             });
 
             // Setup tombol hapus
@@ -107,9 +113,14 @@
             let isValid = true;
             rows.forEach((row, index) => {
                 const produk = row.querySelector('[name*="[id_produk]"]').value;
+                const jenis = row.querySelector('[name*="[jenis_transaksi]"]').value;
+                const pembelian = row.querySelector('[name*="[id_penjualan]"]').value;
 
                 if (!produk) {
                     alert(`Baris ${index + 1}: Pilih produk terlebih dahulu.`);
+                    isValid = false;
+                } else if (['retur', 'pengembalian'].includes(jenis) && !pembelian) {
+                    alert(`Baris ${index + 1}: Pilih pembelian asal untuk transaksi ${jenis}.`);
                     isValid = false;
                 }
             });
