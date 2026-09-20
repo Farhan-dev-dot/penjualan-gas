@@ -48,6 +48,10 @@
                                             <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
                                             <input type="password" id="password" name="password" required
                                                 class="form-control @error('password') is-invalid @enderror">
+                                            <span class="input-group-text" role="button" style="cursor:pointer"
+                                                id="togglePassword" aria-label="Tampilkan password">
+                                                <i class="fa-solid fa-eye" id="toggleIcon"></i>
+                                            </span>
                                         </div>
                                     </div>
 
@@ -91,4 +95,18 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.getElementById('toggleIcon');
+            const isHidden = passwordInput.type === 'password';
+
+            passwordInput.type = isHidden ? 'text' : 'password';
+            icon.classList.toggle('fa-eye', !isHidden);
+            icon.classList.toggle('fa-eye-slash', isHidden);
+
+            this.setAttribute('aria-label', isHidden ? 'Sembunyikan password' : 'Tampilkan password');
+        });
+    </script>
 @endsection

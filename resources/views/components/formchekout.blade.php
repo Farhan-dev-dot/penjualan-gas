@@ -10,6 +10,14 @@
                 <p class="text-secondary mb-0">
                     Lengkapi detail pesanan Anda di bawah ini.
                 </p>
+
+                {{-- Kembali ke halaman produk = membatalkan alur refill (jika ada).
+                    Semua state refill dibersihkan supaya user memulai transaksi baru. --}}
+                <button type="button" id="checkout-back-btn"
+                    class="btn btn-link text-secondary text-decoration-none mt-3 p-0 small">
+                    <i class="fa-solid fa-arrow-left me-1"></i>
+                    Kembali / Batalkan
+                </button>
             </div>
 
             <form id="checkout-form" action="{{ route('user.checkout.transaction') }}" method="POST">
@@ -418,8 +426,6 @@
 
             const cartKey = 'penjualan_gas_cart';
 
-            const refillCartKey = 'penjualan_gas_refill_checkout';
-
             const API =
                 'https://semyluase.github.io/api-indonesia/static/api';
 
@@ -453,6 +459,12 @@
 
             const cartItemsInput =
                 document.getElementById('cart-items-input');
+
+            const backBtn =
+                document.getElementById('checkout-back-btn');
+
+            const produkUrl =
+                @json(route('produk.index'));
 
 
             /*
@@ -569,10 +581,12 @@
             let isRefillCheckout = false;
 
             try {
-                const refillCart = sessionStorage.getItem(refillCartKey);
+                const refillCart = window.RefillState
+                    ? window.RefillState.cart()
+                    : null;
 
                 isRefillCheckout = Boolean(refillCart);
-                cart = JSON.parse(refillCart || localStorage.getItem(cartKey)) || {};
+                cart = refillCart || JSON.parse(localStorage.getItem(cartKey)) || {};
 
             } catch (error) {
 
@@ -582,6 +596,17 @@
                 );
 
                 cart = {};
+            }
+
+            // Item refill hanya boleh dieksekusi pada checkout refill.
+            // Kalau penanda refill hilang (mis. tab lama / storage terhapus),
+            // item refill dibuang agar pembelian berikutnya benar-benar pembelian biasa.
+            if (!isRefillCheckout) {
+                Object.keys(cart).forEach(function(key) {
+                    if (cart[key] && cart[key].tipe_transaksi === 'refil') {
+                        delete cart[key];
+                    }
+                });
             }
 
 
@@ -1533,6 +1558,21 @@
 
             /*
             |--------------------------------------------------------------------------
+            | BATALKAN / KEMBALI DARI CHECKOUT
+            |--------------------------------------------------------------------------
+            */
+
+            // Membatalkan alur refill: state refill dibuang, keranjang belanja
+            // utama tidak disentuh, lalu user kembali ke halaman produk untuk
+            // memilih pembelian biasa maupun refill baru.
+            backBtn?.addEventListener('click', function() {
+                window.RefillState?.clear();
+
+                window.location.href = produkUrl;
+            });
+
+            /*
+            |--------------------------------------------------------------------------
             | SUBMIT CHECKOUT
             |--------------------------------------------------------------------------
             */
@@ -1730,7 +1770,7 @@
                             );
 
                             if (isRefillCheckout) {
-                                sessionStorage.removeItem(refillCartKey);
+                                window.RefillState?.clear();
                             } else {
                                 localStorage.removeItem(cartKey);
                             }
@@ -1746,7 +1786,7 @@
                             );
 
                             if (isRefillCheckout) {
-                                sessionStorage.removeItem(refillCartKey);
+                                window.RefillState?.clear();
                             } else {
                                 localStorage.removeItem(cartKey);
                             }

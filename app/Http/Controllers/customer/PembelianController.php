@@ -286,6 +286,9 @@ class PembelianController extends Controller
                 return ($item['tipe_transaksi'] ?? null) === 'refil';
             });
 
+            // Saat ada item refill, permintaan ini murni transaksi refill:
+            // field sewa dipaksa kosong agar tidak ada jenis_sewa/durasi/tanggal
+            // sewa yang ikut tersimpan ke transaksi refill.
             $jenisSewa = $hasRefil
                 ? null
                 : ($request->input('jenis_sewa') ?: null);
@@ -307,6 +310,16 @@ class PembelianController extends Controller
                         return response()->json([
                             'success' => false,
                             'message' => 'Sewa aktif untuk produk refill tidak ditemukan.',
+                        ], 422);
+                    }
+
+                    // Jumlah refill tidak boleh melebihi jumlah tabung yang disewa.
+                    $maksimalRefill = (int) $sewaDetail->jumlah;
+
+                    if ($quantity < 1 || $quantity > $maksimalRefill) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Jumlah refill melebihi jumlah tabung yang disewa.',
                         ], 422);
                     }
                 }

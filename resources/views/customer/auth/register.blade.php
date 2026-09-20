@@ -86,6 +86,20 @@
                                                 <input type="password" id="password" name="password" required
                                                     minlength="8"
                                                     class="form-control @error('password') is-invalid @enderror">
+                                                <span class="input-group-text" role="button" style="cursor:pointer"
+                                                    id="togglePassword" aria-label="Tampilkan password">
+                                                    {{-- Ikon WAJIB dibungkus <span>. Script Font Awesome Kit
+                                                         mengganti <i> menjadi <svg> dan MENYALIN seluruh class
+                                                         dari <i> ke <svg>, termasuk d-none. Karena <i> tidak bisa
+                                                         dikembalikan lagi oleh JS kita, class d-none tidak akan
+                                                         pernah bisa dilepas -> ikon tidak mau berubah.
+                                                         Dengan pembungkus <span>, class d-none dipasang di <span>
+                                                         milik kita sendiri, jadi aman untuk di-add/remove. --}}
+                                                    <span class="toggle-icon d-none" id="iconPasswordShow"><i
+                                                            class="fa-solid fa-eye"></i></span>
+                                                    <span class="toggle-icon" id="iconPasswordHide"><i
+                                                            class="fa-solid fa-eye-slash"></i></span>
+                                                </span>
                                             </div>
                                         </div>
 
@@ -96,6 +110,16 @@
                                                 <input type="password" id="password_confirmation"
                                                     name="password_confirmation" required minlength="8"
                                                     class="form-control">
+                                                <span class="input-group-text" role="button" style="cursor:pointer"
+                                                    id="togglePasswordConfirmation"
+                                                    aria-label="Tampilkan konfirmasi password">
+                                                    {{-- Sama seperti kolom Password: pembungkus <span> supaya
+                                                         class d-none aman dari proses i->svg milik FA Kit. --}}
+                                                    <span class="toggle-icon d-none" id="iconPasswordConfirmationShow"><i
+                                                            class="fa-solid fa-eye"></i></span>
+                                                    <span class="toggle-icon" id="iconPasswordConfirmationHide"><i
+                                                            class="fa-solid fa-eye-slash"></i></span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -116,4 +140,60 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function setupPasswordToggle(toggleId, inputId, showIconId, hideIconId) {
+            const toggleBtn = document.getElementById(toggleId);
+            const passwordInput = document.getElementById(inputId);
+            const showIcon = document.getElementById(showIconId); // fa-eye
+            const hideIcon = document.getElementById(hideIconId); // fa-eye-slash
+
+            if (!toggleBtn || !passwordInput || !showIcon || !hideIcon) return;
+            if (toggleBtn.dataset.bound === 'true') return; // cegah listener dobel
+            toggleBtn.dataset.bound = 'true';
+
+            // Tampilkan/sembunyikan ikon secara EKSPLISIT (add/remove),
+            // jangan pakai toggle(class, force).
+            //
+            // Soalnya: showIcon dan hideIcon itu DUA elemen berbeda yang kebetulan
+            // sama-sama punya class dasar "fa-solid fa-eye...". classList.toggle()
+            // mencari class di elemen ITU SENDIRI, jadi:
+            //   - hideIcon.toggle('d-none', false) tidak menghapus apa pun
+            //     (di elemen hideIcon memang tidak ada 'd-none'), lalu karena
+            //     force=false class itu DITAMBAHKAN — ikon eye-slash jadi ikut
+            //     tersembunyi selamanya.
+            //   - showIcon.toggle('d-none', true) -> ikon eye ikut disembunyikan,
+            //     hasilnya kedua ikon hilang dan tidak ada yang berubah.
+            // Dengan add/remove eksplisit, hasilnya pasti benar.
+            const render = (visible) => {
+                showIcon.classList.remove('d-none'); // mata terbuka (password tersembunyi)
+                hideIcon.classList.add('d-none');
+
+                if (visible) {
+                    showIcon.classList.add('d-none');
+                    hideIcon.classList.remove('d-none');
+                }
+            };
+
+            render(passwordInput.type !== 'password');
+
+            toggleBtn.addEventListener('click', function() {
+                const isHidden = passwordInput.type === 'password';
+
+                passwordInput.type = isHidden ? 'text' : 'password';
+
+                // Password baru saja dibuka -> tampilkan mata tercoret.
+                // Password baru saja disembunyikan -> tampilkan mata terbuka.
+                render(!isHidden);
+
+                this.setAttribute('aria-label', isHidden ? 'Sembunyikan password' : 'Tampilkan password');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPasswordToggle('togglePassword', 'password', 'iconPasswordShow', 'iconPasswordHide');
+            setupPasswordToggle('togglePasswordConfirmation', 'password_confirmation',
+                'iconPasswordConfirmationShow', 'iconPasswordConfirmationHide');
+        });
+    </script>
 @endsection

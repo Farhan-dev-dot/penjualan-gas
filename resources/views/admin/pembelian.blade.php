@@ -10,8 +10,8 @@
 
                 <div class="content-card-header">
                     <h6 class="content-card-title">
-                        Data Pembelian
-                        <small>Kelola seluruh transaksi pembelian & sewa pelanggan</small>
+                        Data Penjualan
+                        <small>Kelola seluruh transaksi penjualan & sewa pelanggan</small>
                     </h6>
                 </div>
 

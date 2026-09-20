@@ -93,12 +93,12 @@
         </ul>
     </li>
 
-    {{-- Pembelian --}}
+    {{-- Penjualan --}}
     <li class="nav-item">
         <a href="{{ route($prefix . '.pembelian') }}"
             class="nav-link {{ request()->routeIs($prefix . '.pembelian') ? 'active' : '' }}">
             <i class="fa-solid fa-bag-shopping me-2"></i>
-            Pembelian
+            Penjualan
         </a>
     </li>
 

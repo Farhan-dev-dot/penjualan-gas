@@ -81,6 +81,11 @@
     </main>
 
     <script>
+        // Penanda mode refill hanya hidup selama pengisian form di halaman ini.
+        // Kalau ada sisa keranjang refill dari percobaan sebelumnya, dibuang dulu
+        // supaya user benar-benar mulai dari pilihan yang baru.
+        window.RefillState?.clear({ keepMode: true });
+
         (function() {
             const list = document.querySelector('.refill-flat-list');
             if (!list) return;
@@ -160,8 +165,25 @@
             }
 
             // Refill memakai cart sementara agar tidak mengisi cart belanja utama.
+            // State ini hanya dibuat di titik ini: saat user memilih refill lagi
+            // dan benar-benar lanjut ke checkout.
+            document.getElementById('refill-form').dataset.leaving = '1';
+
             sessionStorage.setItem('penjualan_gas_refill_checkout', JSON.stringify(cart));
+            sessionStorage.setItem('penjualan_gas_refill_mode', '1');
+
             window.location.href = @json(route('user.checkout'));
+        });
+
+        // User meninggalkan halaman refill tanpa lanjut ke checkout (tombol
+        // kembali browser, menu lain, dsb) -> tidak ada state refill yang tertinggal.
+        window.addEventListener('pagehide', function() {
+            const lanjutKeCheckout =
+                document.getElementById('refill-form')?.dataset.leaving === '1';
+
+            if (!lanjutKeCheckout) {
+                window.RefillState?.clear();
+            }
         });
     </script>
 @endsection

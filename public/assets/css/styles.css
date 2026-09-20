@@ -28,15 +28,10 @@
     --shadow-sm: 0 2px 8px rgba(1, 23, 57, 0.06);
     --shadow-md: 0 8px 24px rgba(1, 23, 57, 0.1);
 }
+
 /* =========================================================
    NAVBAR
    ========================================================= */
-
-.navbar {
-    padding-top: 0.9rem;
-    padding-bottom: 0.9rem;
-    transition: box-shadow 0.25s ease;
-}
 
 /* =========================================================
    NAVBAR BRAND / LOGO
@@ -176,6 +171,10 @@
         background-color 0.18s ease,
         border-color 0.18s ease,
         box-shadow 0.18s ease;
+    -webkit-transition:;
+    -moz-transition:;
+    -ms-transition:;
+    -o-transition:;
 }
 
 .user-chip:hover {
@@ -6744,5 +6743,336 @@ section.filter-produk-bar {
 
     .profile-section-card {
         padding: 18px;
+    }
+}
+/* =========================================================
+   PRODUCT DETAIL MODAL
+   =========================================================
+   Modal detail produk memakai kontrol JS sendiri (bukan Bootstrap
+   Modal), supaya klik tombol Tambah di dalam card bisa dikecualikan.
+*/
+
+.produk-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(1, 23, 57, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.produk-modal-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.produk-modal {
+    position: relative;
+    width: 100%;
+    max-width: 940px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 30px 70px rgba(1, 23, 57, 0.35);
+    transform: translateY(24px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.produk-modal-overlay.is-open .produk-modal {
+    transform: translateY(0) scale(1);
+}
+
+.produk-modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 5;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--ink-900);
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease,
+        color 0.15s ease;
+}
+
+.produk-modal-close:hover {
+    background: #fff;
+    transform: scale(1.06);
+    color: #dc3545;
+}
+
+.produk-modal-gallery {
+    position: relative;
+    padding: 28px;
+    background: var(--brand-blue-50);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.produk-modal-main-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+}
+
+.produk-modal-main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 20px;
+    transition: opacity 0.25s ease;
+}
+
+.produk-modal-thumbs {
+    display: flex;
+    gap: 10px;
+}
+
+.produk-modal-thumb {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1.5px solid var(--ink-200);
+    background: #fff;
+    cursor: pointer;
+    transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.produk-modal-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.produk-modal-thumb:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-blue-200);
+}
+
+.produk-modal-thumb.active {
+    border-color: var(--brand-blue-500);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+}
+
+.produk-modal-info {
+    padding: 34px 34px 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.produk-modal-category {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 6px 14px;
+    margin-bottom: 14px;
+    border-radius: 50px;
+    background: var(--brand-blue-soft);
+    color: var(--brand-blue-700);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.produk-modal-title {
+    margin: 0 0 10px;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--brand-blue-900);
+    letter-spacing: -0.5px;
+}
+
+.produk-modal-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--ink-400);
+}
+
+.produk-modal-price {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: baseline;
+    gap: 6px;
+    padding: 8px 16px;
+    margin-bottom: 20px;
+    border-radius: 50px;
+    background: var(--brand-blue-soft);
+    color: var(--brand-blue-700);
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.produk-modal-desc {
+    margin: 0 0 22px;
+    color: var(--text-muted);
+    font-size: 14.5px;
+    line-height: 1.75;
+}
+
+.produk-modal-section-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin-bottom: 10px;
+}
+
+.produk-modal-variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.produk-modal-variant {
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1.5px solid var(--ink-200);
+    background: var(--ink-100);
+    color: var(--ink-600);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+
+.produk-modal-variant.active {
+    border-color: var(--brand-blue-500);
+    background: #fff;
+    color: var(--brand-blue-700);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15);
+}
+
+.produk-modal-footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 8px;
+}
+
+.produk-modal-add-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(
+        135deg,
+        var(--brand-blue-500),
+        var(--brand-blue-900)
+    );
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition:
+        transform 0.18s ease,
+        filter 0.18s ease;
+}
+
+.produk-modal-add-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+.produk-modal-add-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    filter: none;
+}
+
+/* Card produk yang bisa diklik untuk membuka modal detail. */
+.produkall .product-card.product-detail-card {
+    cursor: pointer;
+}
+
+.produkall .product-card.product-detail-card .product-add-btn {
+    cursor: pointer;
+}
+
+/* Cadangkan ruang scrollbar sejak awal. Dengan ini, muncul/hilangnya scrollbar
+   (mis. saat konten bertambah panjang atau saat modal mengunci body) tidak lagi
+   menggeser lebar layout — termasuk navbar sticky yang tadinya jadi melebar. */
+html {
+    scrollbar-gutter: stable;
+}
+
+/* Saat modal dibuka, body dikunci agar halaman di belakangnya tidak ikut scroll.
+   Kompensasi ini cadangan untuk browser yang belum mendukung
+   scrollbar-gutter (Safari lama). */
+body.modal-open-lock {
+    overflow: hidden;
+    padding-right: var(--scrollbar-compensation, 0px);
+}
+
+@media (max-width: 767.98px) {
+    .produk-modal {
+        grid-template-columns: 1fr;
+        border-radius: 22px;
+        max-height: 92vh;
+    }
+
+    .produk-modal-gallery {
+        padding: 20px;
+    }
+
+    .produk-modal-info {
+        padding: 24px 22px 24px;
+    }
+
+    .produk-modal-title {
+        font-size: 21px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .produk-modal-overlay,
+    .produk-modal,
+    .produk-modal-thumb,
+    .produk-modal-variant,
+    .produk-modal-add-btn {
+        transition: none !important;
     }
 }

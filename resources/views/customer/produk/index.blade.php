@@ -197,7 +197,19 @@
                                 @forelse($produk as $item)
                                     <div class="col-6 col-md-6 col-lg-4 col-xl-3">
 
-                                        <div class="product-card h-100">
+                                        {{-- Klik card membuka modal detail.
+                                            Trigger TIDAK dipasang lewat data-bs-toggle supaya
+                                            tombol Tambah di dalam card bisa dikecualikan. --}}
+                                        <div class="product-card h-100 product-detail-card"
+                                            data-product-id="{{ $item->id_produk }}"
+                                            data-product-name="{{ $item->jenis_gas }}"
+                                            data-product-variant="{{ rtrim(rtrim(number_format($item->berat, 1, ',', '.'), '0'), ',') }} {{ $item->satuan }}"
+                                            data-product-price="{{ $item->harga }}"
+                                            data-product-price-label="Rp {{ number_format($item->harga, 0, ',', '.') }}"
+                                            data-product-stock="{{ $item->stok_isi }}"
+                                            data-product-berat="{{ $item->berat }}"
+                                            data-product-image="{{ $item->foto ? asset('storage/' . $item->foto) : asset('assets/img/produk1.png') }}"
+                                            data-product-desc="{{ $item->deskripsi ?: 'Tabung gas berkualitas, aman digunakan untuk kebutuhan rumah tangga maupun usaha. Sudah melalui pemeriksaan sebelum dikirim.' }}">
 
                                             {{-- IMAGE --}}
                                             <div class="product-image-wrapper">
@@ -424,8 +436,72 @@
         </div>
     </main>
 
+    {{-- =========================================================
+         MODAL DETAIL PRODUK
+    ========================================================== --}}
+    <div class="produk-modal-overlay" id="produkModalOverlay">
+        <div class="produk-modal" role="dialog" aria-modal="true" aria-labelledby="produkModalTitle">
+            <button type="button" class="produk-modal-close" id="produkModalClose" aria-label="Tutup">&times;</button>
+
+            <div class="produk-modal-gallery">
+                <div class="produk-modal-main-image">
+                    <img id="produkModalImage" src="" alt="">
+                </div>
+            </div>
+
+            <div class="produk-modal-info">
+                <span class="produk-modal-category">Tabung Gas</span>
+
+                <h2 class="produk-modal-title" id="produkModalTitle"></h2>
+
+                <div class="produk-modal-meta">
+                    <i class="fa-solid fa-box"></i>
+                    <span id="produkModalStock"></span>
+                </div>
+
+                <div class="produk-modal-price" id="produkModalPrice"></div>
+
+                <p class="produk-modal-desc" id="produkModalDesc"></p>
+
+                <div class="produk-modal-section-label">Berat / Varian</div>
+                <div class="produk-modal-variants">
+                    <span class="produk-modal-variant active" id="produkModalVariant"></span>
+                </div>
+
+                <div class="produk-modal-footer">
+                    <div class="cart-qty-control">
+                        <button type="button" class="cart-qty-btn" id="produkModalQtyMinus">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+
+                        <input type="text" class="cart-qty-input" id="produkModalQty" value="1" readonly>
+
+                        <button type="button" class="cart-qty-btn" id="produkModalQtyPlus">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+
+                    <button type="button" class="produk-modal-add-btn" id="produkModalAddBtn">
+                        <i class="fa-solid fa-cart-plus"></i>
+                        Tambah ke Keranjang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            // ==========================================
+            // HALAMAN PRODUK = TRANSAKSI BARU
+            // ==========================================
+            // Kalau user kembali ke sini (mis. membatalkan refill di checkout),
+            // seluruh state refill dibersihkan supaya tidak ada sisa tipe_transaksi,
+            // jenis_sewa, atau keranjang refill yang bocor ke pembelian berikutnya.
+            if (window.RefillState) {
+                window.RefillState.clear();
+            }
 
             // ==========================================
             // SKELETON LOADING
@@ -440,55 +516,256 @@
 
 
             // ==========================================
-            // CEK STATUS LOGIN
+            // CEK STATUS LOGIN & KTP
             // ==========================================
+            // Kunci yang sama dipakai cart offcanvas (layouts/customer/cart-script.blade.php),
+            // supaya modal dan tombol Tambah menulis ke keranjang yang sama.
+            const cartKey = window.cartKey || 'penjualan_gas_cart';
+
             const isLoggedIn = @json(auth()->check());
+            const hasUploadedKtp = @json(auth()->check() && filled(auth()->user()?->foto_ktp));
+            const loginUrl = @json(route('login'));
+            const profileUrl = @json(route('user.profile'));
 
+            function getCart() {
+                try {
+                    return JSON.parse(localStorage.getItem(cartKey)) || {};
+                } catch (error) {
+                    return {};
+                }
+            }
+
+            /**
+             * Tambah produk ke keranjang belanja utama.
+             * Dipakai bersama oleh tombol Tambah di card dan tombol di modal.
+             */
+            function tambahKeKeranjang(produk, jumlah) {
+                const cart = getCart();
+                const kunci = produk.productId;
+                const stok = Number(produk.productStock) || 0;
+                const tambahan = Math.max(1, Number(jumlah) || 1);
+
+                if (stok <= 0) {
+                    return 0;
+                }
+
+                const item = cart[kunci] || {
+                    id: kunci,
+                    name: produk.productName,
+                    variant: produk.productVariant,
+                    price: Number(produk.productPrice),
+                    stock: stok,
+                    image: produk.productImage,
+                    berat: Number(produk.productBerat),
+                    quantity: 0,
+                    is_pinjam: false,
+                    tipe_transaksi: 'isi_ulang'
+                };
+
+                // Item ini selalu pembelian biasa, bukan refill.
+                item.tipe_transaksi = 'isi_ulang';
+                item.stock = stok;
+
+                const sebelum = Number(item.quantity) || 0;
+
+                item.quantity = Math.min(sebelum + tambahan, stok);
+                cart[kunci] = item;
+
+                localStorage.setItem(cartKey, JSON.stringify(cart));
+
+                // renderCart() ada di cart offcanvas. Panggil kalau tersedia
+                // supaya badge & isi offcanvas langsung ikut ter-update.
+                window.renderCart?.();
+
+                return item.quantity - sebelum;
+            }
 
             // ==========================================
-            // TOMBOL TAMBAH PRODUK
+            // MODAL DETAIL PRODUK (KLIK CARD)
             // ==========================================
-            document.querySelectorAll('.product-add-btn').forEach(function(button) {
+            // Dibuka dari JS, bukan `data-bs-toggle`, supaya klik tombol Tambah
+            // di dalam card tidak ikut membuka modal.
+            const modalOverlay = document.getElementById('produkModalOverlay');
+            const modalImage = document.getElementById('produkModalImage');
+            const modalQty = document.getElementById('produkModalQty');
+            const modalAddBtn = document.getElementById('produkModalAddBtn');
 
-                button.addEventListener('click', function() {
+            let produkAktif = null;
 
-                    // ==========================================
-                    // BELUM LOGIN
-                    // ==========================================
-                    if (!isLoggedIn) {
-                        window.location.href = "{{ route('login') }}";
+            function bukaModal(card) {
+                produkAktif = card.dataset;
+
+                const nama = produkAktif.productName || 'Produk';
+                const stok = Number(produkAktif.productStock || 0);
+
+                modalImage.src = produkAktif.productImage || '';
+                modalImage.alt = nama;
+
+                document.getElementById('produkModalTitle').textContent = nama;
+                document.getElementById('produkModalVariant').textContent =
+                    produkAktif.productVariant || '-';
+
+                document.getElementById('produkModalPrice').textContent =
+                    produkAktif.productPriceLabel || '';
+
+                document.getElementById('produkModalDesc').textContent =
+                    produkAktif.productDesc || '';
+
+                document.getElementById('produkModalStock').textContent =
+                    stok > 0 ? 'Stok tersedia: ' + stok : 'Stok habis';
+
+                modalQty.value = 1;
+
+                modalAddBtn.disabled = stok <= 0;
+
+                modalOverlay.classList.add('is-open');
+                document.body.classList.add('modal-open-lock');
+            }
+
+            function tutupModal() {
+                modalOverlay.classList.remove('is-open');
+                document.body.classList.remove('modal-open-lock');
+            }
+
+            /**
+             * Hitung lebar scrollbar dan simpan sebagai CSS variable.
+             * Dipakai body.modal-open-lock untuk mengganjal ruang yang hilang
+             * saat overflow: hidden dipasang, agar navbar tidak melebar.
+             */
+            function setKompensasiScrollbar() {
+                const lebar = window.innerWidth - document.documentElement.clientWidth;
+
+                document.documentElement.style.setProperty(
+                    '--scrollbar-compensation',
+                    lebar > 0 ? lebar + 'px' : '0px'
+                );
+            }
+
+            setKompensasiScrollbar();
+            window.addEventListener('resize', setKompensasiScrollbar);
+
+            document.querySelectorAll('.product-detail-card').forEach(function(card) {
+
+                card.addEventListener('click', function(event) {
+
+                    // Tombol Tambah punya aksi sendiri, jangan buka modal.
+                    if (event.target.closest('.product-add-btn')) {
                         return;
                     }
 
+                    // Klik pada elemen interaktif lain (mis. tombol tutup) juga
+                    // tidak boleh membuka modal.
+                    if (event.target.closest('button, a, input, select')) {
+                        return;
+                    }
 
-                    // ==========================================
-                    // SUDAH LOGIN
-                    // ==========================================
-                    const productId = this.dataset.productId;
-                    const productName = this.dataset.productName;
-                    const productVariant = this.dataset.productVariant;
-                    const productPrice = this.dataset.productPrice;
-                    const productStock = this.dataset.productStock;
-                    const productImage = this.dataset.productImage;
+                    bukaModal(card);
+                });
 
+            });
 
-                    // ==========================================
-                    // DATA PRODUK
-                    // ==========================================
-                    console.log('Tambah ke keranjang:', {
-                        productId,
-                        productName,
-                        productVariant,
-                        productPrice,
-                        productStock,
-                        productImage
-                    });
+            document.getElementById('produkModalClose')
+                .addEventListener('click', tutupModal);
 
+            // Klik area gelap di luar modal menutup modal.
+            modalOverlay.addEventListener('click', function(event) {
+                if (event.target === modalOverlay) {
+                    tutupModal();
+                }
+            });
 
-                    // ==========================================
-                    // PROSES TAMBAH KE CART
-                    // ==========================================
-                    // Tambahkan proses AJAX / fetch cart kamu di sini
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    tutupModal();
+                }
+            });
+
+            // ==========================================
+            // QTY DI DALAM MODAL
+            // ==========================================
+            // Batas atas qty mengikuti stok produk yang sedang dibuka.
+            function maksimalQty() {
+                return Math.max(1, Number(produkAktif?.productStock || 0) || 1);
+            }
+
+            function setQty(nilai) {
+                const angka = Math.min(maksimalQty(), Math.max(1, Number(nilai) || 1));
+
+                modalQty.value = angka;
+            }
+
+            document.getElementById('produkModalQtyMinus').addEventListener('click', function() {
+                setQty((Number(modalQty.value) || 1) - 1);
+            });
+
+            document.getElementById('produkModalQtyPlus').addEventListener('click', function() {
+                setQty((Number(modalQty.value) || 1) + 1);
+            });
+
+            // Qty tidak boleh diketik manual, tapi tetap dijaga kalau nilainya diubah.
+            modalQty.addEventListener('change', function() {
+                setQty(modalQty.value);
+            });
+
+            // ==========================================
+            // TAMBAH DARI DALAM MODAL
+            // ==========================================
+            modalAddBtn.addEventListener('click', function() {
+                if (!produkAktif || modalAddBtn.disabled) {
+                    return;
+                }
+
+                if (!isLoggedIn) {
+                    window.location.href = loginUrl;
+                    return;
+                }
+
+                if (!hasUploadedKtp) {
+                    alert('Tolong lengkapi profil dan unggah foto KTP terlebih dahulu.');
+                    window.location.href = profileUrl;
+                    return;
+                }
+
+                const ditambahkan = tambahKeKeranjang(produkAktif, modalQty.value);
+
+                if (ditambahkan <= 0) {
+                    alert('Stok produk ini sudah mencapai batas maksimal di keranjang.');
+                    return;
+                }
+
+                tutupModal();
+            });
+
+            // ==========================================
+            // TOMBOL TAMBAH PRODUK (DI CARD)
+            // ==========================================
+            document.querySelectorAll('.product-add-btn').forEach(function(button) {
+
+                button.addEventListener('click', function(event) {
+
+                    // Hentikan bubbling supaya handler global di cart-script
+                    // tidak ikut menambahkan item yang sama.
+                    event.stopPropagation();
+
+                    // Klik ini sudah ditangani penuh di sini.
+                    event.preventDefault();
+
+                    if (!isLoggedIn) {
+                        window.location.href = loginUrl;
+                        return;
+                    }
+
+                    if (!hasUploadedKtp) {
+                        alert('Tolong lengkapi profil dan unggah foto KTP terlebih dahulu.');
+                        window.location.href = profileUrl;
+                        return;
+                    }
+
+                    const ditambahkan = tambahKeKeranjang(this.dataset, 1);
+
+                    if (ditambahkan <= 0) {
+                        alert('Stok produk ini sudah mencapai batas maksimal di keranjang.');
+                    }
 
                 });
 
