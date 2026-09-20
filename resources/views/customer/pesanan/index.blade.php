@@ -20,6 +20,13 @@
             </li>
 
             <li class="nav-item">
+                <a href="{{ route('user.pesanan', ['status' => 'dikirim']) }}"
+                    class="nav-link {{ $status === 'dikirim' ? 'active' : '' }}">
+                    Dikirim
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a href="{{ route('user.pesanan', ['status' => 'settlement']) }}"
                     class="nav-link {{ $status === 'settlement' ? 'active' : '' }}">
                     Selesai / Dibayar
@@ -47,11 +54,13 @@
                     $totalPesanan = $item->gross_amount;
 
                     $statusMap = [
-                        'settlement' => ['label' => 'Selesai', 'class' => 'is-settlement'],
+                        'settlement' => ['label' => 'Diproses', 'class' => 'is-settlement'],
                         'menunggu_konfirmasi' => [
                             'label' => 'Menunggu Konfirmasi',
                             'class' => 'is-menunggu-konfirmasi',
                         ],
+                        'berhasil' => ['label' => 'Berhasil', 'class' => 'is-settlement'],
+                        'dikirim' => ['label' => 'Dikirim', 'class' => 'is-proses'],
                         'pending' => ['label' => 'Belum Bayar', 'class' => 'is-pending'],
                         'cancel' => ['label' => 'Dibatalkan', 'class' => 'is-cancel'],
                         'process' => ['label' => 'Diproses', 'class' => 'is-proses'],

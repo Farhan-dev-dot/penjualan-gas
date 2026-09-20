@@ -31,20 +31,34 @@ class PembelianController extends Controller
     }
 
     /**
-     * Konfirmasi admin hanya dapat dilakukan saat pembayaran menunggu konfirmasi.
+     * Satu langkah status berikutnya yang boleh dilakukan admin:
+     * pending -> menunggu_konfirmasi, menunggu_konfirmasi -> settlement.
+     * Status 'dikirim' tidak di sini karena diisi otomatis saat admin
+     * menginput barang keluar (TransaksiController::storeBarangKeluar).
      */
+    private const NEXT_STATUS = [
+        'pending' => 'menunggu_konfirmasi',
+        'process' => 'menunggu_konfirmasi',
+        'menunggu_konfirmasi' => 'settlement',
+    ];
+
     public function updatePaymentStatus(Request $request, Pembelian $pembelian)
     {
         $validated = $request->validate([
-            'payment_status' => ['required', 'in:settlement'],
+            'payment_status' => ['required', 'in:menunggu_konfirmasi,settlement'],
         ]);
 
-        if ($pembelian->payment_status !== 'menunggu_konfirmasi') {
+        $nextStatus = self::NEXT_STATUS[$pembelian->payment_status] ?? null;
+
+        if ($nextStatus === null || $validated['payment_status'] !== $nextStatus) {
             return response()->json([
-                'message' => 'Hanya transaksi berstatus menunggu konfirmasi yang dapat ditandai berhasil.',
+                'message' => 'Status transaksi ini tidak dapat diubah ke status tersebut.',
             ], 422);
         }
 
+        // 'settlement' = pembayaran dikonfirmasi admin, transaksi masuk
+        // antrean Barang Keluar dan akan berubah menjadi 'dikirim'
+        // setelah barangnya benar-benar keluar.
         $pembelian->update([
             'payment_status' => $validated['payment_status'],
         ]);
@@ -52,7 +66,9 @@ class PembelianController extends Controller
         return response()->json([
             'success' => true,
             'payment_status' => $pembelian->payment_status,
-            'label' => 'Berhasil',
+            'label' => $validated['payment_status'] === 'settlement'
+                ? 'Berhasil'
+                : 'Menunggu Konfirmasi',
         ]);
     }
 

@@ -32,17 +32,25 @@
                             placeholder="Cari kode pembelian atau nama pembeli..." value="{{ request('search') }}">
                     </div>
 
-                    <select name="status" class="filter-select" onchange="this.form.submit()">
+                    {{-- Filter status dikunci (read-only), tidak bisa diubah-ubah. --}}
+                    <select class="filter-select filter-select-locked" disabled aria-disabled="true" tabindex="-1"
+                        title="Filter status dikunci">
                         <option value="">Semua Status</option>
-                        <option value="settlement" {{ request('status') == 'settlement' ? 'selected' : '' }}>
-                            Berhasil
-                        </option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
                             Menunggu Pembayaran
                         </option>
                         <option value="menunggu_konfirmasi"
                             {{ request('status') == 'menunggu_konfirmasi' ? 'selected' : '' }}>
                             Menunggu Konfirmasi
+                        </option>
+                        <option value="settlement" {{ request('status') == 'settlement' ? 'selected' : '' }}>
+                            Berhasil
+                        </option>
+                        <option value="berhasil" {{ request('status') == 'berhasil' ? 'selected' : '' }}>
+                            Berhasil
+                        </option>
+                        <option value="dikirim" {{ request('status') == 'dikirim' ? 'selected' : '' }}>
+                            Dikirim
                         </option>
                         <option value="expire" {{ request('status') == 'expire' ? 'selected' : '' }}>
                             Kadaluarsa
@@ -51,6 +59,11 @@
                             Dibatalkan
                         </option>
                     </select>
+
+                    {{-- Kirim status yang sedang aktif supaya filter tetap bekerja. --}}
+                    @if (request('status'))
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                    @endif
 
                     <button type="submit" class="btn-filter">
                         <i class="fa-solid fa-filter"></i>
@@ -154,38 +167,31 @@
                                     </td>
                                     <td>
                                         @php
+                                            // 'badge' berisi class Bootstrap 5.3 (text-bg-*) untuk tiap status.
                                             $statusMap = [
-                                                'settlement' => ['label' => 'Berhasil', 'class' => 'status-active'],
-                                                'capture' => ['label' => 'Selesai', 'class' => 'status-active'],
-                                                'pending' => ['label' => 'Menunggu', 'class' => 'status-pending'],
+                                                'settlement' => ['label' => 'Berhasil', 'badge' => 'text-bg-success'],
+                                                'capture' => ['label' => 'Selesai', 'badge' => 'text-bg-success'],
+                                                'pending' => ['label' => 'Menunggu', 'badge' => 'text-bg-warning'],
                                                 'menunggu_konfirmasi' => [
                                                     'label' => 'Menunggu Konfirmasi',
-                                                    'class' => 'status-pending',
+                                                    'badge' => 'text-bg-warning',
                                                 ],
-                                                'expire' => ['label' => 'Kadaluarsa', 'class' => 'status-inactive'],
-                                                'cancel' => ['label' => 'Dibatalkan', 'class' => 'status-inactive'],
-                                                'deny' => ['label' => 'Ditolak', 'class' => 'status-inactive'],
+                                                'berhasil' => ['label' => 'Berhasil', 'badge' => 'text-bg-success'],
+                                                'dikirim' => ['label' => 'Dikirim', 'badge' => 'text-bg-primary'],
+                                                'expire' => ['label' => 'Kadaluarsa', 'badge' => 'text-bg-secondary'],
+                                                'cancel' => ['label' => 'Dibatalkan', 'badge' => 'text-bg-danger'],
+                                                'deny' => ['label' => 'Ditolak', 'badge' => 'text-bg-danger'],
                                             ];
                                             $status = $statusMap[$item->payment_status] ?? [
                                                 'label' => ucfirst($item->payment_status ?? '-'),
-                                                'class' => 'status-pending',
+                                                'badge' => 'text-bg-warning',
                                             ];
                                         @endphp
-                                        @php($canConfirmPayment = $item->payment_status === 'menunggu_konfirmasi')
-                                        <select
-                                            class="form-select form-select-sm status-select payment-status-select {{ $status['class'] }}"
-                                            data-url="{{ route('admin.pembelian.payment-status', $item) }}"
-                                            data-original-status="{{ $item->payment_status }}"
-                                            {{ $canConfirmPayment ? '' : 'disabled' }}
-                                            aria-label="Status pembayaran {{ $item->kode_penjualan }}">
-                                            @if ($canConfirmPayment)
-                                                <option value="menunggu_konfirmasi" selected>Menunggu Konfirmasi</option>
-                                                <option value="settlement">Berhasil</option>
-                                            @else
-                                                <option value="{{ $item->payment_status }}" selected>
-                                                    {{ $status['label'] }}</option>
-                                            @endif
-                                        </select>
+
+                                        {{-- Status pembayaran ditampilkan sebagai badge, tidak bisa diubah dari sini. --}}
+                                        <span class="badge {{ $status['badge'] }}">
+                                            {{ $status['label'] }}
+                                        </span>
                                     </td>
                                     <td class="cell-muted">
                                         {{ $item->created_at->format('d M Y, H:i') }}
@@ -199,7 +205,7 @@
                                                 data-email="{{ $item->user->email ?? '-' }}"
                                                 data-payment="{{ strtoupper($item->payment_type ?? '-') }}"
                                                 data-status="{{ $status['label'] }}"
-                                                data-statusclass="{{ $status['class'] }}"
+                                                data-statusclass="{{ $status['badge'] }}"
                                                 data-total="Rp {{ number_format($item->gross_amount, 0, ',', '.') }}"
                                                 data-tanggal="{{ $item->created_at->format('d M Y, H:i') }}"
                                                 data-items='{{ json_encode($detailItems) }}'>
@@ -248,6 +254,18 @@
 @endsection
 
 @include('components.pembeliandetailmodal')
+
+@section('styles')
+    <style>
+        /* Filter status dikunci: tidak bisa diklik maupun diubah. */
+        .filter-select-locked {
+            pointer-events: none;
+            cursor: not-allowed;
+            background-color: #f1f3f5;
+            opacity: .75;
+        }
+    </style>
+@endsection
 
 @section('scripts')
     @include('admin.components.scriptspembelian')

@@ -45,7 +45,7 @@ class TransaksiController extends Controller
         $produks = ProdukModel::orderBy('jenis_gas')->get();
         $pembelianDetails = PembelianDetail::with('pembelian')
             ->whereHas('pembelian', function ($query) {
-                $query->whereIn('payment_status', ['menunggu_konfirmasi', 'settlement']);
+                $query->whereIn('payment_status', ["dikirim"]);
             })
             ->latest('id_detail')
             ->get();
@@ -60,48 +60,192 @@ class TransaksiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'tanggal_transaksi' => ['required', 'date'],
+
             'items' => ['required', 'array', 'min:1'],
-            'items.*.id_produk' => ['required', 'exists:produk,id_produk'],
-            'items.*.jenis_transaksi' => ['required', 'in:masuk,retur,pengembalian'],
-            'items.*.stok_isi' => ['required', 'integer', 'min:0'],
-            'items.*.stok_kosong' => ['required', 'integer', 'min:0'],
-            'items.*.stok_pinjam' => ['required', 'integer', 'min:0'],
-            'items.*.id_penjualan' => ['nullable', 'exists:penjualan,id_penjualan'],
+
+            'items.*.id_produk' => [
+                'required',
+                'exists:produk,id_produk'
+            ],
+
+            'items.*.jenis_transaksi' => [
+                'required',
+                'in:masuk,retur,pengembalian'
+            ],
+
+            'items.*.stok_isi' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+
+            'items.*.stok_kosong' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+
+            'items.*.stok_pinjam' => [
+                'required',
+                'integer',
+                'min:0'
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pembelian asal wajib dipilih untuk retur / pengembalian.
+            |--------------------------------------------------------------------------
+            */
+
+            'items.*.id_penjualan' => [
+                'nullable',
+                'required_if:items.*.jenis_transaksi,retur,pengembalian',
+                'exists:penjualan,id_penjualan',
+            ],
+
+            'items.*.keterangan' => [
+                'nullable',
+                'string'
+            ],
+        ], [
+            'items.*.id_penjualan.required_if' =>
+            'Pembelian asal wajib dipilih untuk transaksi retur atau pengembalian.',
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI KECOCOKAN PRODUK DENGAN PEMBELIAN ASAL
+        |--------------------------------------------------------------------------
+        | Untuk retur & pengembalian, produk yang dipilih WAJIB ada di pembelian
+        | asal. Jika tidak cocok, request ditolak (422) dan transaksi TIDAK
+        | diupdate dan TIDAK dimasukkan ke database.
+        */
+
+        $validator->after(function ($validator) use ($request) {
+
+            foreach ($request->input('items', []) as $index => $item) {
+
+                $jenis = $item['jenis_transaksi'] ?? null;
+                $idPenjualan = $item['id_penjualan'] ?? null;
+                $idProduk = $item['id_produk'] ?? null;
+
+                /*
+                |--------------------------------------------------------------------------
+                | Stok tidak boleh kosong semua (isi, kosong, dan pinjam = 0).
+                |--------------------------------------------------------------------------
+                | Berlaku untuk semua jenis transaksi. Bila ketiganya 0, tidak ada
+                | pergerakan stok yang bisa dicatat, sehingga transaksi ditolak.
+                */
+
+                $stokIsiItem = (int) ($item['stok_isi'] ?? 0);
+                $stokKosongItem = (int) ($item['stok_kosong'] ?? 0);
+                $stokPinjamItem = (int) ($item['stok_pinjam'] ?? 0);
+
+                if ($stokIsiItem === 0 && $stokKosongItem === 0 && $stokPinjamItem === 0) {
+                    $validator->errors()->add(
+                        "items.{$index}.stok_isi",
+                        "Baris " . ($index + 1) . ": Jumlah stok tidak boleh 0 semuanya. " .
+                            "Isi minimal salah satu dari Isi, Kosong, atau Pinjam. " .
+                            "Transaksi dibatalkan dan tidak disimpan."
+                    );
+
+                    continue;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Transaksi 'masuk' manual terikat pembelian asal.
+                |--------------------------------------------------------------------------
+                | Boleh diinput tanpa id_penjualan maupun dengan pembelian asal.
+                | Pengecekan jenis gas hanya berlaku untuk retur / pengembalian.
+                */
+                if (!in_array($jenis, ['retur', 'pengembalian', "masuk"], true)) {
+                    continue;
+                }
+
+                // Pembelian asal kosong sudah divalidasi required_if di atas.
+                if (empty($idPenjualan) || empty($idProduk)) {
+                    continue;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Jenis gas harus sama dengan jenis gas pada pembelian asal.
+                |--------------------------------------------------------------------------
+                | Contoh: pembelian asal Argon, maka barang masuk wajib Argon.
+                | Bila barang masuk Nitrogen, transaksi ditolak.
+                */
+
+                $produkDipilih = ProdukModel::find($idProduk);
+                $jenisGasDipilih = $produkDipilih?->jenis_gas;
+
+                // Kumpulkan jenis gas yang benar-benar ada pada pembelian asal.
+                $jenisGasPembelian = PembelianDetail::with('produk')
+                    ->where('id_penjualan', $idPenjualan)
+                    ->get()
+                    ->pluck('produk.jenis_gas')
+                    ->filter()
+                    ->unique()
+                    ->values();
+
+                // Produk cocok bila jenis gasnya ada pada pembelian asal.
+                $produkAda = $jenisGasDipilih !== null
+                    && $jenisGasPembelian->contains($jenisGasDipilih);
+
+                if ($produkAda) {
+                    continue;
+                }
+
+                $jenisGasDipilihLabel = $jenisGasDipilih ?? 'Tidak diketahui';
+                $jenisGasPembelianLabel = $jenisGasPembelian->implode(', ') ?: 'Tidak diketahui';
+
+                $validator->errors()->add(
+                    "items.{$index}.id_produk",
+                    "Baris " . ($index + 1) . ": Barang tidak sesuai dengan pembelian asal. " .
+                        "Jenis gas yang dimasukkan '{$jenisGasDipilihLabel}', " .
+                        "sedangkan jenis gas pada pembelian asal adalah '{$jenisGasPembelianLabel}'. " .
+                        "Transaksi dibatalkan dan tidak disimpan."
+                );
+            }
+        });
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->errors()->first(),
+                'errors' => $validator->errors()->toArray(),
             ], 422);
-        }
-
-        foreach ($request->items as $item) {
-            if (in_array($item['jenis_transaksi'], ['retur', 'pengembalian'], true)) {
-                if (empty($item['id_penjualan'])) {
-                    return response()->json([
-                        'message' => 'Pembelian asal wajib dipilih untuk transaksi retur atau pengembalian.',
-                    ], 422);
-                }
-
-                $produkAdaDiPembelian = PembelianDetail::where('id_penjualan', $item['id_penjualan'])
-                    ->where('id_produk', $item['id_produk'])
-                    ->exists();
-
-                if (!$produkAdaDiPembelian) {
-                    return response()->json([
-                        'message' => 'Produk retur atau pengembalian tidak terdapat pada pembelian asal.',
-                    ], 422);
-                }
-            }
         }
 
         $namaPetugas = auth('admin')->user()?->name;
 
-        DB::transaction(function () use ($request, $namaPetugas) {
+        /*
+    |--------------------------------------------------------------------------
+    | ID PENJUALAN YANG AKAN DIUBAH MENJADI BERHASIL
+    |--------------------------------------------------------------------------
+    */
+
+        $idPenjualanSelesai = [];
+
+        DB::transaction(function () use (
+            $request,
+            $namaPetugas,
+            &$idPenjualanSelesai
+        ) {
+
             foreach ($request->items as $item) {
-                $produk = ProdukModel::where('id_produk', $item['id_produk'])
+
+                $produk = ProdukModel::where(
+                    'id_produk',
+                    $item['id_produk']
+                )
                     ->lockForUpdate()
                     ->firstOrFail();
+
+                /*
+            |--------------------------------------------------------------------------
+            | STOK SEBELUM
+            |--------------------------------------------------------------------------
+            */
 
                 $stokIsiSebelum = $produk->stok_isi;
                 $stokKosongSebelum = $produk->stok_kosong;
@@ -111,11 +255,47 @@ class TransaksiController extends Controller
                 $stokKosong = (int) $item['stok_kosong'];
                 $stokPinjam = (int) $item['stok_pinjam'];
 
+                /*
+            |--------------------------------------------------------------------------
+            | PROSES STOK
+            |--------------------------------------------------------------------------
+            */
+
                 if ($item['jenis_transaksi'] === 'pengembalian') {
+
+                    /*
+                |--------------------------------------------------------------------------
+                | PENGEMBALIAN
+                |
+                | Tabung pinjaman kembali ke gudang.
+                |
+                | stok_pinjam  -
+                | stok_kosong  +
+                |--------------------------------------------------------------------------
+                */
+
                     $jumlahPengembalian = $stokKosong;
-                    $produk->stok_pinjam = max(0, $produk->stok_pinjam - $jumlahPengembalian);
+
+                    // Jangan sampai stok pinjam minus
+                    if ($jumlahPengembalian > $produk->stok_pinjam) {
+                        throw new \Exception(
+                            "Jumlah pengembalian {$jumlahPengembalian} " .
+                                "melebihi stok pinjam {$produk->stok_pinjam}."
+                        );
+                    }
+
+                    $produk->stok_pinjam -= $jumlahPengembalian;
                     $produk->stok_kosong += $jumlahPengembalian;
                 } else {
+
+                    /*
+                |--------------------------------------------------------------------------
+                | MASUK / RETUR
+                |
+                | Stok ditambahkan sesuai input.
+                |--------------------------------------------------------------------------
+                */
+
                     $produk->stok_isi += $stokIsi;
                     $produk->stok_kosong += $stokKosong;
                     $produk->stok_pinjam += $stokPinjam;
@@ -123,28 +303,101 @@ class TransaksiController extends Controller
 
                 $produk->save();
 
+                /*
+            |--------------------------------------------------------------------------
+            | BARANG TRANSAKSI
+            |--------------------------------------------------------------------------
+            */
+
+                /*
+                |--------------------------------------------------------------------------
+                | Kolom id_penjualan bertipe NOT NULL di database.
+                |--------------------------------------------------------------------------
+                | Barang masuk manual ('masuk' tanpa pembelian asal) tidak punya
+                | id_penjualan, sehingga disimpan sebagai 0 agar tidak melanggar
+                | constraint NOT NULL dan tidak menunjuk pembelian mana pun.
+                */
+
+                $idPenjualanItem = (int) ($item['id_penjualan'] ?? 0);
+
+                if ($idPenjualanItem <= 0) {
+                    $idPenjualanItem = 0;
+                }
+
                 $barangTransaksi = BarangTransaksi::create([
-                    'id_penjualan' => $item['id_penjualan'] ?? null,
+                    'id_penjualan' => $idPenjualanItem,
                     'id_produk' => $item['id_produk'],
                     'jenis_transaksi' => $item['jenis_transaksi'],
+
                     'stok_isi' => $stokIsi,
                     'stok_kosong' => $stokKosong,
                     'stok_pinjam' => $stokPinjam,
+
                     'keterangan' => $item['keterangan'] ?? null,
+
                     'tanggal_transaksi' => $request->tanggal_transaksi,
+
                     'nama_petugas' => $namaPetugas,
                 ]);
 
+                /*
+            |--------------------------------------------------------------------------
+            | KARTU STOK
+            |--------------------------------------------------------------------------
+            */
+
                 KartuStok::create([
                     'id_transaksi' => $barangTransaksi->id_transaksi,
+
                     'stok_isi_sebelum' => $stokIsiSebelum,
                     'stok_kosong_sebelum' => $stokKosongSebelum,
                     'stok_pinjam_sebelum' => $stokPinjamSebelum,
+
                     'stok_isi_sesudah' => $produk->stok_isi,
                     'stok_kosong_sesudah' => $produk->stok_kosong,
                     'stok_pinjam_sesudah' => $produk->stok_pinjam,
+
                     'tanggal_transaksi' => $request->tanggal_transaksi,
                 ]);
+
+                /*
+            |--------------------------------------------------------------------------
+            | SIMPAN ID PENJUALAN
+            |
+            | Hanya retur / pengembalian yang memiliki pembelian asal.
+            |--------------------------------------------------------------------------
+            */
+
+                if (
+                    in_array(
+                        $item['jenis_transaksi'],
+                        ['retur', 'pengembalian', "masuk"],
+                        true
+                    )
+                    && !empty($item['id_penjualan'])
+                ) {
+
+                    $idPenjualanSelesai[$item['id_penjualan']]
+                        = $item['id_penjualan'];
+                }
+            }
+
+            /*
+        |--------------------------------------------------------------------------
+        | UBAH STATUS PEMBELIAN
+        |--------------------------------------------------------------------------
+        */
+
+            if (!empty($idPenjualanSelesai)) {
+
+                Pembelian::whereIn(
+                    'id_penjualan',
+                    array_values($idPenjualanSelesai)
+                )
+                    ->where('payment_status', '!=', 'berhasil')
+                    ->update([
+                        'payment_status' => 'berhasil'
+                    ]);
             }
         });
 
@@ -158,22 +411,22 @@ class TransaksiController extends Controller
         $barangKeluars = Pembelian::query()
             ->with([
                 'details',
-                'barangTransaksis' => fn ($query) => $query
+                'barangTransaksis' => fn($query) => $query
                     ->where('jenis_transaksi', 'keluar')
                     ->with('produk')
                     ->latest('tanggal_transaksi'),
             ])
-            ->whereHas('barangTransaksis', fn ($query) => $query->where('jenis_transaksi', 'keluar'))
+            ->whereHas('barangTransaksis', fn($query) => $query->where('jenis_transaksi', 'keluar'))
             ->when($request->search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('kode_penjualan', 'like', "%{$search}%")
-                        ->orWhereHas('details', fn ($detail) => $detail
+                        ->orWhereHas('details', fn($detail) => $detail
                             ->where('nama_penerima', 'like', "%{$search}%"))
-                        ->orWhereHas('barangTransaksis', fn ($transaksi) => $transaksi
+                        ->orWhereHas('barangTransaksis', fn($transaksi) => $transaksi
                             ->where('jenis_transaksi', 'keluar')
                             ->where(function ($transaksi) use ($search) {
                                 $transaksi->where('keterangan', 'like', "%{$search}%")
-                                    ->orWhereHas('produk', fn ($produk) => $produk
+                                    ->orWhereHas('produk', fn($produk) => $produk
                                         ->where('jenis_gas', 'like', "%{$search}%"));
                             }));
                 });
@@ -183,16 +436,18 @@ class TransaksiController extends Controller
             ->withQueryString();
 
         $pembelianSudahKeluar = BarangTransaksi::where('jenis_transaksi', 'keluar')
-            ->whereNotNull('id_penjualan')
+            ->where('id_penjualan', '>', 0)
             ->pluck('id_penjualan');
+
 
         $pembelianDetails = PembelianDetail::with(['pembelian', 'produk'])
             ->whereNotIn('id_penjualan', $pembelianSudahKeluar)
             ->whereHas('pembelian', function ($query) {
-                $query->whereIn('payment_status', ['menunggu_konfirmasi', 'settlement']);
+                $query->where('payment_status', 'menunggu_konfirmasi');
             })
             ->latest('id_detail')
             ->get();
+
 
         return view('admin.barangkeluar', compact('barangKeluars', 'pembelianDetails'));
     }
@@ -215,7 +470,10 @@ class TransaksiController extends Controller
 
         $namaPetugas = auth('admin')->user()?->name;
 
-        DB::transaction(function () use ($request, $namaPetugas) {
+        // Semua id_penjualan yang ikut dalam sekali input barang keluar ini.
+        $idPenjualanDikirim = [];
+
+        DB::transaction(function () use ($request, $namaPetugas, &$idPenjualanDikirim) {
             foreach ($request->items as $item) {
                 $detail = PembelianDetail::with('pembelian')
                     ->where('id_detail', $item['id_detail'])
@@ -269,19 +527,28 @@ class TransaksiController extends Controller
                     'stok_pinjam_sesudah' => $produk->stok_pinjam,
                     'tanggal_transaksi' => $request->tanggal_transaksi,
                 ]);
+
+
+                $idPenjualanDikirim[$detail->id_penjualan] = $detail->id_penjualan;
+            }
+
+            if (!empty($idPenjualanDikirim)) {
+                Pembelian::whereIn('id_penjualan', array_values($idPenjualanDikirim))
+                    ->where('payment_status', '!=', 'dikirim')
+                    ->update(['payment_status' => 'dikirim']);
             }
         });
 
         return redirect()
             ->route('admin.barang-keluar')
-            ->with('success', 'Data barang keluar berhasil disimpan.');
+            ->with('success', 'Data barang keluar berhasil disimpan dan status pembelian berubah menjadi dikirim.');
     }
 
     public function printSuratJalan(Pembelian $pembelian)
     {
         $pembelian->load([
             'details',
-            'barangTransaksis' => fn ($query) => $query
+            'barangTransaksis' => fn($query) => $query
                 ->where('jenis_transaksi', 'keluar')
                 ->with('produk')
                 ->latest('tanggal_transaksi'),
@@ -301,6 +568,10 @@ class TransaksiController extends Controller
     public function destroyBarangKeluar(Pembelian $pembelian)
     {
         DB::transaction(function () use ($pembelian) {
+            $pembelian = Pembelian::whereKey($pembelian->getKey())
+                ->lockForUpdate()
+                ->firstOrFail();
+
             $transaksis = BarangTransaksi::where('id_penjualan', $pembelian->id_penjualan)
                 ->where('jenis_transaksi', 'keluar')
                 ->lockForUpdate()
@@ -330,11 +601,22 @@ class TransaksiController extends Controller
                 KartuStok::where('id_transaksi', $transaksi->id_transaksi)->delete();
                 $transaksi->delete();
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Pengiriman dibatalkan: status kembali menjadi 'menunggu_konfirmasi'
+            |--------------------------------------------------------------------------
+            | Supaya pembelian ini kembali masuk antrean Barang Keluar dan bisa
+            | diinput ulang oleh admin.
+            */
+            if ($pembelian->payment_status === 'dikirim') {
+                $pembelian->update(['payment_status' => 'menunggu_konfirmasi']);
+            }
         });
 
         return redirect()
             ->route('admin.barang-keluar')
-            ->with('success', 'Seluruh transaksi barang keluar berhasil dihapus dan stok dikembalikan.');
+            ->with('success', 'Seluruh transaksi barang keluar berhasil dihapus, stok dikembalikan, dan status pembelian kembali menjadi menunggu konfirmasi.');
     }
 
     public function destroyBarangMasuk(BarangTransaksi $barangTransaksi)
@@ -374,12 +656,42 @@ class TransaksiController extends Controller
 
             $produk->save();
             KartuStok::where('id_transaksi', $transaksi->id_transaksi)->delete();
+
+            $idPenjualan = $transaksi->id_penjualan;
+
             $transaksi->delete();
+
+            /*
+            |--------------------------------------------------------------------------
+            | KEMBALIKAN STATUS PEMBELIAN MENJADI 'dikirim'
+            |--------------------------------------------------------------------------
+            | Saat barang masuk (retur / pengembalian / masuk) dibuat dengan pembelian
+            | asal, statusnya diubah menjadi 'berhasil'. Ketika barang masuk tersebut
+            | dihapus, status pembelian dikembalikan menjadi 'dikirim'.
+            |
+            | Tidak dilakukan bila masih ada transaksi barang masuk lain yang
+            | menempel pada pembelian asal yang sama.
+            */
+
+            if (!empty($idPenjualan)) {
+
+                $masihAdaTransaksi = BarangTransaksi::where('id_penjualan', $idPenjualan)
+                    ->whereIn('jenis_transaksi', ['masuk', 'retur', 'pengembalian'])
+                    ->exists();
+
+                if (!$masihAdaTransaksi) {
+                    Pembelian::where('id_penjualan', $idPenjualan)
+                        ->where('payment_status', 'berhasil')
+                        ->update([
+                            'payment_status' => 'dikirim'
+                        ]);
+                }
+            }
         });
 
         return redirect()
             ->route('admin.barang-masuk')
-            ->with('success', 'Data barang masuk berhasil dihapus dan stok dikembalikan.');
+            ->with('success', 'Data barang masuk berhasil dihapus, stok dikembalikan, dan status pembelian kembali menjadi dikirim.');
     }
 
     public function showBarangRusak()

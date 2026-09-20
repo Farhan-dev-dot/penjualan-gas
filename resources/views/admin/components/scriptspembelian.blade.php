@@ -43,14 +43,15 @@
     document.querySelectorAll('.payment-status-select:not(:disabled)').forEach(function(select) {
         select.addEventListener('change', async function() {
             const originalStatus = this.dataset.originalStatus;
+            const nextStatus = this.dataset.nextValue;
 
-            if (this.value === originalStatus) {
+            if (!nextStatus || this.value === originalStatus) {
+                this.value = originalStatus;
                 return;
             }
 
-            if (!window.confirm(
-                    'Tandai transaksi yang menunggu konfirmasi ini sebagai pembayaran berhasil? Status ini tidak dapat diubah kembali.'
-                )) {
+            if (!window.confirm(this.dataset.nextWarning ||
+                    'Ubah status transaksi ini?')) {
                 this.value = originalStatus;
                 return;
             }
@@ -66,7 +67,7 @@
                         'X-CSRF-TOKEN': @json(csrf_token()),
                     },
                     body: JSON.stringify({
-                        payment_status: 'settlement'
+                        payment_status: nextStatus
                     }),
                 });
                 const data = await response.json();

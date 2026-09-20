@@ -226,7 +226,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/produk/{produk}', [AdminProdukController::class, 'destroy'])->name('produk.destroy');
 
         // pembelian
-        Route::get('/pembelian', [AdminPembelianController::class, 'ShowPembelian'])->name('pembelian');
+        Route::get('/penjualan', [AdminPembelianController::class, 'ShowPembelian'])->name('pembelian');
         Route::patch('/pembelian/{pembelian}/payment-status', [AdminPembelianController::class, 'updatePaymentStatus'])
             ->name('pembelian.payment-status');
         Route::delete('/pembelian/{pembelian}', [AdminPembelianController::class, 'destroy'])

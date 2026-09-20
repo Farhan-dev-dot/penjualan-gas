@@ -112,16 +112,53 @@
 
             let isValid = true;
             rows.forEach((row, index) => {
-                const produk = row.querySelector('[name*="[id_produk]"]').value;
+                const produkEl = row.querySelector('[name*="[id_produk]"]');
+                const produk = produkEl.value;
                 const jenis = row.querySelector('[name*="[jenis_transaksi]"]').value;
-                const pembelian = row.querySelector('[name*="[id_penjualan]"]').value;
+                const pembelianEl = row.querySelector('[name*="[id_penjualan]"]');
+                const pembelian = pembelianEl.value;
+
+                // Jumlah stok tidak boleh 0 semuanya (isi, kosong, dan pinjam).
+                const stokIsi = parseInt(row.querySelector('[name*="[stok_isi]"]').value, 10) || 0;
+                const stokKosong = parseInt(row.querySelector('[name*="[stok_kosong]"]').value, 10) || 0;
+                const stokPinjam = parseInt(row.querySelector('[name*="[stok_pinjam]"]').value, 10) || 0;
 
                 if (!produk) {
                     alert(`Baris ${index + 1}: Pilih produk terlebih dahulu.`);
                     isValid = false;
-                } else if (['retur', 'pengembalian'].includes(jenis) && !pembelian) {
-                    alert(`Baris ${index + 1}: Pilih pembelian asal untuk transaksi ${jenis}.`);
+                } else if (stokIsi === 0 && stokKosong === 0 && stokPinjam === 0) {
+                    alert(
+                        `Baris ${index + 1}: Jumlah stok tidak boleh 0 semuanya.\n\n` +
+                        `Isi minimal salah satu dari Isi, Kosong, atau Pinjam.\n\n` +
+                        `Transaksi dibatalkan dan tidak disimpan.`
+                    );
                     isValid = false;
+                } else if (['retur', 'pengembalian'].includes(jenis) && !pembelian) {
+                    alert(`Baris ${index + 1}: Pembelian asal wajib dipilih untuk transaksi retur atau pengembalian.`);
+                    isValid = false;
+                } else if (['retur', 'pengembalian'].includes(jenis) && pembelian) {
+                    // Jenis gas yang dipilih harus SAMA dengan jenis gas pada
+                    // pembelian asal. Contoh: pembelian asal Argon, maka barang
+                    // masuk harus Argon (bukan Nitrogen).
+                    const opsi = pembelianEl.selectedOptions[0];
+
+                    const produkIdPembelian = String(opsi?.dataset.produk || '')
+                        .split(',')
+                        .map(v => v.trim())
+                        .filter(Boolean);
+
+                    const namaProduk = produkEl.selectedOptions[0]?.textContent.trim() ?? '-';
+                    const jenisGasPembelian = String(opsi?.dataset.jenisgas || '').trim() || '-';
+
+                    if (!produkIdPembelian.includes(String(produk))) {
+                        alert(
+                            `Baris ${index + 1}: Barang tidak sesuai dengan pembelian asal.\n\n` +
+                            `Jenis gas yang Anda masukkan: ${namaProduk}\n` +
+                            `Jenis gas pada pembelian asal: ${jenisGasPembelian}\n\n` +
+                            `Transaksi dibatalkan dan tidak disimpan.`
+                        );
+                        isValid = false;
+                    }
                 }
             });
 

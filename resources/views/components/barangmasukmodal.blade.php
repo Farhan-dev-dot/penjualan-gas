@@ -85,9 +85,19 @@
             <select class="form-select form-select-sm select-penjualan-row" name="items[__INDEX__][id_penjualan]">
                 <option value="">-- Tidak ada / pilih untuk retur --</option>
                 @foreach ($pembelianDetails->groupBy('id_penjualan') as $idPenjualan => $details)
-                    <option value="{{ $idPenjualan }}">
+                    @php
+                        $jenisGasPembelian = $details
+                            ->pluck('produk.jenis_gas')
+                            ->filter()
+                            ->unique()
+                            ->values();
+                    @endphp
+                    <option value="{{ $idPenjualan }}"
+                        data-produk="{{ $details->pluck('id_produk')->unique()->implode(',') }}"
+                        data-jenisgas="{{ $jenisGasPembelian->implode(', ') }}">
                         {{ $details->first()->pembelian->kode_penjualan ?? '-' }}
                         — {{ $details->first()->nama_penerima }}
+                        ({{ $jenisGasPembelian->implode(', ') }})
                     </option>
                 @endforeach
             </select>

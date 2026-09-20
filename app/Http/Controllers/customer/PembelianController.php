@@ -531,7 +531,8 @@ class PembelianController extends Controller
             $transactionStatus = $data['transaction_status'] ?? null;
             $paid = $transactionStatus === 'settlement' ||
                 ($transactionStatus === 'capture' && ($data['fraud_status'] ?? 'accept') === 'accept');
-            $wasPaid = in_array($pembelian->payment_status, ['menunggu_konfirmasi', 'settlement'], true);
+            // Sudah dibayar: dibayar online (menunggu_konfirmasi) maupun dikonfirmasi admin (settlement).
+            $wasPaid = in_array($pembelian->payment_status, ['menunggu_konfirmasi', 'settlement', 'dikirim'], true);
             $wasTerminal = in_array($pembelian->payment_status, ['expire', 'cancel', 'deny', 'failure'], true);
 
             // Status sukses dan terminal tidak boleh ditimpa notifikasi lama yang datang terlambat.
@@ -540,9 +541,10 @@ class PembelianController extends Controller
             }
 
             if ($paid) {
-                $pembelian->payment_status = $pembelian->payment_status === 'settlement'
-                    ? 'settlement'
-                    : 'menunggu_konfirmasi';
+                // Pembayaran sudah masuk, jadi cukup menunggu konfirmasi admin.
+                // Setelah admin menginput barang keluar, statusnya berubah
+                // menjadi dikirim (lihat TransaksiController::storeBarangKeluar).
+                $pembelian->payment_status = 'menunggu_konfirmasi';
             } elseif (in_array($transactionStatus, ['pending', 'expire', 'cancel', 'deny', 'failure'], true)) {
                 $pembelian->payment_status = $transactionStatus;
             }
