@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- link fontawsome  --}}
-    <script src="https://kit.fontawesome.com/f1bc26f6b9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ asset('assets/fontawesome/css/all.min.css') }}">
     <title>Bootstrap demo</title>
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     {{-- link css --}}
