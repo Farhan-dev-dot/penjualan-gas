@@ -31,44 +31,51 @@ class PembelianController extends Controller
     }
 
     /**
-     * Satu langkah status berikutnya yang boleh dilakukan admin:
-     * pending -> menunggu_konfirmasi, menunggu_konfirmasi -> settlement.
-     * Status 'dikirim' tidak di sini karena diisi otomatis saat admin
-     * menginput barang keluar (TransaksiController::storeBarangKeluar).
+     * Satu-satunya perubahan status manual yang boleh dilakukan admin lewat
+     * dropdown: dari 'dikirim' menjadi 'settlement' (Berhasil), dan hanya
+     * untuk transaksi 'pinjam' (bukan 'isi_ulang').
      */
     private const NEXT_STATUS = [
-        'pending' => 'menunggu_konfirmasi',
-        'process' => 'menunggu_konfirmasi',
-        'menunggu_konfirmasi' => 'settlement',
+        'dikirim' => 'settlement',
     ];
 
     public function updatePaymentStatus(Request $request, Pembelian $pembelian)
     {
         $validated = $request->validate([
-            'payment_status' => ['required', 'in:menunggu_konfirmasi,settlement'],
+            'payment_status' => ['required', 'in:settlement'],
         ]);
 
-        $nextStatus = self::NEXT_STATUS[$pembelian->payment_status] ?? null;
+        // Hanya transaksi 'pinjam' yang boleh diubah manual (bukan 'isi_ulang').
+        $isPinjam = $pembelian->details()
+            ->where('tipe_transaksi', 'pinjam')
+            ->exists();
 
-        if ($nextStatus === null || $validated['payment_status'] !== $nextStatus) {
+        if (! $isPinjam) {
+            return response()->json([
+                'message' => 'Hanya transaksi pinjam yang statusnya dapat diubah manual.',
+            ], 422);
+        }
+
+        $currentStatus = strtolower(trim((string) $pembelian->payment_status));
+        $requestedStatus = strtolower(trim($validated['payment_status']));
+
+        $nextStatus = self::NEXT_STATUS[$currentStatus] ?? null;
+
+        if ($nextStatus === null || $requestedStatus !== $nextStatus) {
             return response()->json([
                 'message' => 'Status transaksi ini tidak dapat diubah ke status tersebut.',
             ], 422);
         }
 
-        // 'settlement' = pembayaran dikonfirmasi admin, transaksi masuk
-        // antrean Barang Keluar dan akan berubah menjadi 'dikirim'
-        // setelah barangnya benar-benar keluar.
+        // 'settlement' = transaksi selesai (status terakhir), tidak bisa diubah lagi.
         $pembelian->update([
-            'payment_status' => $validated['payment_status'],
+            'payment_status' => $nextStatus,
         ]);
 
         return response()->json([
             'success' => true,
             'payment_status' => $pembelian->payment_status,
-            'label' => $validated['payment_status'] === 'settlement'
-                ? 'Berhasil'
-                : 'Menunggu Konfirmasi',
+            'label' => 'Berhasil',
         ]);
     }
 

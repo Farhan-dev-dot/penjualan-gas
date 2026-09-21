@@ -46,9 +46,6 @@
                         <option value="settlement" {{ request('status') == 'settlement' ? 'selected' : '' }}>
                             Berhasil
                         </option>
-                        <option value="berhasil" {{ request('status') == 'berhasil' ? 'selected' : '' }}>
-                            Berhasil
-                        </option>
                         <option value="dikirim" {{ request('status') == 'dikirim' ? 'selected' : '' }}>
                             Dikirim
                         </option>
@@ -171,27 +168,68 @@
                                             $statusMap = [
                                                 'settlement' => ['label' => 'Berhasil', 'badge' => 'text-bg-success'],
                                                 'capture' => ['label' => 'Selesai', 'badge' => 'text-bg-success'],
-                                                'pending' => ['label' => 'Menunggu', 'badge' => 'text-bg-warning'],
+                                                'pending' => [
+                                                    'label' => 'Menunggu Pembayaran',
+                                                    'badge' => 'text-bg-warning',
+                                                ],
                                                 'menunggu_konfirmasi' => [
                                                     'label' => 'Menunggu Konfirmasi',
                                                     'badge' => 'text-bg-warning',
                                                 ],
-                                                'berhasil' => ['label' => 'Berhasil', 'badge' => 'text-bg-success'],
                                                 'dikirim' => ['label' => 'Dikirim', 'badge' => 'text-bg-primary'],
                                                 'expire' => ['label' => 'Kadaluarsa', 'badge' => 'text-bg-secondary'],
                                                 'cancel' => ['label' => 'Dibatalkan', 'badge' => 'text-bg-danger'],
                                                 'deny' => ['label' => 'Ditolak', 'badge' => 'text-bg-danger'],
+                                                // Data lama menyimpan status sukses sebagai 'berhasil' (bukan
+                                                // 'settlement'). Ditampilkan sama supaya warnanya tidak seperti
+                                                // status tak dikenal.
+                                                'berhasil' => ['label' => 'Berhasil', 'badge' => 'text-bg-success'],
                                             ];
+
                                             $status = $statusMap[$item->payment_status] ?? [
                                                 'label' => ucfirst($item->payment_status ?? '-'),
                                                 'badge' => 'text-bg-warning',
                                             ];
-                                        @endphp
 
-                                        {{-- Status pembayaran ditampilkan sebagai badge, tidak bisa diubah dari sini. --}}
-                                        <span class="badge {{ $status['badge'] }}">
-                                            {{ $status['label'] }}
-                                        </span>
+                                            // Dropdown status HANYA muncul jika:
+                                            // 1. Status saat ini persis 'dikirim'
+                                            // 2. Transaksi ini berisi item dengan tipe_transaksi = 'pinjam'
+                                            //    (bukan 'isi_ulang')
+                                            // Satu-satunya tujuan: ubah ke 'settlement' (Berhasil).
+                                            $currentStatus = strtolower(trim((string) $item->payment_status));
+
+                                            $isPinjam = $item->details->where('tipe_transaksi', 'pinjam')->isNotEmpty();
+
+                                            $canChangeStatus = $isPinjam && $currentStatus === 'dikirim';
+
+                                            $nextStatus = 'settlement';
+                                            $nextLabel = 'Berhasil';
+                                            $nextBadge = $statusMap['settlement']['badge'];
+                                        @endphp
+                                        @if ($canChangeStatus)
+                                            {{-- Hanya transaksi pinjam berstatus 'dikirim' yang bisa diubah,
+                                                 dan hanya menjadi 'settlement' (Berhasil). --}}
+                                            <select class="filter-select payment-status-select {{ $status['badge'] }}"
+                                                data-url="{{ route('admin.pembelian.payment-status', $item->id_penjualan) }}"
+                                                data-original-status="{{ $item->payment_status }}"
+                                                data-original-badge="{{ $status['badge'] }}"
+                                                data-next-value="{{ $nextStatus }}"
+                                                data-next-badge="{{ $nextBadge }}"
+                                                data-next-warning="Ubah status pembayaran {{ addslashes($item->kode_penjualan) }} menjadi {{ $nextLabel }}?"
+                                                title="Ubah status pembayaran">
+                                                <option value="{{ $item->payment_status }}" selected>
+                                                    {{ $status['label'] }}
+                                                </option>
+                                                <option value="{{ $nextStatus }}">
+                                                    {{ $nextLabel }}
+                                                </option>
+                                            </select>
+                                        @else
+                                            {{-- Semua status lain (termasuk transaksi isi_ulang) hanya badge. --}}
+                                            <span class="badge {{ $status['badge'] }}">
+                                                {{ $status['label'] }}
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="cell-muted">
                                         {{ $item->created_at->format('d M Y, H:i') }}

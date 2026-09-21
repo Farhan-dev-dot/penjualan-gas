@@ -40,23 +40,66 @@
         });
     });
 
-    document.querySelectorAll('.payment-status-select:not(:disabled)').forEach(function(select) {
+    const paymentStatusSelects = document.querySelectorAll('.payment-status-select:not(:disabled)');
+    console.log('[payment-status] jumlah select ditemukan:', paymentStatusSelects.length);
+
+    paymentStatusSelects.forEach(function(select) {
+        console.log('[payment-status] binding select untuk kode:', select.dataset.originalStatus, '-> next:',
+            select.dataset.nextValue, '| url:', select.dataset.url);
+
+        // Warna select mengikuti pilihan yang sedang aktif (badge + pilihan berikutnya).
+        function paintSelect(el) {
+            const isNext = el.value === el.dataset.nextValue;
+            const cls = isNext ? el.dataset.nextBadge : el.dataset.originalBadge;
+
+            el.classList.remove(
+                'text-bg-success',
+                'text-bg-warning',
+                'text-bg-primary',
+                'text-bg-secondary',
+                'text-bg-danger',
+            );
+
+            if (cls) {
+                el.classList.add(cls);
+            }
+        }
+
+        paintSelect(select);
+
         select.addEventListener('change', async function() {
+            console.log('[payment-status] event change terpicu. value dipilih:', this.value);
+
             const originalStatus = this.dataset.originalStatus;
             const nextStatus = this.dataset.nextValue;
 
+            console.log('[payment-status] originalStatus:', originalStatus,
+                '| nextStatus (dataset):', nextStatus);
+
             if (!nextStatus || this.value === originalStatus) {
+                console.warn(
+                    '[payment-status] dibatalkan: nextStatus kosong atau value sama dengan originalStatus.'
+                    );
                 this.value = originalStatus;
+                paintSelect(this);
                 return;
             }
 
+            // Langsung tampilkan warna status tujuan sebelum dikonfirmasi.
+            paintSelect(this);
+
             if (!window.confirm(this.dataset.nextWarning ||
                     'Ubah status transaksi ini?')) {
+                console.log('[payment-status] dibatalkan oleh user (confirm ditolak).');
                 this.value = originalStatus;
+                paintSelect(this);
                 return;
             }
 
             this.disabled = true;
+            console.log('[payment-status] mengirim request ke:', this.dataset.url, 'payload:', {
+                payment_status: nextStatus
+            });
 
             try {
                 const response = await fetch(this.dataset.url, {
@@ -70,16 +113,24 @@
                         payment_status: nextStatus
                     }),
                 });
+
+                console.log('[payment-status] response status:', response.status, response
+                    .statusText);
+
                 const data = await response.json();
+                console.log('[payment-status] response body:', data);
 
                 if (!response.ok || !data.success) {
                     throw new Error(data.message || 'Status pembayaran gagal diperbarui.');
                 }
 
+                console.log('[payment-status] sukses, reload halaman...');
                 // Ambil ulang data dari server agar status tabel dan modal selalu sinkron.
                 window.location.reload();
             } catch (error) {
+                console.error('[payment-status] ERROR:', error);
                 this.value = originalStatus;
+                paintSelect(this);
                 this.disabled = false;
                 alert(error.message || 'Status pembayaran gagal diperbarui.');
             }
