@@ -12,6 +12,17 @@
     <div class="offcanvas-body d-flex flex-column p-0" id="local-cart-body"></div>
 </div>
 
-{{-- Markup saja. Logika keranjang ada di layouts/customer/cart-script.blade.php
-     yang di-include dari <head> layout, supaya window.renderCart dan
-     window.cartKey sudah siap sebelum script halaman berjalan. --}}
+{{-- Markup saja. Logika keranjang ada di public/assets/js/cart-script.js,
+     di-load di akhir <body> pada layouts/customer/app.blade.php.
+     window.CartConfig (data dari Blade seperti route & status login)
+     didefinisikan tepat di bawah, sebelum cart-script.js dijalankan. --}}
+<script>
+    window.CartConfig = {
+        isLoggedIn: @json(auth()->check()),
+        hasUploadedKtp: @json(auth()->check() && filled(auth()->user()?->foto_ktp)),
+        profileUrl: @json(route('user.profile')),
+        checkoutUrl: @json(route('user.checkout')),
+        loginUrl: @json(route('login')),
+        produkUrl: @json(route('produk.index')),
+    };
+</script>

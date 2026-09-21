@@ -12,7 +12,6 @@
     {{-- link css --}}
     <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}">
     @stack('styles')
-
 </head>
 
 <body>
@@ -25,14 +24,10 @@
     {{-- Markup keranjang tetap di body, bukan di head. --}}
 
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/refillstate.js') }}"></script>
+    <script src="{{ asset('assets/js/cart-script.js') }}"></script>
 
 
-    {{-- Helper pembersih state refill & fungsi keranjang global.
-         Dimuat di head supaya halaman di body (mis. halaman produk) bisa
-         memakai window.RefillState dan window.renderCart tanpa bergantung
-         pada urutan render markup. Keduanya hanya berisi <script>. --}}
-    @include('components.refillstate')
-    @include('layouts.customer.cart-script')
 </body>
 
 </html>
