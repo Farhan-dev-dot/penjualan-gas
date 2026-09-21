@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg shadow-sm bg-white sticky-top  ">
+<nav class="navbar navbar-expand-lg shadow-sm bg-white sticky-top py-3 ">
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('/') }}">

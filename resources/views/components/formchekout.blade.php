@@ -102,7 +102,8 @@
                                         </label>
 
                                         <select name="kecamatan" id="kecamatan" class="form-select bg-light border-0 py-3"
-                                            data-old="{{ old('kecamatan', $detailSebelumnya?->kecamatan) }}" required disabled>
+                                            data-old="{{ old('kecamatan', $detailSebelumnya?->kecamatan) }}" required
+                                            disabled>
                                             <option value="">
                                                 Pilih Kecamatan
                                             </option>
@@ -115,7 +116,8 @@
                                         </label>
 
                                         <select name="kelurahan" id="kelurahan" class="form-select bg-light border-0 py-3"
-                                            data-old="{{ old('kelurahan', $detailSebelumnya?->kelurahan) }}" required disabled>
+                                            data-old="{{ old('kelurahan', $detailSebelumnya?->kelurahan) }}" required
+                                            disabled>
                                             <option value="">
                                                 Pilih Kelurahan
                                             </option>
@@ -581,9 +583,9 @@
             let isRefillCheckout = false;
 
             try {
-                const refillCart = window.RefillState
-                    ? window.RefillState.cart()
-                    : null;
+                const refillCart = window.RefillState ?
+                    window.RefillState.cart() :
+                    null;
 
                 isRefillCheckout = Boolean(refillCart);
                 cart = refillCart || JSON.parse(localStorage.getItem(cartKey)) || {};
@@ -1297,8 +1299,7 @@
 
             function toggleFields() {
 
-                const isSewa =
-                    !hasRefil && jenisSewa.value !== '';
+                const isSewa = !hasRefil && jenisSewa.value !== '';
 
                 sewaTabungCard.classList.toggle('d-none', hasRefil);
 
@@ -1763,11 +1764,7 @@
                     snap.pay(data.snap_token, {
 
                         onSuccess: function(result) {
-
-                            console.log(
-                                'Pembayaran berhasil:',
-                                result
-                            );
+                            console.log('Pembayaran berhasil:', result);
 
                             if (isRefillCheckout) {
                                 window.RefillState?.clear();
@@ -1779,11 +1776,7 @@
                         },
 
                         onPending: function(result) {
-
-                            console.log(
-                                'Pembayaran pending:',
-                                result
-                            );
+                            console.log('Pembayaran pending:', result);
 
                             if (isRefillCheckout) {
                                 window.RefillState?.clear();
@@ -1795,26 +1788,25 @@
                         },
 
                         onError: function(result) {
-
-                            console.error(
-                                'Midtrans error:',
-                                result
-                            );
-
-                            alert(
-                                'Pembayaran gagal. Silakan coba lagi.'
-                            );
-
+                            console.error('Midtrans error:', result);
+                            alert('Pembayaran gagal. Silakan coba lagi.');
                             aktifkanTombol();
                         },
 
+                        // Popup Snap ditutup/disilang tanpa menyelesaikan pembayaran.
+                        // Karena data checkout belum tersimpan ke database (masih di cache,
+                        // baru dimaterialisasi saat webhook pertama masuk), di sini tidak perlu
+                        // membatalkan apapun — cukup bersihkan cart lalu redirect ke beranda.
                         onClose: function() {
+                            console.log('Popup Midtrans ditutup.');
 
-                            console.log(
-                                'Popup Midtrans ditutup.'
-                            );
+                            if (isRefillCheckout) {
+                                window.RefillState?.clear();
+                            } else {
+                                localStorage.removeItem(cartKey);
+                            }
 
-                            aktifkanTombol();
+                            window.location.href = '/';
                         }
 
                     });
