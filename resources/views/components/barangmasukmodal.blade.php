@@ -91,10 +91,17 @@
                             ->filter()
                             ->unique()
                             ->values();
+
+                        // Sisa yang masih dapat diproses per produk.
+                        // Dipakai untuk validasi di sisi klien agar tidak melebihi sisa.
+                        $sisaPengembalian = $details->pluck('sisa_pengembalian', 'id_produk')->toArray();
+                        $sisaRetur = $details->pluck('sisa_retur', 'id_produk')->toArray();
                     @endphp
                     <option value="{{ $idPenjualan }}"
                         data-produk="{{ $details->pluck('id_produk')->unique()->implode(',') }}"
-                        data-jenisgas="{{ $jenisGasPembelian->implode(', ') }}">
+                        data-jenisgas="{{ $jenisGasPembelian->implode(', ') }}"
+                        data-sisa-pengembalian="{{ json_encode($sisaPengembalian) }}"
+                        data-sisa-retur="{{ json_encode($sisaRetur) }}">
                         {{ $details->first()->pembelian->kode_penjualan ?? '-' }}
                         — {{ $details->first()->nama_penerima }}
                         ({{ $jenisGasPembelian->implode(', ') }})

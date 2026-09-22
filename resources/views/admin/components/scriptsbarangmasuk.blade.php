@@ -158,6 +158,50 @@
                             `Transaksi dibatalkan dan tidak disimpan.`
                         );
                         isValid = false;
+                    } else {
+                        // Sisa barang yang masih dapat diproses pada pembelian asal.
+                        // Pengembalian & retur boleh sebagian, tetapi tidak boleh
+                        // melebihi sisa yang belum diproses.
+                        const parseSisa = (raw) => {
+                            try {
+                                return JSON.parse(raw || '{}');
+                            } catch (e) {
+                                return {};
+                            }
+                        };
+
+                        const sisaPengembalian = parseSisa(opsi?.dataset.sisaPengembalian);
+                        const sisaRetur = parseSisa(opsi?.dataset.sisaRetur);
+
+                        const sisaProdukPengembalian = parseInt(sisaPengembalian[produk] || 0, 10) || 0;
+                        const sisaProdukRetur = parseInt(sisaRetur[produk] || 0, 10) || 0;
+
+                        if (jenis === 'pengembalian') {
+                            if (stokKosong === 0) {
+                                alert(
+                                    `Baris ${index + 1}: Pengembalian diisi lewat kolom Kosong.`
+                                );
+                                isValid = false;
+                            } else if (stokKosong > sisaProdukPengembalian) {
+                                alert(
+                                    `Baris ${index + 1}: Jumlah pengembalian (${stokKosong}) ` +
+                                    `melebihi sisa yang dapat dikembalikan (${sisaProdukPengembalian}).`
+                                );
+                                isValid = false;
+                            }
+                        }
+
+                        if (jenis === 'retur') {
+                            const totalRetur = stokIsi + stokKosong + stokPinjam;
+
+                            if (totalRetur > sisaProdukRetur) {
+                                alert(
+                                    `Baris ${index + 1}: Jumlah retur (${totalRetur}) ` +
+                                    `melebihi sisa yang dapat diretur (${sisaProdukRetur}).`
+                                );
+                                isValid = false;
+                            }
+                        }
                     }
                 }
             });
