@@ -33,6 +33,33 @@ class StokOpnameController extends Controller
         return view('admin.stokopname', compact('produk', 'opnames'));
     }
 
+    /**
+     * Data produk untuk modal picker stok opname.
+     * Mengembalikan partial blade (bukan JSON) agar langsung bisa
+     * di-inject ke dalam modal via fetch().
+     */
+    public function produkPicker(Request $request)
+    {
+        $search = trim((string) $request->input('search'));
+
+        $produks = ProdukModel::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($produkQuery) use ($search) {
+                    $produkQuery->where('kode_produk', 'like', "%{$search}%")
+                        ->orWhere('jenis_gas', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('jenis_gas')
+            ->paginate(10)
+            ->withQueryString();
+
+        if ($request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return view('admin.components.produkpickertable', compact('produks'));
+        }
+
+        return redirect()->route('admin.stok-opname');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

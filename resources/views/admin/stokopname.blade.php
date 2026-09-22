@@ -71,7 +71,6 @@
                 <table class="table w-100 mb-0">
                     <thead>
                         <tr>
-                            <th>Kode</th>
                             <th>Produk</th>
                             <th>Tanggal</th>
                             <th>Selisih Isi</th>
@@ -82,7 +81,6 @@
                     <tbody>
                         @forelse ($opnames as $opname)
                             <tr>
-                                <td>{{ $opname->kode_opname }}</td>
                                 <td>{{ $opname->produk?->jenis_gas ?? '-' }}</td>
                                 <td>{{ $opname->tanggal_opname?->format('d M Y') }}</td>
                                 <td>{{ $opname->selisih_isi }}</td>
@@ -90,7 +88,7 @@
                                 <td class="text-start">
                                     <div class="row-actions justify-content-start">
                                         <button type="button" class="btn-icon" title="Detail" data-bs-toggle="modal"
-                                            data-bs-target="#ModalDetailOpname" data-kode="{{ $opname->kode_opname }}"
+                                            data-bs-target="#ModalDetailOpname"
                                             data-produk="{{ $opname->produk?->jenis_gas ?? '-' }}"
                                             data-tanggal="{{ $opname->tanggal_opname?->format('d M Y H:i') }}"
                                             data-keterangan="{{ $opname->keterangan ?? '-' }}"
@@ -125,7 +123,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6">
+                                <td colspan="5">
                                     <div class="table-empty"><i class="fa-solid fa-clipboard-check"></i>
                                         <p>Belum ada data stok opname</p>
                                     </div>
@@ -147,7 +145,6 @@
                         <div class="cm-avatar"><i class="fa-solid fa-clipboard-check"></i></div>
                         <div>
                             <h6 class="cm-title">Detail Stok Opname</h6>
-                            <span class="cm-subtitle" id="d-kode">-</span>
                         </div>
                     </div>
                     <button type="button" class="btn-close cm-btn-close-x" data-bs-dismiss="modal"

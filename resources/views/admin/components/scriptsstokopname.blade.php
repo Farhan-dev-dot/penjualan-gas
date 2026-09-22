@@ -135,7 +135,6 @@
         const btn = e.relatedTarget;
         if (!btn) return;
 
-        getElement('d-kode').textContent = btn.dataset.kode;
         getElement('d-produk').textContent = btn.dataset.produk;
         getElement('d-tanggal').textContent = btn.dataset.tanggal;
         getElement('d-keterangan').textContent = btn.dataset.keterangan;
