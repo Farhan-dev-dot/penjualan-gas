@@ -27,6 +27,8 @@
     <script src="{{ asset('assets/js/refillstate.js') }}"></script>
     <script src="{{ asset('assets/js/cart-script.js') }}"></script>
 
+    @stack('scripts')
+
 
 </body>
 

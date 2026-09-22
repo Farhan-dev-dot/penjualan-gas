@@ -166,6 +166,10 @@ class PembelianController extends Controller
         }
 
         if (!$pembelian->snap_token) {
+            // Durasi kedaluwarsa pembayaran (jam), selaras dengan createTransaction().
+            $expiryDuration = 1;
+            $expiredAt = $pembelian->expired_at ?? now()->addHours($expiryDuration);
+
             $details = $pembelian->details->map(function ($detail) {
                 return [
                     'id' => (string) $detail->id_produk,
@@ -198,12 +202,13 @@ class PembelianController extends Controller
 
                 'expiry' => [
                     'unit'     => 'hour',
-                    'duration' => 1, // nanti disesuaikan durasinya
+                    'duration' => $expiryDuration,
                 ],
             ]);
 
             $pembelian->update([
-                'snap_token' => $snapToken
+                'snap_token' => $snapToken,
+                'expired_at' => $expiredAt,
             ]);
         }
 
@@ -385,6 +390,11 @@ class PembelianController extends Controller
 
             $kodePenjualan = 'INV-' . time() . '-' . $user->id;
 
+            // Durasi kedaluwarsa pembayaran (jam) sekaligus dipakai sebagai
+            // durasi expiry pada payload Snap agar selaras dengan expired_at.
+            $expiryDuration = 1;
+            $expiredAt = now()->addHours($expiryDuration);
+
             $pembelian = DB::transaction(function () use (
                 $request,
                 $cartItems,
@@ -394,7 +404,8 @@ class PembelianController extends Controller
                 $durasiSewa,
                 $totalHariSewa,
                 $mulaiSewa,
-                $akhirSewa
+                $akhirSewa,
+                $expiredAt
             ) {
 
                 $pembelian = Pembelian::create([
@@ -403,6 +414,7 @@ class PembelianController extends Controller
                     'gross_amount'     => $grossAmount,
                     'payment_type'     => null,
                     'payment_status'   => 'pending',
+                    'expired_at'       => $expiredAt,
                 ]);
 
                 foreach ($cartItems as $item) {
@@ -465,13 +477,16 @@ class PembelianController extends Controller
                 ],
                 'expiry' => [
                     'unit'     => 'hour',
-                    'duration' => 1,
+                    'duration' => $expiryDuration,
                 ],
             ];
 
             $snapToken = Snap::getSnapToken($transactionDetails);
 
-            $pembelian->update(['snap_token' => $snapToken]);
+            $pembelian->update([
+                'snap_token' => $snapToken,
+                'expired_at' => $pembelian->expired_at ?? $expiredAt,
+            ]);
 
             return response()->json([
                 'success'     => true,

@@ -27,11 +27,13 @@ class Pembelian extends Model
         'payment_status',
         'midtrans_response',
         'snap_token',
+        'expired_at',
     ];
 
     protected $casts = [
         'gross_amount' => 'integer',
         'midtrans_response' => 'array',
+        'expired_at' => 'datetime',
     ];
 
     /**

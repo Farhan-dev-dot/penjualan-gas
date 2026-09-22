@@ -12,6 +12,19 @@
                     <span class="pesanan-flat-dot">&middot;</span>
                     <span class="pesanan-flat-date">{{ $pembelian->created_at->format('d M Y, H:i') }}</span>
                 </div>
+
+                @if (in_array($pembelian->payment_status, ['pending', 'process'], true) && $pembelian->expired_at)
+                    @if ($pembelian->expired_at->isPast())
+                        <span class="pesanan-expired-badge pesanan-expired-badge--danger">
+                            Sudah kedaluwarsa
+                        </span>
+                    @else
+                        <span id="expiredBadge" class="pesanan-expired-badge pesanan-expired-badge--warning"
+                            data-expired-at="{{ $pembelian->expired_at->toIso8601String() }}">
+                            Berlaku sampai {{ $pembelian->expired_at->format('d M Y, H:i') }}
+                        </span>
+                    @endif
+                @endif
             </div>
 
 
@@ -156,3 +169,49 @@
 
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        (function() {
+            const badge = document.getElementById('expiredBadge');
+            if (!badge) return;
+
+            const expiredAt = new Date(badge.dataset.expiredAt).getTime();
+            let intervalHitungMundur = null;
+
+            function ubahKeKedaluwarsa() {
+                badge.classList.remove('pesanan-expired-badge--warning');
+                badge.classList.add('pesanan-expired-badge--danger');
+                badge.textContent = 'Sudah kedaluwarsa';
+            }
+
+            function perbaruiHitungMundur() {
+                const sisa = expiredAt - Date.now();
+
+                if (sisa <= 0) {
+                    ubahKeKedaluwarsa();
+                    if (intervalHitungMundur) {
+                        clearInterval(intervalHitungMundur);
+                    }
+                    return;
+                }
+
+                const totalJam = Math.floor(sisa / 3600000);
+                const hari = Math.floor(totalJam / 24);
+                const jam = totalJam % 24;
+                const menit = Math.floor((sisa % 3600000) / 60000);
+                const detik = Math.floor((sisa % 60000) / 1000);
+
+                badge.textContent = `${jam}j ${menit}m ${detik}d`;
+            }
+
+            if (expiredAt - Date.now() <= 0) {
+                ubahKeKedaluwarsa();
+                return;
+            }
+
+            perbaruiHitungMundur();
+            intervalHitungMundur = setInterval(perbaruiHitungMundur, 1000);
+        })();
+    </script>
+@endpush
