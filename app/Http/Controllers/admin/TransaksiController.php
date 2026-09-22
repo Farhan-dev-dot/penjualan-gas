@@ -540,7 +540,7 @@ class TransaksiController extends Controller
             ], 422);
         }
 
-        $namaPetugas = auth('admin')->user()?->name;
+        $namaPetugas = auth()->user()?->name;
 
         // Semua id_penjualan yang ikut dalam sekali input barang keluar ini.
         $idPenjualanDikirim = [];

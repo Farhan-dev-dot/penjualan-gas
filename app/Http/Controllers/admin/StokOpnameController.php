@@ -91,6 +91,8 @@ class StokOpnameController extends Controller
                 'rusak' => (int) $produk->stok_rusak,
             ];
 
+            $namaPetugas = auth()->user()?->name;
+
             StokOpname::create([
                 'id_produk' => $produk->id_produk,
                 'stok_isi_sistem' => $sistem['isi'],
@@ -98,6 +100,7 @@ class StokOpnameController extends Controller
                 'stok_pinjam_sistem' => $sistem['pinjam'],
                 'stok_rusak_sistem' => $sistem['rusak'],
                 'stok_isi_fisik' => $fisik['isi'],
+                'petugas' => $namaPetugas,
                 'stok_kosong_fisik' => $fisik['kosong'],
                 'stok_pinjam_fisik' => $fisik['pinjam'],
                 'stok_rusak_fisik' => $fisik['rusak'],

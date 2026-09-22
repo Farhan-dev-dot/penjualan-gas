@@ -25,7 +25,7 @@ class StokOpname extends Model
         'stok_kosong_fisik',
         'stok_pinjam_fisik',
         'stok_rusak_fisik',
-
+        "petugas",
         'selisih_isi',
         'selisih_kosong',
         'selisih_pinjam',

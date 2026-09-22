@@ -24,10 +24,14 @@
                     <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                     <input type="text" name="kode_produk" id="kode_produk_input" class="form-control"
                         placeholder="Pilih produk..." value="{{ request('kode_produk') }}" readonly style="cursor:pointer">
-                    <button type="button" class="btn-filter" id="btn-buka-picker-produk" title="Pilih Produk">
-                        <i class="fa-solid fa-search"></i> Pilih Produk
-                    </button>
                 </div>
+
+                @if (request('kode_produk'))
+                    <a href="{{ route('admin.stok-opname') }}" class="btn-filter btn-reset">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Reset
+                    </a>
+                @endif
             </form>
 
             @if ($produk)
@@ -95,6 +99,7 @@
                                             data-tanggal="{{ $opname->tanggal_opname?->format('d M Y H:i') }}"
                                             data-keterangan="{{ $opname->keterangan ?? '-' }}"
                                             data-isi-sistem="{{ $opname->stok_isi_sistem }}"
+                                            data-petugas = "{{ $opname->petugas }}"
                                             data-isi-fisik="{{ $opname->stok_isi_fisik }}"
                                             data-isi-selisih="{{ $opname->selisih_isi }}"
                                             data-kosong-sistem="{{ $opname->stok_kosong_sistem }}"
@@ -186,6 +191,9 @@
                 </div>
                 <div class="modal-body cm-body">
                     <div class="cm-field"><span class="cm-field-label">Produk</span><strong id="d-produk">-</strong>
+                    </div>
+                    <div class="cm-field"><span class="cm-field-label">Nama Petugas</span><strong
+                            id="d-petugas">-</strong>
                     </div>
                     <div class="cm-field"><span class="cm-field-label">Tanggal</span><strong id="d-tanggal">-</strong>
                     </div>

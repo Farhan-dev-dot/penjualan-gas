@@ -133,10 +133,12 @@
         if (e.target.id !== 'ModalDetailOpname') return;
 
         const btn = e.relatedTarget;
+        console.log(btn);
         if (!btn) return;
 
         getElement('d-produk').textContent = btn.dataset.produk;
         getElement('d-tanggal').textContent = btn.dataset.tanggal;
+        getElement('d-petugas').textContent = btn.dataset.petugas;
         getElement('d-keterangan').textContent = btn.dataset.keterangan;
 
         KATEGORI.forEach(kategori => {
