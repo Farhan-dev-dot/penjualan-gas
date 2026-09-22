@@ -205,7 +205,7 @@
 --}}
 <div class="modal fade cm-modal" id="ModalPembelianAsal" tabindex="-1" aria-labelledby="PembelianAsalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content cm-content">
             <div class="modal-header cm-header">
                 <div class="cm-header-left">
@@ -221,57 +221,115 @@
 
             <div class="modal-body cm-body">
 
-                @forelse ($pembelianDetails->groupBy('id_penjualan') as $idPenjualan => $details)
-                    @php
-                        $detailUtama = $details->first();
-                        $jenisGasPembelian = $details->pluck('produk.jenis_gas')->filter()->unique()->values();
+                {{-- Search: kode pembelian / penerima / produk / status pembayaran --}}
+                <div class="input-group search-box mb-3">
+                    <span class="input-group-text">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="pa-search" class="form-control"
+                        placeholder="Cari kode pembelian / penerima / produk / status..." autocomplete="off">
+                </div>
 
-                        $dataProduk = $details->pluck('id_produk')->unique()->implode(',');
+                @php
+                    // Satu baris = satu pembelian (dikelompokkan per id_penjualan).
+                    // Logic sisa_pengembalian / sisa_retur tetap memakai data existing.
+                    $barisPembelian = $pembelianDetails
+                        ->groupBy('id_penjualan')
+                        ->map(function ($details, $idPenjualan) {
+                            $detailUtama = $details->first();
 
-                        $dataSisaPengembalian = $details
-                            ->pluck('sisa_pengembalian', 'id_produk')
-                            ->toArray();
+                            return [
+                                'id_penjualan' => $idPenjualan,
+                                'kode' => $detailUtama->pembelian->kode_penjualan ?? '-',
+                                'penerima' => $detailUtama->nama_penerima ?? '-',
+                                'telepon' => $detailUtama->telepon_penerima ?? '',
+                                'produk' => $details
+                                    ->pluck('produk.jenis_gas')
+                                    ->filter()
+                                    ->unique()
+                                    ->values()
+                                    ->implode(', '),
+                                'status' => $detailUtama->pembelian->payment_status ?? '-',
+                                'sisa_pengembalian' => (int) $details->sum('sisa_pengembalian'),
+                                'sisa_retur' => (int) $details->sum('sisa_retur'),
+                                'data_produk' => $details->pluck('id_produk')->unique()->implode(','),
+                                'data_sisa_pengembalian' => $details
+                                    ->pluck('sisa_pengembalian', 'id_produk')
+                                    ->toArray(),
+                                'data_sisa_retur' => $details->pluck('sisa_retur', 'id_produk')->toArray(),
+                            ];
+                        })
+                        ->values();
+                @endphp
 
-                        $dataSisaRetur = $details->pluck('sisa_retur', 'id_produk')->toArray();
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle" id="table-pembelian-asal">
+                        <thead>
+                            <tr>
+                                <th style="width:15%">Kode Pembelian</th>
+                                <th style="width:18%">Penerima</th>
+                                <th style="width:24%">Produk</th>
+                                <th style="width:12%">Status</th>
+                                <th style="width:10%" class="text-center">Sisa Pengembalian</th>
+                                <th style="width:10%" class="text-center">Sisa Retur</th>
+                                <th style="width:11%" class="text-end">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pa-tbody">
+                            @forelse ($barisPembelian as $baris)
+                                <tr class="pa-row">
+                                    <td class="text-break">{{ $baris['kode'] }}</td>
+                                    <td class="text-break">
+                                        {{ $baris['penerima'] }}
+                                        @if ($baris['telepon'])
+                                            <span class="d-block text-muted small">{{ $baris['telepon'] }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-break">{{ $baris['produk'] ?: '-' }}</td>
+                                    <td class="text-break">{{ $baris['status'] }}</td>
+                                    <td class="text-center">{{ $baris['sisa_pengembalian'] }}</td>
+                                    <td class="text-center">{{ $baris['sisa_retur'] }}</td>
+                                    <td class="text-end">
+                                        <button type="button" class="btn btn-sm btn-primary btn-pilih-pembelian"
+                                            data-id="{{ $baris['id_penjualan'] }}" data-kode="{{ $baris['kode'] }}"
+                                            data-produk="{{ $baris['data_produk'] }}"
+                                            data-sisa-pengembalian='@json($baris['data_sisa_pengembalian'])'
+                                            data-sisa-retur='@json($baris['data_sisa_retur'])'>
+                                            <i class="fa-solid fa-check"></i> Pilih
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="table-empty">
+                                            <i class="fa-solid fa-box-open"></i>
+                                            <p>Belum ada pembelian yang bisa diproses.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
 
-                        $totalSisaPengembalian = (int) $details->sum('sisa_pengembalian');
-                        $totalSisaRetur = (int) $details->sum('sisa_retur');
-                    @endphp
+                            {{-- Pesan khusus ketika search tidak menemukan hasil --}}
+                            <tr id="pa-empty-search" style="display:none">
+                                <td colspan="7">
+                                    <div class="table-empty">
+                                        <i class="fa-solid fa-box-open"></i>
+                                        <p>Pembelian tidak ditemukan.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                    <div class="pembelian-asal-item d-flex align-items-start justify-content-between gap-3 mb-2">
-                        <div>
-                            <div class="fw-semibold">
-                                {{ $detailUtama->pembelian->kode_penjualan ?? '-' }}
-                            </div>
-                            <div class="text-muted small">
-                                {{ $detailUtama->nama_penerima ?? '-' }}
-                                @if ($detailUtama->telepon_penerima)
-                                    &bull; {{ $detailUtama->telepon_penerima }}
-                                @endif
-                            </div>
-                            <div class="text-muted small">
-                                {{ $jenisGasPembelian->implode(', ') ?: '-' }}
-                                &bull; Status: {{ $detailUtama->pembelian->payment_status ?? '-' }}
-                                &bull; Sisa pengembalian: {{ $totalSisaPengembalian }}
-                                &bull; Sisa retur: {{ $totalSisaRetur }}
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-sm btn-primary btn-pilih-pembelian"
-                            data-id="{{ $idPenjualan }}"
-                            data-kode="{{ $detailUtama->pembelian->kode_penjualan ?? '-' }}"
-                            data-produk="{{ $dataProduk }}"
-                            data-sisa-pengembalian='@json($dataSisaPengembalian)'
-                            data-sisa-retur='@json($dataSisaRetur)'>
-                            <i class="fa-solid fa-check"></i> Pilih
-                        </button>
-                    </div>
-                @empty
-                    <div class="table-empty">
-                        <i class="fa-solid fa-box-open"></i>
-                        <p>Belum ada pembelian yang bisa diproses barang masuknya</p>
-                    </div>
-                @endforelse
+                {{-- Pagination: maksimal 10 pembelian per halaman --}}
+                <div id="pa-footer" class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-3">
+                    <span class="text-muted small" id="pa-info">-</span>
+                    <nav aria-label="Pagination pembelian asal">
+                        <ul class="pagination pagination-sm mb-0" id="pa-pagination"></ul>
+                    </nav>
+                </div>
 
                 <p class="text-muted small mt-3 mb-0">
                     Pembelian berstatus <strong>settlement</strong> tetap dapat dipilih selama masih ada sisa barang
