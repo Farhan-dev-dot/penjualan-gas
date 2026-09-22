@@ -7,7 +7,6 @@ use App\Models\ProdukModel;
 use App\Models\StokOpname;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class StokOpnameController extends Controller
 {
@@ -22,11 +21,10 @@ class StokOpnameController extends Controller
         $opnames = StokOpname::with('produk')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = trim($request->search);
-                $query->where('kode_opname', 'like', "%{$search}%")
-                    ->orWhereHas('produk', function ($produkQuery) use ($search) {
-                        $produkQuery->where('kode_produk', 'like', "%{$search}%")
-                            ->orWhere('jenis_gas', 'like', "%{$search}%");
-                    });
+                $query->whereHas('produk', function ($produkQuery) use ($search) {
+                    $produkQuery->where('kode_produk', 'like', "%{$search}%")
+                        ->orWhere('jenis_gas', 'like', "%{$search}%");
+                });
             })
             ->latest('tanggal_opname')
             ->paginate(10)
@@ -67,7 +65,6 @@ class StokOpnameController extends Controller
             ];
 
             StokOpname::create([
-                'kode_opname' => 'OPN-' . now()->format('YmdHis') . '-' . Str::upper(Str::random(4)),
                 'id_produk' => $produk->id_produk,
                 'stok_isi_sistem' => $sistem['isi'],
                 'stok_kosong_sistem' => $sistem['kosong'],

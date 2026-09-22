@@ -7,23 +7,54 @@
 
             {{-- ================= HEADER ================= --}}
             <div class="pesanan-detail-header">
-                <div class="pesanan-flat-top-left">
-                    <span class="pesanan-flat-kode">{{ $pembelian->kode_penjualan }}</span>
-                    <span class="pesanan-flat-dot">&middot;</span>
-                    <span class="pesanan-flat-date">{{ $pembelian->created_at->format('d M Y, H:i') }}</span>
+                <div class="pesanan-detail-header-row">
+                    <div class="pesanan-flat-top-left">
+                        <span class="pesanan-flat-kode">{{ $pembelian->kode_penjualan }}</span>
+                        <span class="pesanan-flat-dot">&middot;</span>
+                        <span class="pesanan-flat-date">{{ $pembelian->created_at->format('d M Y, H:i') }}</span>
+                    </div>
+
+                    @if (in_array($pembelian->payment_status, ['pending', 'process'], true) && $pembelian->expired_at)
+                        @if ($pembelian->expired_at->isPast())
+                            <div class="pesanan-expired-chip pesanan-expired-chip--danger">
+                                <span class="pesanan-expired-chip-icon">
+                                    <i class="fa-regular fa-clock"></i>
+                                </span>
+                                <span class="pesanan-expired-chip-body">
+                                    <span class="pesanan-expired-chip-label">Status Pembayaran</span>
+                                    <span class="pesanan-expired-chip-text">Sudah kedaluwarsa</span>
+                                </span>
+                            </div>
+                        @else
+                            <div id="expiredBadge" class="pesanan-expired-chip pesanan-expired-chip--warning"
+                                data-expired-at="{{ $pembelian->expired_at->toIso8601String() }}">
+                                <span class="pesanan-expired-chip-icon">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <span class="pesanan-expired-chip-pulse"></span>
+                                </span>
+                                <span class="pesanan-expired-chip-body">
+                                    <span class="pesanan-expired-chip-label">Bayar sebelum</span>
+                                    <span class="pesanan-expired-chip-text" id="expiredCountdownText">
+                                        {{ $pembelian->expired_at->format('d M Y, H:i') }}
+                                    </span>
+                                </span>
+                            </div>
+                        @endif
+                    @endif
                 </div>
 
-                @if (in_array($pembelian->payment_status, ['pending', 'process'], true) && $pembelian->expired_at)
-                    @if ($pembelian->expired_at->isPast())
-                        <span class="pesanan-expired-badge pesanan-expired-badge--danger">
-                            Sudah kedaluwarsa
-                        </span>
-                    @else
-                        <span id="expiredBadge" class="pesanan-expired-badge pesanan-expired-badge--warning"
-                            data-expired-at="{{ $pembelian->expired_at->toIso8601String() }}">
-                            Berlaku sampai {{ $pembelian->expired_at->format('d M Y, H:i') }}
-                        </span>
-                    @endif
+                @if (in_array($pembelian->payment_status, ['pending', 'process'], true))
+                    <div class="pesanan-flat-actions mt-3">
+                        <button type="button" class="btn-flat-outline btn-sm btn-batalkan-pesanan"
+                            data-url="{{ route('user.pesanan.batalkan', $pembelian->id_penjualan) }}">
+                            Batalkan
+                        </button>
+                        <a href="{{ route('user.pesanan.payment-token', $pembelian->id_penjualan) }}"
+                            data-sync-url="{{ route('user.pesanan.sync-payment-status', $pembelian->id_penjualan) }}"
+                            class="btn-flat-primary btn-sm js-pay-order">
+                            Bayar Sekarang
+                        </a>
+                    </div>
                 @endif
             </div>
 
@@ -115,13 +146,6 @@
                             <div class="pesanan-saya-penerima-value">{{ $detailPenerima->telepon_penerima }}</div>
                         </div>
 
-                        <div class="pesanan-saya-penerima-item">
-                            <div class="pesanan-saya-penerima-head">
-                                <span class="pesanan-saya-penerima-icon"><i class="fa-regular fa-envelope fs-4"></i></span>
-                                <span class="pesanan-saya-penerima-label">Email</span>
-                            </div>
-                            <div class="pesanan-saya-penerima-value">{{ $detailPenerima->email_penerima }}</div>
-                        </div>
 
                         <div class="pesanan-saya-penerima-item pesanan-saya-penerima-item--full">
                             <div class="pesanan-saya-penerima-head">
@@ -170,19 +194,23 @@
     </div>
 @endsection
 
+
 @push('scripts')
     <script>
         (function() {
             const badge = document.getElementById('expiredBadge');
             if (!badge) return;
 
+            const countdownText = document.getElementById('expiredCountdownText');
             const expiredAt = new Date(badge.dataset.expiredAt).getTime();
             let intervalHitungMundur = null;
 
             function ubahKeKedaluwarsa() {
-                badge.classList.remove('pesanan-expired-badge--warning');
-                badge.classList.add('pesanan-expired-badge--danger');
-                badge.textContent = 'Sudah kedaluwarsa';
+                badge.classList.remove('pesanan-expired-chip--warning');
+                badge.classList.add('pesanan-expired-chip--danger');
+                badge.querySelector('.pesanan-expired-chip-pulse')?.remove();
+                badge.querySelector('.pesanan-expired-chip-label').textContent = 'Status Pembayaran';
+                countdownText.textContent = 'Sudah kedaluwarsa';
             }
 
             function perbaruiHitungMundur() {
@@ -190,9 +218,7 @@
 
                 if (sisa <= 0) {
                     ubahKeKedaluwarsa();
-                    if (intervalHitungMundur) {
-                        clearInterval(intervalHitungMundur);
-                    }
+                    if (intervalHitungMundur) clearInterval(intervalHitungMundur);
                     return;
                 }
 
@@ -202,7 +228,8 @@
                 const menit = Math.floor((sisa % 3600000) / 60000);
                 const detik = Math.floor((sisa % 60000) / 1000);
 
-                badge.textContent = `${jam}j ${menit}m ${detik}d`;
+                const bagianHari = hari > 0 ? `${hari}h ` : '';
+                countdownText.textContent = `${bagianHari}${jam}j ${menit}m ${detik}d lagi`;
             }
 
             if (expiredAt - Date.now() <= 0) {
@@ -213,5 +240,99 @@
             perbaruiHitungMundur();
             intervalHitungMundur = setInterval(perbaruiHitungMundur, 1000);
         })();
+    </script>
+
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
+    </script>
+    <script>
+        document.querySelectorAll('.js-pay-order').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                button.classList.add('disabled');
+
+                fetch(button.href, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(async function(response) {
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            if (data.payment_status === 'expire') {
+                                window.location.reload();
+                            }
+
+                            throw new Error(data.message || 'Token pembayaran tidak tersedia.');
+                        }
+
+                        return data;
+                    })
+                    .then(function(data) {
+                        window.snap.pay(data.snap_token, {
+                            onSuccess: function() {
+                                window.location.reload();
+                            },
+                            onPending: function() {
+                                window.location.reload();
+                            },
+                            onError: function() {
+                                alert('Pembayaran gagal, silakan coba lagi.');
+                                window.location.reload();
+                            },
+                            onClose: function() {
+                                button.classList.remove('disabled');
+                            }
+                        });
+                    })
+                    .catch(function(error) {
+                        alert(error.message);
+                        button.classList.remove('disabled');
+                    });
+            });
+        });
+
+        // Batalkan pesanan: pakai event delegation agar tetap bekerja
+        // untuk elemen apa pun yang memakai class .btn-batalkan-pesanan.
+        document.addEventListener('click', function(event) {
+            const button = event.target.closest('.btn-batalkan-pesanan');
+            if (!button) return;
+
+            event.preventDefault();
+
+            if (!confirm('Batalkan pesanan ini?')) return;
+
+            const teksAsli = button.textContent.trim();
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ??
+                @json(csrf_token());
+
+            button.disabled = true;
+            button.textContent = 'Memproses...';
+
+            fetch(button.dataset.url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                })
+                .then(async function(response) {
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.message || 'Pesanan tidak dapat dibatalkan.');
+                    }
+
+                    return data;
+                })
+                .then(function() {
+                    window.location.reload();
+                })
+                .catch(function(error) {
+                    alert(error.message);
+                    button.disabled = false;
+                    button.textContent = teksAsli;
+                });
+        });
     </script>
 @endpush

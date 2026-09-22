@@ -543,6 +543,64 @@ class PembelianController extends Controller
         }
     }
 
+    /**
+     * Batalkan pesanan pelanggan yang masih menunggu pembayaran.
+     * Transaksi di Midtrans juga dibatalkan; kegagalan di Midtrans tidak
+     * menggagalkan pembatalan di sisi aplikasi.
+     */
+    public function cancelPembelian(Request $request, $id_penjualan)
+    {
+        try {
+            $pembelian = Pembelian::where('id_penjualan', $id_penjualan)
+                ->where('id_user', auth()->id())
+                ->whereIn('payment_status', ['pending', 'process'])
+                ->firstOrFail();
+
+
+            try {
+                Transaction::cancel($pembelian->kode_penjualan);
+            } catch (\Throwable $th) {
+                Log::info('Gagal membatalkan transaksi di Midtrans', [
+                    'kode_penjualan' => $pembelian->kode_penjualan,
+                    'message' => $th->getMessage(),
+                ]);
+            }
+
+            $pembelian->update([
+                'payment_status' => 'cancel',
+            ]);
+
+            $pesan = 'Pesanan berhasil dibatalkan.';
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $pesan,
+                ]);
+            }
+
+            return redirect()
+                ->route('user.pesanan-detail', $pembelian->id_penjualan)
+                ->with('success', $pesan);
+        } catch (\Throwable $th) {
+            Log::error('Gagal membatalkan pesanan pembelian', [
+                'kode_penjualan' => $kode_penjualan ?? null,
+                'message' => $th->getMessage(),
+            ]);
+
+            $pesan = 'Pesanan tidak dapat dibatalkan.';
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $pesan,
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', $pesan);
+        }
+    }
+
     /** Terapkan status Midtrans secara atomik dan idempoten. */
     public function applyMidtransStatus(Pembelian $pembelian, array $data): Pembelian
     {

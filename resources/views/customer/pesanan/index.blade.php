@@ -133,8 +133,11 @@
                                         Lihat Detail
                                     </a>
                                 @endif
-
                                 @if (in_array($item->payment_status, ['pending', 'process']))
+                                    <button type="button" class="btn-flat-outline btn-sm btn-batalkan-pesanan"
+                                        data-url="{{ route('user.pesanan.batalkan', $item->id_penjualan) }}">
+                                        Batalkan
+                                    </button>
                                     <a href="{{ route('user.pesanan.payment-token', $item->id_penjualan) }}"
                                         data-sync-url="{{ route('user.pesanan.sync-payment-status', $item->id_penjualan) }}"
                                         class="btn-flat-primary btn-sm js-pay-order">
@@ -262,6 +265,49 @@
                         button.classList.remove('disabled');
                     });
             });
+        });
+
+        // Batalkan pesanan: pakai event delegation agar tetap bekerja
+        // untuk elemen apa pun yang memakai class .btn-batalkan-pesanan.
+        document.addEventListener('click', function(event) {
+            const button = event.target.closest('.btn-batalkan-pesanan');
+            if (!button) return;
+
+            event.preventDefault();
+
+            if (!confirm('Batalkan pesanan ini?')) return;
+
+            const teksAsli = button.textContent.trim();
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ??
+                @json(csrf_token());
+
+            button.disabled = true;
+            button.textContent = 'Memproses...';
+
+            fetch(button.dataset.url, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                })
+                .then(async function(response) {
+                    const data = await response.json();
+
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.message || 'Pesanan tidak dapat dibatalkan.');
+                    }
+
+                    return data;
+                })
+                .then(function() {
+                    window.location.reload();
+                })
+                .catch(function(error) {
+                    alert(error.message);
+                    button.disabled = false;
+                    button.textContent = teksAsli;
+                });
         });
     </script>
 @endsection

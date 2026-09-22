@@ -110,6 +110,7 @@ Route::middleware('auth:web')->group(function () {
         Route::get('/form-chekout', [PembelianController::class, 'showChekout'])->name("checkout");
         Route::post('/checkout/transaction', [PembelianController::class, 'createTransaction'])->name('checkout.transaction');
         Route::get('/pesanan/{id_penjualan}/payment-token', [PembelianController::class, 'paymentToken'])->name('pesanan.payment-token');
+        Route::post('/pesanan/{id_penjualan}/batalkan', [PembelianController::class, 'cancelPembelian'])->name('pesanan.batalkan');
         Route::post('/pesanan/{id_penjualan}/sync-payment-status', [PembelianController::class, 'syncPaymentStatus'])
             ->middleware('throttle:10,1')
             ->name('pesanan.sync-payment-status');

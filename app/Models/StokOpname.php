@@ -14,7 +14,6 @@ class StokOpname extends Model
     protected $primaryKey = 'id_stok_opname';
 
     protected $fillable = [
-        'kode_opname',
         'id_produk',
 
         'stok_isi_sistem',

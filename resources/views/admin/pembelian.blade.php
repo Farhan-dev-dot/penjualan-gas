@@ -32,9 +32,7 @@
                             placeholder="Cari kode pembelian atau nama pembeli..." value="{{ request('search') }}">
                     </div>
 
-                    {{-- Filter status dikunci (read-only), tidak bisa diubah-ubah. --}}
-                    <select class="filter-select filter-select-locked" disabled aria-disabled="true" tabindex="-1"
-                        title="Filter status dikunci">
+                    <select name="status" class="filter-select">
                         <option value="">Semua Status</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
                             Menunggu Pembayaran
@@ -56,11 +54,6 @@
                             Dibatalkan
                         </option>
                     </select>
-
-                    {{-- Kirim status yang sedang aktif supaya filter tetap bekerja. --}}
-                    @if (request('status'))
-                        <input type="hidden" name="status" value="{{ request('status') }}">
-                    @endif
 
                     <button type="submit" class="btn-filter">
                         <i class="fa-solid fa-filter"></i>

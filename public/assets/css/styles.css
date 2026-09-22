@@ -6286,6 +6286,33 @@ section.filter-produk-bar {
     opacity: 0.6;
 }
 
+/* ---------- Ukuran kecil (btn-sm) ---------- */
+.btn-flat-outline.btn-sm,
+.btn-flat-primary.btn-sm {
+    font-size: 11.5px;
+    padding: 5px 12px;
+    border-radius: 7px;
+}
+
+/* ---------- Tombol batalkan pesanan ---------- */
+.btn-batalkan-pesanan {
+    border-color: #dc3545;
+    color: #dc3545;
+    background: #fff;
+}
+
+.btn-batalkan-pesanan:hover {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.btn-batalkan-pesanan:disabled,
+.btn-batalkan-pesanan.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
 /* ---------- Empty state ---------- */
 .pesanan-flat-empty {
     padding: 60px 20px;

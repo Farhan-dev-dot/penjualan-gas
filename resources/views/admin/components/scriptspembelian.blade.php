@@ -79,7 +79,7 @@
             if (!nextStatus || this.value === originalStatus) {
                 console.warn(
                     '[payment-status] dibatalkan: nextStatus kosong atau value sama dengan originalStatus.'
-                    );
+                );
                 this.value = originalStatus;
                 paintSelect(this);
                 return;
