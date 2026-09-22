@@ -11,6 +11,71 @@
         let rowCount = 0;
 
         /* ============================
+           0) MODAL PEMBELIAN ASAL
+           Alur: klik input Pembelian Asal -> modal terbuka berisi daftar
+           pembelian -> klik tombol "Pilih" -> id_penjualan disimpan ke hidden
+           input pada baris tersebut -> input terisi kode pembelian -> modal tutup.
+        ============================ */
+        const modalPembelianAsal = document.getElementById('ModalPembelianAsal');
+
+        // Baris (tr) yang sedang memilih Pembelian Asal.
+        let barisPembelianAktif = null;
+
+        // Ambil elemen di dalam baris, toleran bila baris tidak ditemukan.
+        function elDiBaris(row, selector) {
+            return row ? row.querySelector(selector) : null;
+        }
+
+        // Buka Modal Pembelian Asal ketika input Pembelian Asal diklik.
+        // Delegasi event dipakai agar tetap bekerja untuk baris hasil clone.
+        document.addEventListener('click', function(e) {
+            const input = e.target.closest('.pembelian-asal-input');
+            if (!input) return;
+
+            barisPembelianAktif = input.closest('tr');
+
+            if (modalPembelianAsal && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(modalPembelianAsal).show();
+            }
+        });
+
+        // Tombol "Pilih" pada tiap pembelian di dalam modal.
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-pilih-pembelian');
+            if (!btn) return;
+
+            const row = barisPembelianAktif;
+
+            const idPembelian = btn.dataset.id || '';
+            const kodePembelian = btn.dataset.kode || '-';
+
+            const inputTampil = elDiBaris(row, '.pembelian-asal-input');
+            const inputId = elDiBaris(row, '.pembelian-asal-id');
+            const inputProduk = elDiBaris(row, '.pembelian-asal-data-produk');
+            const inputSisaPengembalian = elDiBaris(row, '.pembelian-asal-data-sisa-pengembalian');
+            const inputSisaRetur = elDiBaris(row, '.pembelian-asal-data-sisa-retur');
+
+            // Simpan id_penjualan untuk diproses pada Barang Masuk.
+            if (inputId) inputId.value = idPembelian;
+
+            // Tampilkan kode pembelian pada input yang terlihat.
+            if (inputTampil) inputTampil.value = kodePembelian;
+
+            // Simpan data pendukung untuk validasi sisa barang.
+            if (inputProduk) inputProduk.value = btn.dataset.produk || '';
+            if (inputSisaPengembalian) {
+                inputSisaPengembalian.value = btn.dataset.sisaPengembalian || '{}';
+            }
+            if (inputSisaRetur) {
+                inputSisaRetur.value = btn.dataset.sisaRetur || '{}';
+            }
+
+            if (modalPembelianAsal && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(modalPembelianAsal).hide();
+            }
+        });
+
+        /* ============================
            1) Isi modal detail (read only)
         ============================ */
         const modalDetail = document.getElementById('ModalDetailBarangMasuk');
@@ -95,6 +160,9 @@
                 form.reset();
                 barangMasukBody.innerHTML = '';
                 rowCount = 0;
+
+                // Batalkan konteks Modal Pembelian Asal yang mungkin masih aktif.
+                barisPembelianAktif = null;
             });
         }
 
@@ -115,13 +183,18 @@
                 const produkEl = row.querySelector('[name*="[id_produk]"]');
                 const produk = produkEl.value;
                 const jenis = row.querySelector('[name*="[jenis_transaksi]"]').value;
-                const pembelianEl = row.querySelector('[name*="[id_penjualan]"]');
-                const pembelian = pembelianEl.value;
+
+                // Pembelian Asal berupa hidden input yang diisi dari Modal Pembelian Asal.
+                const pembelianEl = row.querySelector('.pembelian-asal-id');
+                const pembelian = pembelianEl ? pembelianEl.value : '';
 
                 // Jumlah stok tidak boleh 0 semuanya (isi, kosong, dan pinjam).
-                const stokIsi = parseInt(row.querySelector('[name*="[stok_isi]"]').value, 10) || 0;
-                const stokKosong = parseInt(row.querySelector('[name*="[stok_kosong]"]').value, 10) || 0;
-                const stokPinjam = parseInt(row.querySelector('[name*="[stok_pinjam]"]').value, 10) || 0;
+                const stokIsi = parseInt(row.querySelector('[name*="[stok_isi]"]').value, 10) ||
+                    0;
+                const stokKosong = parseInt(row.querySelector('[name*="[stok_kosong]"]').value,
+                    10) || 0;
+                const stokPinjam = parseInt(row.querySelector('[name*="[stok_pinjam]"]').value,
+                    10) || 0;
 
                 if (!produk) {
                     alert(`Baris ${index + 1}: Pilih produk terlebih dahulu.`);
@@ -134,27 +207,36 @@
                     );
                     isValid = false;
                 } else if (['retur', 'pengembalian'].includes(jenis) && !pembelian) {
-                    alert(`Baris ${index + 1}: Pembelian asal wajib dipilih untuk transaksi retur atau pengembalian.`);
+                    alert(
+                        `Baris ${index + 1}: Pembelian asal wajib dipilih untuk transaksi retur atau pengembalian.`
+                    );
                     isValid = false;
                 } else if (['retur', 'pengembalian'].includes(jenis) && pembelian) {
+                    // Data pembelian asal diambil dari hidden input yang diisi
+                    // saat user menekan "Pilih" pada Modal Pembelian Asal.
+                    const dataProdukEl = row.querySelector('.pembelian-asal-data-produk');
+                    const dataSisaPengembalianEl = row.querySelector(
+                        '.pembelian-asal-data-sisa-pengembalian');
+                    const dataSisaReturEl = row.querySelector(
+                        '.pembelian-asal-data-sisa-retur');
+
                     // Jenis gas yang dipilih harus SAMA dengan jenis gas pada
                     // pembelian asal. Contoh: pembelian asal Argon, maka barang
                     // masuk harus Argon (bukan Nitrogen).
-                    const opsi = pembelianEl.selectedOptions[0];
-
-                    const produkIdPembelian = String(opsi?.dataset.produk || '')
+                    const produkIdPembelian = String(dataProdukEl?.value || '')
                         .split(',')
                         .map(v => v.trim())
                         .filter(Boolean);
 
                     const namaProduk = produkEl.selectedOptions[0]?.textContent.trim() ?? '-';
-                    const jenisGasPembelian = String(opsi?.dataset.jenisgas || '').trim() || '-';
+                    const namaPembelian = row.querySelector('.pembelian-asal-input')?.value ||
+                        '-';
 
                     if (!produkIdPembelian.includes(String(produk))) {
                         alert(
                             `Baris ${index + 1}: Barang tidak sesuai dengan pembelian asal.\n\n` +
                             `Jenis gas yang Anda masukkan: ${namaProduk}\n` +
-                            `Jenis gas pada pembelian asal: ${jenisGasPembelian}\n\n` +
+                            `Pembelian asal yang dipilih: ${namaPembelian}\n\n` +
                             `Transaksi dibatalkan dan tidak disimpan.`
                         );
                         isValid = false;
@@ -170,10 +252,11 @@
                             }
                         };
 
-                        const sisaPengembalian = parseSisa(opsi?.dataset.sisaPengembalian);
-                        const sisaRetur = parseSisa(opsi?.dataset.sisaRetur);
+                        const sisaPengembalian = parseSisa(dataSisaPengembalianEl?.value);
+                        const sisaRetur = parseSisa(dataSisaReturEl?.value);
 
-                        const sisaProdukPengembalian = parseInt(sisaPengembalian[produk] || 0, 10) || 0;
+                        const sisaProdukPengembalian = parseInt(sisaPengembalian[produk] || 0,
+                            10) || 0;
                         const sisaProdukRetur = parseInt(sisaRetur[produk] || 0, 10) || 0;
 
                         if (jenis === 'pengembalian') {

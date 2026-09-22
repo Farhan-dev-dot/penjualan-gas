@@ -82,32 +82,24 @@
             </select>
         </td>
         <td>
-            <select class="form-select form-select-sm select-penjualan-row" name="items[__INDEX__][id_penjualan]">
-                <option value="">-- Tidak ada / pilih untuk retur --</option>
-                @foreach ($pembelianDetails->groupBy('id_penjualan') as $idPenjualan => $details)
-                    @php
-                        $jenisGasPembelian = $details
-                            ->pluck('produk.jenis_gas')
-                            ->filter()
-                            ->unique()
-                            ->values();
+            {{--
+                Pembelian Asal bukan <select>.
+                Klik input ini akan membuka Modal Pembelian Asal, lalu pembelian
+                yang dipilih disimpan pada hidden input di bawahnya.
+            --}}
+            <div class="input-group input-group-sm">
+                <input type="text" readonly class="form-control pembelian-asal-input"
+                    placeholder="Pilih Pembelian Asal" value="">
+                <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+            </div>
 
-                        // Sisa yang masih dapat diproses per produk.
-                        // Dipakai untuk validasi di sisi klien agar tidak melebihi sisa.
-                        $sisaPengembalian = $details->pluck('sisa_pengembalian', 'id_produk')->toArray();
-                        $sisaRetur = $details->pluck('sisa_retur', 'id_produk')->toArray();
-                    @endphp
-                    <option value="{{ $idPenjualan }}"
-                        data-produk="{{ $details->pluck('id_produk')->unique()->implode(',') }}"
-                        data-jenisgas="{{ $jenisGasPembelian->implode(', ') }}"
-                        data-sisa-pengembalian="{{ json_encode($sisaPengembalian) }}"
-                        data-sisa-retur="{{ json_encode($sisaRetur) }}">
-                        {{ $details->first()->pembelian->kode_penjualan ?? '-' }}
-                        — {{ $details->first()->nama_penerima }}
-                        ({{ $jenisGasPembelian->implode(', ') }})
-                    </option>
-                @endforeach
-            </select>
+            {{-- id_penjualan hasil pilihan dari modal (dipakai proses Barang Masuk) --}}
+            <input type="hidden" class="pembelian-asal-id" name="items[__INDEX__][id_penjualan]" value="">
+
+            {{-- Data pendukung pilihan, diisi JS setelah pembelian dipilih --}}
+            <input type="hidden" class="pembelian-asal-data-produk" value="">
+            <input type="hidden" class="pembelian-asal-data-sisa-pengembalian" value="">
+            <input type="hidden" class="pembelian-asal-data-sisa-retur" value="">
         </td>
         <td>
             <select class="form-select form-select-sm" name="items[__INDEX__][jenis_transaksi]" required>
@@ -191,6 +183,100 @@
                     <span class="cm-field-value" id="detail-bm-keterangan">-</span>
                 </div>
 
+            </div>
+
+            <div class="modal-footer cm-footer">
+                <button type="button" class="btn btn-secondary cm-btn-close" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{--
+    Modal Pembelian Asal
+    Daftar seluruh pembelian yang masih dapat digunakan sebagai sumber Barang Masuk.
+
+    Ketersediaan ditentukan oleh sisa jumlah yang masih dapat diproses
+    (Pengembalian / Retur), bukan oleh payment_status. Transaksi berstatus
+    'settlement' tetap ditampilkan selama masih ada sisa.
+
+    Sumber data: $pembelianDetails (query existing pada TransaksiController),
+    dikelompokkan per id_penjualan.
+--}}
+<div class="modal fade cm-modal" id="ModalPembelianAsal" tabindex="-1" aria-labelledby="PembelianAsalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content cm-content">
+            <div class="modal-header cm-header">
+                <div class="cm-header-left">
+                    <div class="cm-avatar"><i class="fa-solid fa-file-invoice"></i></div>
+                    <div>
+                        <h1 class="modal-title cm-title" id="PembelianAsalLabel">Pilih Pembelian Asal</h1>
+                        <span class="cm-subtitle">Pembelian yang masih memiliki sisa barang untuk diproses</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close cm-btn-close-x" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body cm-body">
+
+                @forelse ($pembelianDetails->groupBy('id_penjualan') as $idPenjualan => $details)
+                    @php
+                        $detailUtama = $details->first();
+                        $jenisGasPembelian = $details->pluck('produk.jenis_gas')->filter()->unique()->values();
+
+                        $dataProduk = $details->pluck('id_produk')->unique()->implode(',');
+
+                        $dataSisaPengembalian = $details
+                            ->pluck('sisa_pengembalian', 'id_produk')
+                            ->toArray();
+
+                        $dataSisaRetur = $details->pluck('sisa_retur', 'id_produk')->toArray();
+
+                        $totalSisaPengembalian = (int) $details->sum('sisa_pengembalian');
+                        $totalSisaRetur = (int) $details->sum('sisa_retur');
+                    @endphp
+
+                    <div class="pembelian-asal-item d-flex align-items-start justify-content-between gap-3 mb-2">
+                        <div>
+                            <div class="fw-semibold">
+                                {{ $detailUtama->pembelian->kode_penjualan ?? '-' }}
+                            </div>
+                            <div class="text-muted small">
+                                {{ $detailUtama->nama_penerima ?? '-' }}
+                                @if ($detailUtama->telepon_penerima)
+                                    &bull; {{ $detailUtama->telepon_penerima }}
+                                @endif
+                            </div>
+                            <div class="text-muted small">
+                                {{ $jenisGasPembelian->implode(', ') ?: '-' }}
+                                &bull; Status: {{ $detailUtama->pembelian->payment_status ?? '-' }}
+                                &bull; Sisa pengembalian: {{ $totalSisaPengembalian }}
+                                &bull; Sisa retur: {{ $totalSisaRetur }}
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-primary btn-pilih-pembelian"
+                            data-id="{{ $idPenjualan }}"
+                            data-kode="{{ $detailUtama->pembelian->kode_penjualan ?? '-' }}"
+                            data-produk="{{ $dataProduk }}"
+                            data-sisa-pengembalian='@json($dataSisaPengembalian)'
+                            data-sisa-retur='@json($dataSisaRetur)'>
+                            <i class="fa-solid fa-check"></i> Pilih
+                        </button>
+                    </div>
+                @empty
+                    <div class="table-empty">
+                        <i class="fa-solid fa-box-open"></i>
+                        <p>Belum ada pembelian yang bisa diproses barang masuknya</p>
+                    </div>
+                @endforelse
+
+                <p class="text-muted small mt-3 mb-0">
+                    Pembelian berstatus <strong>settlement</strong> tetap dapat dipilih selama masih ada sisa barang
+                    yang dapat diproses.
+                </p>
             </div>
 
             <div class="modal-footer cm-footer">
