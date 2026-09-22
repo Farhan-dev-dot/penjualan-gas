@@ -198,6 +198,7 @@ Route::prefix('manager')->name('manager.')->group(function () {
 
         // stok opname
         Route::get('/stok-opname', [StokOpnameController::class, 'index'])->name('stok-opname');
+        Route::get('/produk-picker', [StokOpnameController::class, 'produkPicker'])->name('produk-picker');
         Route::post('/stok-opname', [StokOpnameController::class, 'store'])->name('stok-opname.store');
         Route::delete('/stok-opname/{stokOpname}', [StokOpnameController::class, 'destroy'])->name('stok-opname.destroy');
         Route::get('/manajemen-admin', [ManajemenAdminController::class, 'index'])->name('manajemen-admin');
@@ -259,6 +260,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // stok opname
         Route::get('/stok-opname', [StokOpnameController::class, 'index'])->name('stok-opname');
+        Route::get('/produk-picker', [StokOpnameController::class, 'produkPicker'])->name('produk-picker');
         Route::post('/stok-opname', [StokOpnameController::class, 'store'])->name('stok-opname.store');
         Route::delete('/stok-opname/{stokOpname}', [StokOpnameController::class, 'destroy'])->name('stok-opname.destroy');
     });

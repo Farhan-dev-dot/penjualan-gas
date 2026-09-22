@@ -145,4 +145,114 @@
             getElement(`d-${kategori}-selisih`).textContent = btn.dataset[`${kategori}Selisih`];
         });
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | MODAL PICKER PRODUK
+    |--------------------------------------------------------------------------
+    */
+    const PRODUK_PICKER_URL = @json(route('admin.produk-picker'));
+
+    function loadProdukPicker(url) {
+        const container = getElement('picker-table-container');
+        if (!container) return;
+
+        container.innerHTML =
+            '<div class="table-empty"><i class="fa-solid fa-spinner fa-spin"></i><p>Memuat data...</p></div>';
+
+        fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(html) {
+                container.innerHTML = html;
+            })
+            .catch(function() {
+                container.innerHTML =
+                    '<div class="table-empty"><i class="fa-solid fa-triangle-exclamation"></i><p>Gagal memuat data produk</p></div>';
+            });
+    }
+
+    function bukaPickerProduk() {
+        const modalEl = getElement('ModalPilihProduk');
+        if (!modalEl) return;
+
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+
+        // Hindari pemuatan ganda saat event focus dan click sama-sama terpicu.
+        if (!modalEl.classList.contains('show')) {
+            modalInstance.show();
+            loadProdukPicker(PRODUK_PICKER_URL);
+        }
+    }
+
+    // Buka modal saat input kode produk diklik / difokuskan.
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('#kode_produk_input') || e.target.closest('#btn-buka-picker-produk')) {
+            e.preventDefault();
+            bukaPickerProduk();
+        }
+    });
+
+    document.addEventListener('focus', function(e) {
+        if (e.target.closest('#kode_produk_input')) {
+            bukaPickerProduk();
+        }
+    }, true);
+
+    // Search di dalam modal (debounce ~350ms).
+    let pickerDebounce = null;
+    document.addEventListener('input', function(e) {
+        if (e.target.id !== 'picker-search-input') return;
+
+        clearTimeout(pickerDebounce);
+        const keyword = e.target.value.trim();
+
+        pickerDebounce = setTimeout(function() {
+            const url = keyword === '' ? PRODUK_PICKER_URL :
+                `${PRODUK_PICKER_URL}?search=${encodeURIComponent(keyword)}`;
+            loadProdukPicker(url);
+        }, 350);
+    });
+
+    // Pilih produk (delegasi, karena tabel di-replace tiap AJAX).
+    document.addEventListener('click', function(e) {
+        const row = e.target.closest('.produk-picker-row');
+        if (!row) return;
+
+        const inputKodeProduk = getElement('kode_produk_input');
+        if (inputKodeProduk) {
+            inputKodeProduk.value = row.dataset.kodeProduk;
+        }
+
+        const modalEl = getElement('ModalPilihProduk');
+        if (modalEl) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+        }
+
+        const formCari = getElement('formCariProduk');
+        if (formCari) formCari.submit();
+    });
+
+    // Pagination picker tetap AJAX (delegasi).
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('#picker-table-container .pagination a');
+        if (!link) return;
+
+        e.preventDefault();
+        loadProdukPicker(link.href);
+    });
+
+    // Reset search saat modal picker ditutup.
+    document.addEventListener('hidden.bs.modal', function(e) {
+        if (e.target.id !== 'ModalPilihProduk') return;
+
+        const searchInput = getElement('picker-search-input');
+        if (searchInput) searchInput.value = '';
+    });
 </script>

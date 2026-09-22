@@ -19,13 +19,15 @@
                 <div class="alert alert-danger mx-4 mt-3 mb-0">{{ $errors->first() }}</div>
             @endif
 
-            <form action="{{ route('admin.stok-opname') }}" method="GET" class="table-toolbar">
+            <form action="{{ route('admin.stok-opname') }}" method="GET" class="table-toolbar" id="formCariProduk">
                 <div class="input-group search-box">
                     <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" name="kode_produk" class="form-control" placeholder="Cari kode produk..."
-                        value="{{ request('kode_produk') }}">
+                    <input type="text" name="kode_produk" id="kode_produk_input" class="form-control"
+                        placeholder="Pilih produk..." value="{{ request('kode_produk') }}" readonly style="cursor:pointer">
+                    <button type="button" class="btn-filter" id="btn-buka-picker-produk" title="Pilih Produk">
+                        <i class="fa-solid fa-search"></i> Pilih Produk
+                    </button>
                 </div>
-                <button type="submit" class="btn-filter"><i class="fa-solid fa-search"></i> Cari Produk</button>
             </form>
 
             @if ($produk)
@@ -134,6 +136,38 @@
                 </table>
             </div>
             <div class="table-footer">{{ $opnames->links() }}</div>
+        </div>
+    </div>
+
+    <div class="modal fade cm-modal" id="ModalPilihProduk" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content cm-content">
+                <div class="modal-header cm-header">
+                    <div class="cm-header-left">
+                        <div class="cm-avatar"><i class="fa-solid fa-box"></i></div>
+                        <div>
+                            <h6 class="cm-title">Pilih Produk</h6>
+                            <span class="cm-subtitle">Pilih produk untuk stok opname</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close cm-btn-close-x" data-bs-dismiss="modal"
+                        aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body cm-body">
+                    <div class="input-group search-box mb-3">
+                        <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" id="picker-search-input" class="form-control"
+                            placeholder="Cari kode produk atau jenis gas...">
+                    </div>
+                    <div id="picker-table-container">
+                        <div class="table-empty"><i class="fa-solid fa-spinner fa-spin"></i>
+                            <p>Memuat data...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer cm-footer"><button type="button" class="btn btn-secondary cm-btn-close"
+                        data-bs-dismiss="modal">Tutup</button></div>
+            </div>
         </div>
     </div>
 
