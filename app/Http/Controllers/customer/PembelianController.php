@@ -195,6 +195,11 @@ class PembelianController extends Controller
 
                     'phone' => $firstDetail?->telepon_penerima,
                 ],
+
+                'expiry' => [
+                    'unit'     => 'hour',
+                    'duration' => 1, // nanti disesuaikan durasinya
+                ],
             ]);
 
             $pembelian->update([
@@ -458,6 +463,10 @@ class PembelianController extends Controller
                         'country_code' => 'IDN',
                     ],
                 ],
+                'expiry' => [
+                    'unit'     => 'hour',
+                    'duration' => 1,
+                ],
             ];
 
             $snapToken = Snap::getSnapToken($transactionDetails);
@@ -520,7 +529,7 @@ class PembelianController extends Controller
     }
 
     /** Terapkan status Midtrans secara atomik dan idempoten. */
-    private function applyMidtransStatus(Pembelian $pembelian, array $data): Pembelian
+    public function applyMidtransStatus(Pembelian $pembelian, array $data): Pembelian
     {
         return DB::transaction(function () use ($pembelian, $data) {
             $pembelian = Pembelian::with('details')
