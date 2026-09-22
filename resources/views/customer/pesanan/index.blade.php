@@ -54,7 +54,7 @@
                     $totalPesanan = $item->gross_amount;
 
                     $statusMap = [
-                        'settlement' => ['label' => 'Diproses', 'class' => 'is-settlement'],
+                        'settlement' => ['label' => 'Berhasil', 'class' => 'is-settlement'],
                         'menunggu_konfirmasi' => [
                             'label' => 'Menunggu Konfirmasi',
                             'class' => 'is-menunggu-konfirmasi',
