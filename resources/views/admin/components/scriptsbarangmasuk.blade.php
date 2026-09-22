@@ -26,7 +26,7 @@
             return row ? row.querySelector(selector) : null;
         }
 
-        // Buka Modal Pembelian Asal ketika input Pembelian Asal diklik.
+        // Bukа Modal Pembelian Asal ketika input Pembelian Asal diklik.
         // Delegasi event dipakai agar tetap bekerja untuk baris hasil clone.
         document.addEventListener('click', function(e) {
             const input = e.target.closest('.pembelian-asal-input');
@@ -38,6 +38,145 @@
                 bootstrap.Modal.getOrCreateInstance(modalPembelianAsal).show();
             }
         });
+
+        /* ------------------------------------------------------------
+           SEARCH + PAGINATION TABEL PEMBELIAN ASAL
+           Maksimal 10 baris per halaman. Hanya baris pada halaman aktif
+           yang ditampilkan, sehingga data yang sangat banyak tidak
+           sekaligus masuk ke tampilan.
+        ------------------------------------------------------------ */
+        const PA_PER_PAGE = 10;
+        const paTbody = document.getElementById('pa-tbody');
+        const paSearch = document.getElementById('pa-search');
+        const paPagination = document.getElementById('pa-pagination');
+        const paInfo = document.getElementById('pa-info');
+        const paFooter = document.getElementById('pa-footer');
+        const paEmptySearch = document.getElementById('pa-empty-search');
+
+        // Seluruh baris pembelian (tanpa baris empty-state search).
+        const paRows = paTbody ? Array.from(paTbody.querySelectorAll('tr.pa-row')) : [];
+        const paEmptyAwal = paTbody ? paTbody.querySelector('.table-empty') : null;
+
+        let paHalaman = 1;
+
+        function paCocok(row, kata) {
+            if (!kata) return true;
+
+            // Cari di seluruh isi baris: kode pembelian, penerima, produk, status.
+            return row.textContent.toLowerCase().includes(kata.toLowerCase());
+        }
+
+        function paRender() {
+            if (!paTbody) return;
+
+            const kata = (paSearch?.value || '').trim();
+            const hasil = paRows.filter(row => paCocok(row, kata));
+
+            const totalHalaman = Math.max(1, Math.ceil(hasil.length / PA_PER_PAGE));
+            if (paHalaman > totalHalaman) paHalaman = totalHalaman;
+
+            const mulai = (paHalaman - 1) * PA_PER_PAGE;
+            const akhir = Math.min(mulai + PA_PER_PAGE, hasil.length);
+
+            // Sembunyikan semua baris, lalu tampilkan hanya halaman aktif.
+            paRows.forEach(row => row.style.display = 'none');
+            hasil.slice(mulai, akhir).forEach(row => row.style.display = '');
+
+            // Empty state: data kosong vs search tidak menemukan.
+            if (paEmptyAwal) {
+                const kosongTotal = paRows.length === 0;
+                paEmptyAwal.style.display = kosongTotal ? '' : 'none';
+            }
+
+            // Getarkan footer bila tidak ada data sama sekali.
+            if (paFooter) {
+                paFooter.style.display = paRows.length === 0 ? 'none' : '';
+            }
+
+            if (paEmptySearch) {
+                const tidakDitemukan = paRows.length > 0 && hasil.length === 0;
+                paEmptySearch.style.display = tidakDitemukan ? '' : 'none';
+            }
+
+            // Info jumlah data.
+            if (paInfo) {
+                paInfo.textContent = hasil.length ?
+                    `Menampilkan ${mulai + 1}–${akhir} dari ${hasil.length} pembelian` :
+                    '';
+            }
+
+            paRenderPagination(totalHalaman);
+        }
+
+        function paRenderPagination(totalHalaman) {
+            if (!paPagination) return;
+            paPagination.replaceChildren();
+
+            if (totalHalaman <= 1) return;
+
+            const tambahItem = (label, halamanTujuan, aktif, disabled) => {
+                const li = document.createElement('li');
+                li.className = 'page-item' + (aktif ? ' active' : '') + (disabled ? ' disabled' : '');
+
+                const a = document.createElement('a');
+                a.className = 'page-link';
+                a.href = '#';
+                a.textContent = label;
+
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (disabled || aktif) return;
+                    paHalaman = halamanTujuan;
+                    paRender();
+                });
+
+                li.appendChild(a);
+                paPagination.appendChild(li);
+            };
+
+            // Tombol sebelumnya.
+            tambahItem('‹', Math.max(1, paHalaman - 1), false, paHalaman === 1);
+
+            // Nomor halaman (dengan elipsis bila halaman banyak).
+            const halamanDitampilkan = [];
+            for (let i = 1; i <= totalHalaman; i++) {
+                if (i === 1 || i === totalHalaman || Math.abs(i - paHalaman) <= 2) {
+                    halamanDitampilkan.push(i);
+                }
+            }
+
+            let sebelumnya = 0;
+            halamanDitampilkan.forEach(function(i) {
+                if (sebelumnya && i - sebelumnya > 1) {
+                    tambahItem('…', paHalaman, false, true);
+                }
+                tambahItem(String(i), i, i === paHalaman, false);
+                sebelumnya = i;
+            });
+
+            // Tombol berikutnya.
+            tambahItem('›', Math.min(totalHalaman, paHalaman + 1), false, paHalaman === totalHalaman);
+        }
+
+        // Ketikan pada search mengembalikan pencarian ke halaman pertama.
+        if (paSearch) {
+            paSearch.addEventListener('input', function() {
+                paHalaman = 1;
+                paRender();
+            });
+        }
+
+        // Setiap modal dibuka: reset pencarian lalu render ulang.
+        if (modalPembelianAsal) {
+            modalPembelianAsal.addEventListener('show.bs.modal', function() {
+                if (paSearch) paSearch.value = '';
+                paHalaman = 1;
+                paRender();
+            });
+        }
+
+        // Render awal saat halaman dimuat.
+        paRender();
 
         // Tombol "Pilih" pada tiap pembelian di dalam modal.
         document.addEventListener('click', function(e) {

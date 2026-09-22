@@ -286,7 +286,13 @@
                                         @endif
                                     </td>
                                     <td class="text-break">{{ $baris['produk'] ?: '-' }}</td>
-                                    <td class="text-break">{{ $baris['status'] }}</td>
+                                    <td class="text-break">
+                                        @if ($baris['status'] === 'settlement')
+                                            <span class="badge bg-success">Berhasil</span>
+                                        @else
+                                            <span class="badge bg-secondary">{{ $baris['status'] }}</span>
+                                        @endif
+                                    </td>
                                     <td class="text-center">{{ $baris['sisa_pengembalian'] }}</td>
                                     <td class="text-center">{{ $baris['sisa_retur'] }}</td>
                                     <td class="text-end">

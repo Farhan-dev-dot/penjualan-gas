@@ -60,7 +60,7 @@ class TransaksiController extends Controller
 
         $pembelianDetails = PembelianDetail::with('pembelian')
             ->whereHas('pembelian', function ($query) {
-                $query->whereNotIn('payment_status', ['pending', 'expire', 'deny', 'cancel']);
+                $query->whereNotIn('payment_status', ['pending', 'expire', 'deny', 'cancel', "menunggu_konfirmasi"]);
             })
             ->latest('id_detail')
             ->get()
