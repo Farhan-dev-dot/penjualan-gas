@@ -11,7 +11,7 @@
                 <div class="content-card-header">
                     <h6 class="content-card-title">
                         Manajemen Admin
-                        <small>Kelola akun dengan role Manager, Admin, dan User</small>
+                        <small>Kelola akun dengan role Admin</small>
                     </h6>
                     <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#ModalTambahAkun">
                         <i class="fa-solid fa-plus"></i> Tambah Akun
@@ -64,7 +64,8 @@
                                         </form>
                                     </td>
                                     <td class="text-end">
-                                        <form action="{{ route('manager.manajemen-admin.destroy', $admin) }}" method="POST" class="d-inline"
+                                        <form action="{{ route('manager.manajemen-admin.destroy', $admin) }}" method="POST"
+                                            class="d-inline"
                                             onsubmit="return confirm('Yakin ingin menghapus akun admin ini?')">
                                             @csrf
                                             @method('DELETE')
