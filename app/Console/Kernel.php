@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // Sinkronkan transaksi Midtrans yang sudah melewati masa kedaluwarsa.
+        $schedule->command('pembelian:sync-expired')->everyFiveMinutes();
     }
 
     /**
