@@ -124,7 +124,8 @@
                                                 {{ strtoupper(substr($item->user->name ?? 'U', 0, 1)) }}
                                             </span>
                                             <div>
-                                                <span class="cell-primary d-block">{{ $item->user->name ?? '-' }}</span>
+                                                <span
+                                                    class="cell-primary d-block">{{ $item->details->nama_penerima }}</span>
                                                 <span class="cell-muted small">{{ $item->user->email ?? '-' }}</span>
                                             </div>
                                         </div>
