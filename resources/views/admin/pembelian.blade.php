@@ -74,7 +74,7 @@
                         <thead>
                             <tr>
                                 <th>Kode Pembelian</th>
-                                <th>Pembeli</th>
+                                <th>Pelanggan</th>
                                 <th>Produk</th>
                                 <th>Metode Bayar</th>
                                 <th>Total</th>
