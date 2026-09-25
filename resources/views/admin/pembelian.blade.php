@@ -86,6 +86,8 @@
                         <tbody>
                             @forelse ($pembelians as $item)
                                 @php
+                                    // Detail pertama dipakai untuk kolom pelanggan & produk.
+                                    $firstDetail = $item->details->first();
                                     // Disiapkan di awal setiap baris agar tersedia untuk tombol detail.
                                     $detailItems = $item->details
                                         ->map(function ($detail) {
@@ -121,17 +123,16 @@
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
                                             <span class="row-avatar">
-                                                {{ strtoupper(substr($item->user->name ?? 'U', 0, 1)) }}
+                                                {{ strtoupper(substr($firstDetail?->nama_penerima ?? 'U', 0, 1)) }}
                                             </span>
                                             <div>
                                                 <span
-                                                    class="cell-primary d-block">{{ $item->details->nama_penerima }}</span>
+                                                    class="cell-primary d-block">{{ $firstDetail?->nama_penerima ?? '-' }}</span>
                                                 <span class="cell-muted small">{{ $item->user->email ?? '-' }}</span>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        @php $firstDetail = $item->details->first(); @endphp
                                         @if ($firstDetail)
                                             <span class="cell-primary d-block">
                                                 {{ $firstDetail->produk->jenis_gas ?? '-' }}
